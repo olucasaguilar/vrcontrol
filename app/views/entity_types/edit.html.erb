@@ -1,0 +1,10 @@
+<h1>Editar Tipo de Entidade</h1><br />
+
+<%= form_for(@entity_type) do |f| %>
+  <%= f.label :nome %><br />
+  <%= f.text_field :nome %><br />
+ 
+  <%= f.submit %>
+<% end %><br />
+
+<%= link_to "Voltar", entity_types_path %>

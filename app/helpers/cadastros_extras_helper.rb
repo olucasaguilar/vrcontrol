@@ -1,0 +1,2 @@
+module CadastrosExtrasHelper
+end

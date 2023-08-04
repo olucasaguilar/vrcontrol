@@ -1,0 +1,26 @@
+<h1>Tipo de Entidade</h1><br />
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>Nome</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @entity_types.each do |entity_type| %>
+      <tr>
+        <td><%= entity_type.id %></td>
+        <td><%= entity_type.nome %></td>
+        <td>
+          <%= link_to 'Editar', edit_entity_type_path(entity_type) %>
+          <%= button_to 'Excluir', entity_type, method: :delete %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table><br />
+
+<%= link_to "+ Novo Tipo", new_entity_type_path %><br />
+<%= link_to "Voltar", cadastros_extras_path %>

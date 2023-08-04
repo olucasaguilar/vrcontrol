@@ -1,0 +1,2 @@
+class EntityType < ApplicationRecord
+end
