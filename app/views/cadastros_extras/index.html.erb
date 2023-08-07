@@ -1,3 +1,22 @@
-<h1>Cadastros Extras</h1><br />
+<h1 class="mb-4">Cadastros Extras</h1>
+<div class="row">
+  <div class="col-md-6">
 
-<%= link_to "Tipos de Entidade", @tipos_de_entidade %>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Tipos de Entidade</h5>
+        <p class="card-text">Gerencie os tipos de entidade aqui.</p>
+        <%= link_to "Ver Tipos de Entidade", @tipos_de_entidade, class: "btn btn-primary" %>
+      </div>
+    </div>
+    
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Outro Cadastro</h5>
+        <p class="card-text">Gerencie o outro cadastro aqui.</p>
+        <%= link_to "Ver Outro Cadastro", @outro_cadastro, class: "btn btn-primary" %>
+      </div>
+    </div>
+
+  </div>
+</div>

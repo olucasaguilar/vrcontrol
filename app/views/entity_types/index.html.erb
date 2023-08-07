@@ -1,9 +1,9 @@
-<h1>Tipo de Entidade</h1><br />
+<h1 class="mb-4">Tipos de Entidade</h1>
 
-<table>
+<table class="mb-4 table table-striped table-bordered">
   <thead>
     <tr>
-      <th>id</th>
+      <th>ID</th>
       <th>Nome</th>
       <th>Ações</th>
     </tr>
@@ -14,13 +14,13 @@
         <td><%= entity_type.id %></td>
         <td><%= entity_type.nome %></td>
         <td>
-          <%= link_to 'Editar', edit_entity_type_path(entity_type) %>
-          <%= button_to 'Excluir', entity_type, method: :delete %>
+          <%= link_to 'Editar', edit_entity_type_path(entity_type), class: "btn btn-primary" %>
         </td>
       </tr>
     <% end %>
   </tbody>
-</table><br />
-
-<%= link_to "+ Novo Tipo", new_entity_type_path %><br />
-<%= link_to "Voltar", cadastros_extras_path %>
+</table>
+<div class="mb-3">
+  <%= link_to "+ Novo Tipo", new_entity_type_path, class: "btn btn-success" %>
+  <%= link_to "Voltar", cadastros_extras_path, class: "btn btn-secondary" %>
+</div>

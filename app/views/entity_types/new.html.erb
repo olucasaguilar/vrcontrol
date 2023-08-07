@@ -1,10 +1,23 @@
-<h1>Novo Tipo de Entidade</h1><br />
+<legend>Novo Tipo de Entidade</legend>
 
-<%= form_for(@entity_type) do |f| %>
-  <%= f.label :nome %><br />
-  <%= f.text_field :nome %><br />
- 
-  <%= f.submit %>
-<% end %><br />
+<%= form_with(model: @entity_type) do |f| %>
 
-<%= link_to "Voltar", entity_types_path %>
+  <div class="form-group">
+    <%= f.label 'Descrição', { class: "col-md-4 control-label"} %>
+    <div class="col-md-4 inputGroupContainer">
+      <div class="input-group">
+        <%= f.text_field :nome, class: "form-control", placeholder: "Tipo de Entidade" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-4 control-label"></label>
+    <div class="col-md-4">
+      <%= f.submit "Salvar", class: "btn btn-primary" %>
+      <%= link_to "Cancelar", entity_types_path, class: "btn btn-secondary" %>
+    </div>
+  </div>
+  
+<% end %>
+<br>
