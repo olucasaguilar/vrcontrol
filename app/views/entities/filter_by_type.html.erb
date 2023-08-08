@@ -1,33 +1,31 @@
-<%# Entity.find_or_create_by(
-  nome: 'Malharia Tal 3', 
-  num_contato: '11 99999-9999', 
-  cidade: 'São Paulo', 
-  estado: 'SP', 
-  entity_types_id: 7
-) %>
 
-<h1> Entidades do tipo <%= @entities.first.entity_type.nome %> </h1>
+<% if @entities.empty? %>
+  <h1> Não existem entidades do tipo <%= @entity_type.nome %> </h1>
+<% else %>
+  <h1> Entidades do tipo <%= @entities.first.entity_type.nome %> </h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Nome</th>
-      <th>Contato</th>
-      <th>Cidade</th>
-      <th>Estado</th>
-      <th>Tipo</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @entities.each do |entity| %>
+  <table>
+    <thead>
       <tr>
-        <td><%= entity.nome %></td>
-        <td><%= entity.num_contato %></td>
-        <td><%= entity.cidade %></td>
-        <td><%= entity.estado %></td>
-        <td><%= entity.entity_type.nome %></td>
+        <th>Nome</th>
+        <th>Cidade</th>
+        <th>Estado</th>
+        <th>Ações</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody>
+      <% @entities.each do |entity| %>
+        <tr>
+          <td><%= entity.nome %></td>
+          <td><%= entity.cidade %></td>
+          <td><%= entity.estado %></td>
+          <td><%= link_to 'Detalhes', entity_path(entity.id) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<%= link_to "+ Nova Entidade", root_path %>
+<%= link_to "Voltar", entities_by_type_path %>

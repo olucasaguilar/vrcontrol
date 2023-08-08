@@ -1,0 +1,36 @@
+<h1>Editar Entidade</h1>
+
+<%= form_for(@entity) do |f| %>
+  <div class="field">
+    <%= f.label :nome %>
+    <%= f.text_field :nome %>
+  </div>
+
+  <div class="field">
+    <%= f.label :num_contato %>
+    <%= f.text_field :num_contato %>
+  </div>
+
+  <div class="field">
+    <%= f.label :cidade %>
+    <%= f.text_field :cidade %>
+  </div>
+
+  <div class="field">
+    <%= f.label :estado %>
+    <%= f.text_field :estado %>
+  </div>
+
+  <div class="field">
+    <%= f.label :entity_types_id %>
+    <%= f.collection_select :entity_types_id, @entity_types, :id, :nome, prompt: true %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Update Entity" %>
+  </div>
+<% end %>
+
+
+<%= button_to 'Excluir', entity_path(@entity.id), method: :delete  %>
+<%= link_to 'Cancelar', filter_by_type_path(@entity.entity_type.id) %>

@@ -1,0 +1,11 @@
+<h1> Detalhes da entidade selecionada </h1>
+
+<p> Nome: <%= @entity.nome %> </p>
+<p> Número de contato: <%= @entity.num_contato %> </p>
+<p> Cidade: <%= @entity.cidade %> </p>
+<p> Estado: <%= @entity.estado %> </p>
+<p> Tipo de entidade: <%= @entity.entity_type.nome %> </p>
+
+<p><%= link_to 'Editar', edit_entity_path(@entity.id) %></p>
+<p><%= link_to 'Voltar', filter_by_type_path(@entity.entity_type.id) %></p>
+

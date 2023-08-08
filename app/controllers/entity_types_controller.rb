@@ -13,7 +13,7 @@ class EntityTypesController < ApplicationController
     @entity_type = EntityType.new(entity_type_params)
 
     if @entity_type.save
-      redirect_to entity_types_path, notice: 'Entity Type was successfully created.'
+      redirect_to entity_types_path, notice: 'Tipo de entidade criado com sucesso.'
     else
       render :new
     end
@@ -24,7 +24,7 @@ class EntityTypesController < ApplicationController
 
   def update
     if @entity_type.update(entity_type_params)
-      redirect_to entity_types_path, notice: 'Entity Type was successfully updated.'
+      redirect_to entity_types_path, notice: 'Tipo de entidade atualizado com sucesso.'
     else
       render :edit
     end
@@ -32,7 +32,7 @@ class EntityTypesController < ApplicationController
 
   def destroy
     @entity_type.destroy
-    redirect_to entity_types_path, notice: 'Entity Type was successfully destroyed.'    
+    redirect_to entity_types_path, notice: 'Tipo de entidade excluído com sucesso.'   
   end
 
   private
