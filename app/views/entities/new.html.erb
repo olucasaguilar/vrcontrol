@@ -1,4 +1,4 @@
-<h1>Editar Entidade</h1>
+<h1>Nova Entidade</h1>
 
 <%= form_for(@entity) do |f| %>
 
@@ -47,12 +47,10 @@
 
   <div class="form-group">
     <div class="col-md-offset-4 col-md-4">
-      <%= f.submit "Atualizar", class: "btn btn-primary" %>
-      <%= link_to "Cancelar", filter_by_type_path(@entity.entity_type.id), class: "btn btn-secondary" %>
+      <%= f.submit "Criar", class: "btn btn-primary" %>
+      <%= link_to "Cancelar", filter_by_type_path(@entity.entity_types_id), class: "btn btn-secondary" %>
     </div>
   </div>
 
 <% end %>
 
-<br>
-<%= button_to 'Excluir', entity_path(@entity.id), method: :delete, class: "btn btn-danger" %>

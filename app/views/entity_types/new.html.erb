@@ -2,6 +2,14 @@
 
 <%= form_with(model: @entity_type) do |f| %>
 
+  <% if @entity_type.errors.any? %>
+    <div class="alert alert-danger">
+      <% @entity_type.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </div>
+  <% end %>
+
   <div class="form-group">
     <%= f.label 'Descrição', { class: "col-md-4 control-label"} %>
     <div class="col-md-4 inputGroupContainer">
@@ -20,4 +28,3 @@
   </div>
   
 <% end %>
-<br>

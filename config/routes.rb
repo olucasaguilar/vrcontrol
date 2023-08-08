@@ -17,5 +17,10 @@ Rails.application.routes.draw do
   patch '/entities/:id', to: 'entities#update', as: 'update_entity'
   # Excluir uma entidade
   delete '/entities/:id', to: 'entities#destroy', as: 'destroy_entity'
-
+  #
+  get '/entity/new/:id', to: 'entities#new', as: 'new_entity'
+  #
+  get '/entities', to: 'entities#show', as: 'entities'
+  #
+  post '/entities', to: 'entities#create', as: 'create_entity'
 end

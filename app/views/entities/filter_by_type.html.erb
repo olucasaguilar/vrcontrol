@@ -1,7 +1,7 @@
 <% if @entities.empty? %>
   <h1>Não existem entidades do tipo <%= @entity_type.nome %></h1>
 <% else %>
-  <h1>Entidades do tipo <%= @entities.first.entity_type.nome %></h1>
+  <h1>Entidades do tipo <%= @entity_type.nome %></h1>
 
   <table class="table">
     <thead>
@@ -25,5 +25,5 @@
   </table>
 <% end %>
 
-<%= link_to "+ Nova Entidade", root_path, class: "btn btn-success mt-3 disabled" %>
+<%= link_to "+ Nova Entidade", new_entity_path(@entity_type.id), class: "btn btn-success mt-3" %>
 <%= link_to "Voltar", entities_by_type_path, class: "btn btn-secondary mt-3" %>
