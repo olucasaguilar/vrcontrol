@@ -1,20 +1,17 @@
-<%# Envia o id do tipo de entidade para o controller
-get '/entities-by-type/:entity_type_id', to: 'entities#filter_by_type', as: 'filter_by_type' %>
+<h1>Tipos de Entidade</h1>
 
-<h1> Tipos de Entidade </h1>
-
-<table>
+<table class="table">
   <thead>
     <tr>
       <th>Nome</th>
+      <th>Ações</th>
     </tr>
   </thead>
-
   <tbody>
     <% @entity_types.each do |entity_type| %>
       <tr>
         <td><%= entity_type.nome %></td>
-        <td><%= link_to 'Ver entidades', filter_by_type_path(entity_type.id) %></td>
+        <td><a href="<%= filter_by_type_path(entity_type.id) %>" class="btn btn-primary">Ver entidades</a></td>
       </tr>
     <% end %>
   </tbody>
