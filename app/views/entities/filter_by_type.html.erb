@@ -1,13 +1,24 @@
+<%# Entity.find_or_create_by(
+  nome: 'Malharia Tal 3', 
+  num_contato: '11 99999-9999', 
+  cidade: 'São Paulo', 
+  estado: 'SP', 
+  entity_types_id: 7
+) %>
+
+<h1> Entidades do tipo <%= @entities.first.entity_type.nome %> </h1>
+
 <table>
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Contact Number</th>
-      <th>City</th>
-      <th>State</th>
-      <th>Entity Type</th>
+      <th>Nome</th>
+      <th>Contato</th>
+      <th>Cidade</th>
+      <th>Estado</th>
+      <th>Tipo</th>
     </tr>
   </thead>
+
   <tbody>
     <% @entities.each do |entity| %>
       <tr>
