@@ -1,0 +1,22 @@
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Contact Number</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Entity Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @entities.each do |entity| %>
+      <tr>
+        <td><%= entity.nome %></td>
+        <td><%= entity.num_contato %></td>
+        <td><%= entity.cidade %></td>
+        <td><%= entity.estado %></td>
+        <td><%= entity.entity_type.nome %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
