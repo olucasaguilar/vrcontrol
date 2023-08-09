@@ -1,0 +1,33 @@
+<legend>Editar Tipo de Tecido</legend>
+
+<%= form_with(model: @fabric_type) do |f| %>
+
+  <% if @fabric_type.errors.any? %>
+    <div class="alert alert-danger">
+      <% @fabric_type.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label 'Descrição', { class: "col-md-4 control-label"} %>
+    <div class="col-md-4 inputGroupContainer">
+      <div class="input-group">
+        <%= f.text_field :nome, class: "form-control", placeholder: "Tipo de Tecido" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-4 control-label"></label>
+    <div class="col-md-4">
+      <%= f.submit "Atualizar", class: "btn btn-primary" %>
+      <%= link_to "Cancelar", fabric_types_path, class: "btn btn-secondary" %>
+    </div>
+  </div>
+
+<% end %>
+
+<br>
+<%= button_to 'Excluir', @fabric_type, method: :delete, class: "btn btn-danger" %>
