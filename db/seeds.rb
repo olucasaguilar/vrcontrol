@@ -21,6 +21,19 @@ Color.find_or_create_by(nome: 'Rosa')
 Color.find_or_create_by(nome: 'Laranja')
 Color.find_or_create_by(nome: 'Roxo')
 
+# Tipos de peças
+GarmentType.find_or_create_by(nome: 'Camiseta')
+GarmentType.find_or_create_by(nome: 'Calça')
+GarmentType.find_or_create_by(nome: 'Bermuda')
+
+# Tamanhos de peças
+GarmentSize.find_or_create_by(nome: 'P')
+GarmentSize.find_or_create_by(nome: 'M')
+GarmentSize.find_or_create_by(nome: 'G')
+GarmentSize.find_or_create_by(nome: 'GG')
+GarmentSize.find_or_create_by(nome: 'XG')
+GarmentSize.find_or_create_by(nome: 'XXG')
+
 # Tipos de entidades
 EntityType.find_or_create_by(nome: 'Malharia')
 EntityType.find_or_create_by(nome: 'Cortador')

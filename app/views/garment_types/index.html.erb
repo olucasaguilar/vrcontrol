@@ -1,0 +1,26 @@
+<h1 class="mb-4">Tipos de Roupa</h1>
+
+<table class="mb-4 table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nome</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @garment_types.each do |garment_type| %>
+      <tr>
+        <td><%= garment_type.id %></td>
+        <td><%= garment_type.nome %></td>
+        <td>
+          <%= link_to 'Editar', edit_garment_type_path(garment_type), class: "btn btn-primary" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="mb-3">
+  <%= link_to "+ Novo Tipo de Roupa", new_garment_type_path, class: "btn btn-success" %>
+  <%= link_to "Voltar", cadastros_extras_path, class: "btn btn-secondary" %>
+</div>

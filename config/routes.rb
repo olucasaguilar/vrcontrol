@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   resources :entity_types, except: [:show]
   resources :fabric_types, except: [:show]
   resources :colors, except: [:show]
+  resources :garment_types, except: [:show]
+  resources :garment_sizes, except: [:show]
 
   # Listar entidades por tipo
   get '/entities-by-type', to: 'entities#entities_by_type', as: 'entities_by_type'
