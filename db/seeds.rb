@@ -10,6 +10,16 @@ FabricType.find_or_create_by(nome: 'Jeans')
 FabricType.find_or_create_by(nome: 'Flanela')
 FabricType.find_or_create_by(nome: 'Tule')
 
+# Cores
+Color.find_or_create_by(nome: 'Preto')
+Color.find_or_create_by(nome: 'Branco')
+Color.find_or_create_by(nome: 'Vermelho')
+Color.find_or_create_by(nome: 'Azul')
+Color.find_or_create_by(nome: 'Amarelo')
+Color.find_or_create_by(nome: 'Verde')
+Color.find_or_create_by(nome: 'Rosa')
+Color.find_or_create_by(nome: 'Laranja')
+Color.find_or_create_by(nome: 'Roxo')
 
 # Tipos de entidades
 EntityType.find_or_create_by(nome: 'Malharia')

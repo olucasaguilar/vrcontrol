@@ -1,0 +1,26 @@
+<h1 class="mb-4">Cores</h1>
+
+<table class="mb-4 table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nome</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @colors.each do |color| %>
+      <tr>
+        <td><%= color.id %></td>
+        <td><%= color.nome %></td>
+        <td>
+          <%= link_to 'Editar', edit_color_path(color), class: "btn btn-primary" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="mb-3">
+  <%= link_to "+ Nova Cor", new_color_path, class: "btn btn-success" %>
+  <%= link_to "Voltar", cadastros_extras_path, class: "btn btn-secondary" %>
+</div>
