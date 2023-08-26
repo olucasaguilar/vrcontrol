@@ -1,14 +1,15 @@
 Rails.application.routes.draw do
   root "home#index"
-
   get '/cadastros_extras', to: 'cadastros_extras#index', as: 'cadastros_extras'
 
+  # Rotas dentro de Cadastros Extras
   resources :entity_types, except: [:show]
   resources :fabric_types, except: [:show]
   resources :colors, except: [:show]
   resources :garment_types, except: [:show]
   resources :garment_sizes, except: [:show]
 
+  # Rotas de Entidades
   # Listar entidades por tipo
   get '/entities-by-type', to: 'entities#entities_by_type', as: 'entities_by_type'
   # Filtrar entidades por tipo
@@ -28,6 +29,6 @@ Rails.application.routes.draw do
   # Criar uma nova entidade
   post '/entities', to: 'entities#create', as: 'create_entity'
 
-  #
+  # Rotas de Caixa
   get '/caixa', to: 'financial_records#index', as: 'financial_records'
 end
