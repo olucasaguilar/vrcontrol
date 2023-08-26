@@ -1,26 +1,33 @@
-<div class="container mt-4">
-  <h1>Movimentações Caixa</h1>
-  <table class="table">
-    <thead class="thead-light">
+<h1>Movimentações Caixa</h1><br>
+<p>
+  <%= link_to 'Nova Movimentação', new_financial_record_path, class: 'btn btn-primary' %>
+</p>
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <td colspan="5">
+        <strong>Saldo: </strong>
+        <%= number_to_currency(@saldo, unit: 'R$', separator: ',', delimiter: '.') %>
+      </td>
+    </tr>
+    <tr>
+      <th>Tipo Movimento</th>
+      <th>Valor</th>
+      <th>Saldo</th>
+      <th>Observação</th>
+      <th>Data Hora</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Loop pelos registros financeiros -->
+    <% @financial_records.reverse_each do |financial_record| %>
       <tr>
-        <th>Valor</th>
-        <th>Saldo</th>
-        <th>Tipo Movimento</th>
-        <th>Observação</th>
-        <th>Data Hora</th>
+        <td><%= financial_record.tipo_movimento %></td>
+        <td><%= number_to_currency(financial_record.valor, unit: 'R$', separator: ',', delimiter: '.') %></td>
+        <td><%= number_to_currency(financial_record.saldo, unit: 'R$', separator: ',', delimiter: '.') %></td>
+        <td><%= financial_record.observacao %></td>
+        <td><%= financial_record.data_hora %></td>
       </tr>
-    </thead>
-    <tbody>
-      <!-- Loop pelos registros financeiros -->
-      <% @financial_records.each do |financial_record| %>
-        <tr>
-          <td><%= financial_record.valor %></td>
-          <td><%= financial_record.saldo %></td>
-          <td><%= financial_record.tipo_movimento %></td>
-          <td><%= financial_record.observacao %></td>
-          <td><%= financial_record.data_hora %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+    <% end %>
+  </tbody>
+</table>

@@ -31,4 +31,8 @@ Rails.application.routes.draw do
 
   # Rotas de Caixa
   get '/caixa', to: 'financial_records#index', as: 'financial_records'
+  # Rota para criar uma nova movimentação de caixa
+  get '/caixa/new', to: 'financial_records#new', as: 'new_financial_record'
+  # Rota para criar uma nova movimentação de caixa
+  post '/caixa', to: 'financial_records#create', as: 'create_financial_record'
 end

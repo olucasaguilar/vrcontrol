@@ -1,0 +1,46 @@
+<legend>Novo Registro Financeiro</legend>
+
+<%= form_for @financial_record, html: { class: "form-horizontal" } do |f| %>
+  <% if @financial_record.errors.any? %>
+    <div class="alert alert-danger">
+      <% @financial_record.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :valor, class: "col-md-4 control-label" %>
+    <div class="col-md-4 inputGroupContainer">
+      <%= f.text_field :valor, class: "form-control", id: "valor-input" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :tipo_movimento, class: "col-md-4 control-label" %>
+    <div class="col-md-4 inputGroupContainer">
+      <%= f.select :tipo_movimento, ['Entrada', 'Saída'], {}, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :observacao, class: "col-md-4 control-label" %>
+    <div class="col-md-4 inputGroupContainer">
+      <%= f.text_field :observacao, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :data_hora, class: "col-md-4 control-label" %>
+    <div class="col-md-4 inputGroupContainer">
+      <%= f.datetime_select :data_hora, class: "form-control" %>
+    </div>
+  </div><br>
+
+  <div class="form-group">
+    <div class="col-md-4 col-md-offset-4">
+      <%= f.submit 'Criar Registro Financeiro', class: "btn btn-primary" %>
+      <%= link_to 'Back', financial_records_path, class: "btn btn-secondary" %>
+    </div>
+  </div>
+<% end %>
