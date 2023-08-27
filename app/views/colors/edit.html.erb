@@ -23,11 +23,9 @@
     <label class="col-md-4 control-label"></label>
     <div class="col-md-4">
       <%= f.submit "Atualizar", class: "btn btn-primary" %>
+      <%= link_to "Excluir", @color, method: :delete, class: "btn btn-danger", data: { confirm: 'Tem certeza que deseja excluir esta cor?' } %>
       <%= link_to "Cancelar", colors_path, class: "btn btn-secondary" %>
     </div>
   </div>
 
 <% end %>
-
-<br>
-<%= button_to 'Excluir', @color, method: :delete, class: "btn btn-danger" %>
