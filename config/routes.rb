@@ -35,4 +35,10 @@ Rails.application.routes.draw do
   get '/caixa/new', to: 'financial_records#new', as: 'new_financial_record'
   # Rota para criar uma nova movimentação de caixa
   post '/caixa', to: 'financial_records#create', as: 'create_financial_record'
+
+  # Rotas de Entrada Tecido
+  # /tecidos/entrada - primeira tela de criar nova entrada
+  # /tecidos/entrada/detalhes - segunda tela de criar nova entrada
+  get '/tecidos/entrada', to: 'fabric_entries#new', as: 'new_fabric_entry'
+  get '/tecidos/entrada/detalhes', to: 'fabric_entries#new_details', as: 'new_fabric_entry_details'
 end

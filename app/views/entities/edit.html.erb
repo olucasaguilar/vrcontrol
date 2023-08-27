@@ -13,7 +13,7 @@
   <div class="form-group">
     <%= f.label :nome, class: "col-md-4 control-label" %>
     <div class="col-md-4 inputGroupContainer">
-      <%= f.text_field :nome, class: "form-control" %>
+      <%= f.text_field :nome, class: "form-control #{f.object.errors[:nome].any? ? 'is-invalid' : ''}" %>
     </div>
   </div>
 
