@@ -1,0 +1,52 @@
+<h1>New Fabric Entry</h1>
+
+<%= form_with model: @fabric_entry, url: create_fabric_entry_path do |form| %>
+  <% if @fabric_entry.errors.any? %>
+    <div class="alert alert-danger">
+      <% @fabric_entry.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :entity_id, 'Malharia' %>
+    <%= form.collection_select :entity_id, @malharias, :id, :nome, { prompt: true } %>
+  </div>
+
+  <div>
+    <%= form.label :data_hora %>
+    <%= form.datetime_field :data_hora %>
+  </div>
+
+  <div>
+    <%= form.submit "Create Fabric Entry" %>
+  </div>
+<% end %>
+
+<%= link_to "Back", root_path %>
+
+<br><br>
+<% if @fabric_entries.present? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Malharia</th>
+        <th>Data e Hora</th>
+        <th>Total de tecido</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @fabric_entries.each do |fabric_entry| %>
+        <tr>
+          <td><%= fabric_entry.entity.nome %></td>
+          <td><%= fabric_entry.data_hora.strftime("%d/%m/%Y %H:%M") %></td>
+          <td><%= fabric_entry.total_tecido %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<br>
+<%= button_to "Apagar todos os registros", delete_all_fabric_entries_path, method: :delete, data: { confirm: "Are you sure?" } %>

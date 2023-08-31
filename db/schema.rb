@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_26_193530) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_29_233701) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -35,6 +35,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_26_193530) do
     t.string "nome"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "fabric_entries", force: :cascade do |t|
+    t.bigint "entity_id", null: false
+    t.datetime "data_hora"
+    t.decimal "total_tecido"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["entity_id"], name: "index_fabric_entries_on_entity_id"
   end
 
   create_table "fabric_types", force: :cascade do |t|
@@ -66,4 +75,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_26_193530) do
   end
 
   add_foreign_key "entities", "entity_types", column: "entity_types_id"
+  add_foreign_key "fabric_entries", "entities"
 end

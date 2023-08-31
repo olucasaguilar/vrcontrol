@@ -1,9 +1,16 @@
 class FinancialRecord < ApplicationRecord
   before_save :calculate_and_set_saldo
   
-  validates :valor, :tipo_movimento, :data_hora, presence: true
+  validates :tipo_movimento, :data_hora, presence: true
+  validate :is_valor_valid
   
   private
+
+  def is_valor_valid
+    if self.valor == nil || self.valor <= 0
+      errors.add(:valor, "deve ser um número maior que zero")
+    end
+  end
 
   def calculate_and_set_saldo
     last_record_saldo = 0
@@ -15,6 +22,6 @@ class FinancialRecord < ApplicationRecord
       self.saldo = last_record_saldo + self.valor
     else
       self.saldo = last_record_saldo - self.valor
-    end    
+    end
   end
 end

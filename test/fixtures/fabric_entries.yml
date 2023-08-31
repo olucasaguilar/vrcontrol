@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  malharia: 1
+  data_hora: 2023-08-29 20:37:01
+  total_tecido: 9.99
+
+two:
+  malharia: 1
+  data_hora: 2023-08-29 20:37:01
+  total_tecido: 9.99
