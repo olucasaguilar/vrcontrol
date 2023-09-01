@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_29_233701) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_01_011050) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,6 +52,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_29_233701) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "financial_fabric_entries", force: :cascade do |t|
+    t.bigint "registro_financeiro_id", null: false
+    t.bigint "entrada_tecido_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["entrada_tecido_id"], name: "index_financial_fabric_entries_on_entrada_tecido_id"
+    t.index ["registro_financeiro_id"], name: "index_financial_fabric_entries_on_registro_financeiro_id"
+  end
+
   create_table "financial_records", force: :cascade do |t|
     t.decimal "valor"
     t.decimal "saldo"
@@ -76,4 +85,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_29_233701) do
 
   add_foreign_key "entities", "entity_types", column: "entity_types_id"
   add_foreign_key "fabric_entries", "entities"
+  add_foreign_key "financial_fabric_entries", "fabric_entries", column: "entrada_tecido_id"
+  add_foreign_key "financial_fabric_entries", "financial_records", column: "registro_financeiro_id"
 end

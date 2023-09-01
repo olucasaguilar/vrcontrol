@@ -17,59 +17,44 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :entity_id, 'Malharia' %>
-    <%= form.collection_select :entity_id, @malharias, :id, :nome, { prompt: true } %>
+  <div class="form-group">
+    <%= form.label :entity_id, 'Malharia', class: "col-md-4 control-label" %>
+    <div class="col-md-4 inputGroupContainer">
+      <%= form.collection_select :entity_id, @malharias, :id, :nome, { prompt: true }, class: "form-control #{form.object.errors[:entity].any? ? 'is-invalid' : ''}" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :data_hora %>
-    <%= form.datetime_field :data_hora %>
+  <div class="form-group">
+    <%= form.label :data_hora, class: "col-md-4 control-label" %>
+    <div class="col-md-4 inputGroupContainer">
+      <%= form.datetime_select :data_hora, class: "form-control #{form.object.errors[:data_hora].any? ? 'is-invalid' : ''}" %>
+    </div>
   </div>
-
+  
   <%# Campos de FinancialRecord %>
   <br><div>
     <%= form.label :have_extra, 'Custom Extra' %>
     <%= form.check_box :have_extra, { checked: @have_extra } %>
   </div>
 
-  <div>
-    <%= form.label :valor_extra %>
-    <%= form.text_field :valor_extra, value: @valor_extra %>
+  <div class="form-group">
+    <%= form.label :valor_extra, class: "col-md-4 control-label" %>
+    <div class="col-md-4 inputGroupContainer">
+      <%= form.text_field :valor_extra, value: @valor_extra, class: "form-control #{@financial_record.errors[:valor].any? ? 'is-invalid' : ''}" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :obs_extra %>
-    <%= form.text_field :obs_extra, value: @obs_extra %>
+  <div class="form-group">
+    <%= form.label :obs_extra, class: "col-md-4 control-label" %>
+    <div class="col-md-4 inputGroupContainer">
+      <%= form.text_field :obs_extra, value: @obs_extra, class: "form-control #{form.object.errors[:obs_extra].any? ? 'is-invalid' : ''}" %>
+    </div>
   </div><br>
 
-  <div>
-    <%= form.submit "Create Fabric Entry" %>
+  <div class="form-group">
+    <div class="col-md-4 col-md-offset-4">
+      <%= form.submit 'Criar Entrada de Tecido', class: "btn btn-primary" %>
+      <%= link_to 'Back', root_path, class: "btn btn-secondary" %>
+    </div>
   </div>
 <% end %>
-
-
-<%= link_to "Voltar", root_path %>
-
-<br><br>
-<% if @fabric_entries.present? %>
-  <table>
-    <thead>
-      <tr>
-        <th>Malharia</th>
-        <th>Data e Hora</th>
-        <th>Total de tecido</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @fabric_entries.each do |fabric_entry| %>
-        <tr>
-          <td><%= fabric_entry.entity.nome %></td>
-          <td><%= fabric_entry.data_hora.strftime("%d/%m/%Y %H:%M") %></td>
-          <td><%= fabric_entry.total_tecido %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
-<%= button_to "Apagar todos os registros", delete_all_fabric_entries_path, method: :delete, data: { confirm: "Are you sure?" } %>
