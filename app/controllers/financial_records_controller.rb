@@ -6,7 +6,7 @@ class FinancialRecordsController < ApplicationController
 
   def new
     @financial_record = FinancialRecord.new
-    @financial_record.data_hora = DateTime.now
+    @financial_record.data_hora = DateTime.now - 3.hour
   end
 
   def create

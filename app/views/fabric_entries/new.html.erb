@@ -1,9 +1,17 @@
-<h1>New Fabric Entry</h1>
+<h1>Nova Entrada de Tecido</h1>
 
 <%= form_with model: @fabric_entry, url: create_fabric_entry_path do |form| %>
   <% if @fabric_entry.errors.any? %>
     <div class="alert alert-danger">
       <% @fabric_entry.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @financial_record.errors.any? %>
+    <div class="alert alert-danger">
+      <% @financial_record.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
     </div>
@@ -19,12 +27,29 @@
     <%= form.datetime_field :data_hora %>
   </div>
 
+  <%# Campos de FinancialRecord %>
+  <br><div>
+    <%= form.label :have_extra, 'Custom Extra' %>
+    <%= form.check_box :have_extra, { checked: @have_extra } %>
+  </div>
+
+  <div>
+    <%= form.label :valor_extra %>
+    <%= form.text_field :valor_extra, value: @valor_extra %>
+  </div>
+
+  <div>
+    <%= form.label :obs_extra %>
+    <%= form.text_field :obs_extra, value: @obs_extra %>
+  </div><br>
+
   <div>
     <%= form.submit "Create Fabric Entry" %>
   </div>
 <% end %>
 
-<%= link_to "Back", root_path %>
+
+<%= link_to "Voltar", root_path %>
 
 <br><br>
 <% if @fabric_entries.present? %>
@@ -47,6 +72,4 @@
     </tbody>
   </table>
 <% end %>
-
-<br>
 <%= button_to "Apagar todos os registros", delete_all_fabric_entries_path, method: :delete, data: { confirm: "Are you sure?" } %>
