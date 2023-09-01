@@ -1,8 +1,11 @@
 class FinancialRecord < ApplicationRecord
+  before_destroy :create_reverse_entry, unless: :skip_correction?
   before_save :calculate_and_set_saldo
   
   validates :tipo_movimento, :data_hora, presence: true
   validate :is_valor_valid
+
+  attr_accessor :skip_correction
   
   private
 
@@ -23,5 +26,20 @@ class FinancialRecord < ApplicationRecord
     else
       self.saldo = last_record_saldo - self.valor
     end
+  end
+
+  def create_reverse_entry
+    return if skip_correction?
+
+    new_entry = self.dup
+    new_entry.tipo_movimento = self.tipo_movimento == 'Entrada' ? 'Saída' : 'Entrada'
+    new_entry.valor = self.valor
+    new_entry.saldo = self.tipo_movimento == 'Entrada' ? self.saldo - self.valor : self.saldo + self.valor
+    new_entry.observacao = "Correção de exclusão manual"
+    new_entry.save
+  end
+
+  def skip_correction?
+    skip_correction
   end
 end

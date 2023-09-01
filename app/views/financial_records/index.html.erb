@@ -11,6 +11,7 @@
       </td>
     </tr>
     <tr>
+      <th>ID</th>
       <th>Tipo Movimento</th>
       <th>Valor</th>
       <th>Saldo</th>
@@ -20,8 +21,9 @@
   </thead>
   <tbody>
     <!-- Loop pelos registros financeiros -->
-    <% @financial_records.reverse_each do |financial_record| %>
+    <% FinancialRecord.order(id: :desc).each do |financial_record| %>
       <tr>
+        <td><%= financial_record.id %></td>
         <td><%= financial_record.tipo_movimento %></td>
         <td><%= number_to_currency(financial_record.valor, unit: 'R$', separator: ',', delimiter: '.') %></td>
         <td><%= number_to_currency(financial_record.saldo, unit: 'R$', separator: ',', delimiter: '.') %></td>
