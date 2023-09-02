@@ -1,6 +1,9 @@
+<%= javascript_include_tag "campo_dinheiro" %>
+<%#= javascript_tag do %>
+
 <legend>Novo Registro Financeiro</legend>
 
-<%= form_for @financial_record, html: { class: "form-horizontal" } do |f| %>
+<%= form_for @financial_record, html: { class: "form-horizontal", id: "formulario" } do |f| %>
   <% if @financial_record.errors.any? %>
     <div class="alert alert-danger">
       <% @financial_record.errors.full_messages.each do |message| %>
