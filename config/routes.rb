@@ -41,7 +41,6 @@ Rails.application.routes.draw do
   # /tecidos/entrada/detalhes - segunda tela de criar nova entrada
   get '/tecidos/entrada', to: 'fabric_entries#new', as: 'new_fabric_entry'
   post '/tecidos/entrada', to: 'fabric_entries#create', as: 'create_fabric_entry'
-  # Rota delete temporária
-  delete '/tecidos/entrada', to: 'fabric_entries#destroy_all', as: 'delete_all_fabric_entries'
-  #get '/tecidos/entrada/detalhes', to: 'fabric_entries#new_details', as: 'new_fabric_entry_details'
+  get '/tecidos/entrada/detalhes', to: 'fabric_entries#new_details', as: 'new_fabric_entry_details'
+  post '/tecidos/entrada/detalhes', to: 'fabric_entries#create_details', as: 'create_fabric_entry_details'
 end

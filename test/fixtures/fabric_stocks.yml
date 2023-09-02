@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  tipo_tecido: one
+  cor: one
+  quantidade: 9.99
+  tipo_movimento: MyString
+  data_hora: 2023-09-01 20:15:21
+  saldo: 9.99
+
+two:
+  tipo_tecido: two
+  cor: two
+  quantidade: 9.99
+  tipo_movimento: MyString
+  data_hora: 2023-09-01 20:15:21
+  saldo: 9.99

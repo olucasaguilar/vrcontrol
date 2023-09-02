@@ -1,0 +1,67 @@
+<%# 
+    @fabric_stock = FabricStock.new
+    @fabric_types = FabricType.all
+    @colors = Color.all
+    @fabric_stock.tipo_tecido = ?
+    @fabric_stock.cor = ?
+    @fabric_stock.quantidade = ?
+ %>
+
+Segunda tela
+<br>
+Adicionar Tecidos
+<hr>
+<%= form_with model: @fabric_stock, url: create_fabric_entry_details_path do |f| %>
+  <% if @fabric_stock.errors.any? %>
+    <div class="alert alert-danger">
+      <% @fabric_stock.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </div>
+  <% end %>
+
+  <p>
+    <%= f.label :tipo_tecido_id %><br />
+    <%= f.collection_select :tipo_tecido_id, @fabric_types, :id, :nome, prompt: true %>
+  </p>
+
+  <p>
+    <%= f.label :cor_id %><br />
+    <%= f.collection_select :cor_id, @colors, :id, :nome, prompt: true %>
+  </p>
+
+  <p>
+    <%= f.label :quantidade %><br />
+    <%= f.text_field :quantidade %>
+  </p>
+  
+  <p>
+    <%= f.submit 'Adicionar' %>
+  </p>
+<% end %>
+
+<% fabric_stock_groups = FabricStock.all.group_by { |fabric_stock| [fabric_stock.tipo_tecido.nome, fabric_stock.cor.nome] } %>
+<% if fabric_stock_groups.any? %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Tipo de Tecido</th>
+        <th>Cor</th>
+        <th>Quantidade</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% fabric_stock_groups.each do |(tipo, cor), fabric_stocks| %>
+        <tr>
+          <td><%= fabric_stocks.last.tipo_tecido.nome %></td>
+          <td><%= fabric_stocks.last.cor.nome %></td>
+          <td><%= fabric_stocks.last.saldo %></td>
+          <td></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<%# FabricStock.destroy_all %>

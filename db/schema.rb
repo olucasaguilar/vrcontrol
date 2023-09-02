@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_01_011050) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_01_231521) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -44,6 +44,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_01_011050) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["entity_id"], name: "index_fabric_entries_on_entity_id"
+  end
+
+  create_table "fabric_stocks", force: :cascade do |t|
+    t.bigint "tipo_tecido_id", null: false
+    t.bigint "cor_id", null: false
+    t.decimal "quantidade"
+    t.string "tipo_movimento"
+    t.datetime "data_hora"
+    t.decimal "saldo"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cor_id"], name: "index_fabric_stocks_on_cor_id"
+    t.index ["tipo_tecido_id"], name: "index_fabric_stocks_on_tipo_tecido_id"
   end
 
   create_table "fabric_types", force: :cascade do |t|
@@ -85,6 +98,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_01_011050) do
 
   add_foreign_key "entities", "entity_types", column: "entity_types_id"
   add_foreign_key "fabric_entries", "entities"
+  add_foreign_key "fabric_stocks", "colors", column: "cor_id"
+  add_foreign_key "fabric_stocks", "fabric_types", column: "tipo_tecido_id"
   add_foreign_key "financial_fabric_entries", "fabric_entries", column: "entrada_tecido_id"
   add_foreign_key "financial_fabric_entries", "financial_records", column: "registro_financeiro_id"
 end

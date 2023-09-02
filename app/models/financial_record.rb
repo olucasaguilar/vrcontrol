@@ -3,17 +3,11 @@ class FinancialRecord < ApplicationRecord
   before_save :calculate_and_set_saldo
   
   validates :tipo_movimento, :data_hora, presence: true
-  validate :is_valor_valid
+  validates :valor, numericality: { greater_than_or_equal_to: 1 }
 
   attr_accessor :skip_correction
   
   private
-
-  def is_valor_valid
-    if self.valor == nil || self.valor <= 0
-      errors.add(:valor, "deve ser um número maior que zero")
-    end
-  end
 
   def calculate_and_set_saldo
     last_record_saldo = 0
@@ -35,7 +29,7 @@ class FinancialRecord < ApplicationRecord
     new_entry.tipo_movimento = self.tipo_movimento == 'Entrada' ? 'Saída' : 'Entrada'
     new_entry.valor = self.valor
     new_entry.saldo = self.tipo_movimento == 'Entrada' ? self.saldo - self.valor : self.saldo + self.valor
-    new_entry.observacao = "Correção de exclusão manual"
+    new_entry.observacao = "Correção após exclusão"
     new_entry.save
   end
 
