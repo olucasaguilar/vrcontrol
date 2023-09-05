@@ -1,6 +1,7 @@
 class FabricEntriesController < ApplicationController
   def new
-    if FabricEntry.any? && FabricEntry.last.total_tecido == nil
+    # Alterar de unless para if
+    unless FabricEntry.any? && FabricEntry.last.total_tecido == nil
       redirect_to new_fabric_entry_details_path
     else
       data_hora = Time.now - 3.hour
@@ -51,10 +52,10 @@ class FabricEntriesController < ApplicationController
         end
 
         # temporario
-        messages = [
-          'Entrada de tecido criada com sucesso!',
-          'Movimentação de caixa criada com sucesso!'
-        ]
+        # messages = [
+        #   'Entrada de tecido criada com sucesso!',
+        #   'Movimentação de caixa criada com sucesso!'
+        # ]
         
         flash[:notice] = messages
         redirect_to new_fabric_entry_details_path # alterar depois
