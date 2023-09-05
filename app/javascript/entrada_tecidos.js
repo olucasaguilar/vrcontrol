@@ -27,28 +27,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
   botaoMaisObjeto.addEventListener('click', function() {
     const novoObjetoHTML = `
-      <p>Tecido ${objetoIndex+1}</p>
+      <div class="form-group">
+        <p class="col-md-4 control-label">Tecido ${objetoIndex+1}</p>
+          <label for="fabric_stock${objetoIndex}_tipo_tecido_id" class="col-md-4 control-label">Tipo de Tecido</label>
+          <div class="col-md-4 inputGroupContainer">
+              <select name="fabric_stock${objetoIndex}[tipo_tecido_id]" id="fabric_stock${objetoIndex}_tipo_tecido_id" class="form-control">
+                  ${copiarOpcoes('fabric_stock_tipo_tecido_id')}
+              </select>
+          </div>
+      </div>
       
-      <p>
-        <label for="fabric_stock${objetoIndex}_tipo_tecido_id">Tipo de Tecido</label>
-        <select name="fabric_stock${objetoIndex}[tipo_tecido_id]" id="fabric_stock${objetoIndex}_tipo_tecido_id" class="form-control">
-          ${copiarOpcoes('fabric_stock_tipo_tecido_id')}
-        </select>
-      </p>
+      <div class="form-group">
+          <label for="fabric_stock${objetoIndex}_cor_id" class="col-md-4 control-label">Cor</label>
+          <div class="col-md-4 inputGroupContainer">
+              <select name="fabric_stock${objetoIndex}[cor_id]" id="fabric_stock${objetoIndex}_cor_id" class="form-control">
+                  ${copiarOpcoes('fabric_stock_cor_id')}
+              </select>
+          </div>
+      </div>
 
-      <p>
-        <label for="fabric_stock${objetoIndex}_cor_id">Cor</label>
-        <select name="fabric_stock${objetoIndex}[cor_id]" id="fabric_stock${objetoIndex}_cor_id" class="form-control">
-          ${copiarOpcoes('fabric_stock_cor_id')}
-        </select>
-      </p>
-
-      <p>
-        <label for="fabric_stock${objetoIndex}_quantidade">Quantidade</label>
-        <input type="text" name="fabric_stock${objetoIndex}[quantidade]" id="fabric_stock${objetoIndex}_quantidade" value="0" class="form-control">
-      </p>
-      <hr>
+      <div class="form-group">
+          <label for="fabric_stock${objetoIndex}_quantidade" class="col-md-4 control-label">Quantidade</label>
+          <div class="col-md-4 inputGroupContainer">
+              <input type="text" name="fabric_stock${objetoIndex}[quantidade]" id="fabric_stock${objetoIndex}_quantidade" value="0" class="form-control">
+          </div>
+      </div>
+      <br>
     `;
+
+
     
     const novoObjetoDiv = document.createElement('div');
     novoObjetoDiv.innerHTML = novoObjetoHTML;
@@ -73,28 +80,34 @@ objetoIndex = maxObjetoIndex + 1;
 
 botaoMaisObjeto.addEventListener('click', function() {
   const novoObjetoHTML = `
-    <p>Tecido ${objetoIndex+1}</p>
+    <div class="form-group">
+      <p class="col-md-4 control-label">Tecido ${objetoIndex+1}</p>
+        <label for="fabric_stock${objetoIndex}_tipo_tecido_id" class="col-md-4 control-label">Tipo de Tecido</label>
+        <div class="col-md-4 inputGroupContainer">
+            <select name="fabric_stock${objetoIndex}[tipo_tecido_id]" id="fabric_stock${objetoIndex}_tipo_tecido_id" class="form-control">
+                ${copiarOpcoes('fabric_stock_tipo_tecido_id')}
+            </select>
+        </div>
+    </div>
     
-    <p>
-      <label for="fabric_stock${objetoIndex}_tipo_tecido_id">Tipo de Tecido</label>
-      <select name="fabric_stock${objetoIndex}[tipo_tecido_id]" id="fabric_stock${objetoIndex}_tipo_tecido_id" class="form-control">
-        ${copiarOpcoes('fabric_stock_tipo_tecido_id')}
-      </select>
-    </p>
-    
-    <p>
-      <label for="fabric_stock${objetoIndex}_cor_id">Cor</label>
-      <select name="fabric_stock${objetoIndex}[cor_id]" id="fabric_stock${objetoIndex}_cor_id" class="form-control">
-        ${copiarOpcoes('fabric_stock_cor_id')}
-      </select>
-    </p>
+    <div class="form-group">
+        <label for="fabric_stock${objetoIndex}_cor_id" class="col-md-4 control-label">Cor</label>
+        <div class="col-md-4 inputGroupContainer">
+            <select name="fabric_stock${objetoIndex}[cor_id]" id="fabric_stock${objetoIndex}_cor_id" class="form-control">
+                ${copiarOpcoes('fabric_stock_cor_id')}
+            </select>
+        </div>
+    </div>
 
-    <p>
-      <label for="fabric_stock${objetoIndex}_quantidade">Quantidade</label>
-      <input type="text" name="fabric_stock${objetoIndex}[quantidade]" id="fabric_stock${objetoIndex}_quantidade" value="0" class="form-control">
-    </p>
-    <hr>
+    <div class="form-group">
+        <label for="fabric_stock${objetoIndex}_quantidade" class="col-md-4 control-label">Quantidade</label>
+        <div class="col-md-4 inputGroupContainer">
+            <input type="text" name="fabric_stock${objetoIndex}[quantidade]" id="fabric_stock${objetoIndex}_quantidade" value="0" class="form-control">
+        </div>
+    </div>
+    <br>
   `;
+
 
   const novoObjetoDiv = document.createElement('div');
   novoObjetoDiv.innerHTML = novoObjetoHTML;

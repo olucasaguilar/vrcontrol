@@ -1,112 +1,117 @@
 <%= javascript_include_tag "entrada_tecidos" %>
 <%#= javascript_tag do %>
 
-<body>
+<h2>Entrada de Tecido</h2>
+<h5>Seleção de tecido(s)</h5>
+<br>
 
-<div class="container mt-5">
-  <h2>Entrada de Tecido</h2>
-  <h5>Seleção de tecido(s)</h5>
-  <hr>
-
-  <%= form_with model: @fabric_stocks.first, url: create_fabric_entry_details_path, class: "mb-5" do |f| %>
-    <% if @fabric_stocks.any? %>
-      <% @fabric_stocks.each_with_index do |fabric_stock, index| %>
-        <% if fabric_stock.errors.any? %>
-          <div class="alert alert-danger">
-            <%= 'Tecido ' + (index + 1).to_s %>
-            <% fabric_stock.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          </div>
-        <% end %>    
-      <% end %>
+<%= form_with model: @fabric_stocks.first, url: create_fabric_entry_details_path do |f| %>
+  <% if @fabric_stocks.any? %>
+    <% @fabric_stocks.each_with_index do |fabric_stock, index| %>
+      <% if fabric_stock.errors.any? %>
+        <div class="alert alert-danger">
+          <%= 'Tecido ' + (index + 1).to_s %>
+          <% fabric_stock.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </div>
+      <% end %>    
     <% end %>
+  <% end %>
 
-    <p>
-      <%= f.label :tipo_tecido_id %><br />
+  <div class="form-group">
+    <%= f.label :tipo_tecido_id, class: "col-md-4 control-label" %>
+    <div class="col-md-4 inputGroupContainer">
       <%= f.collection_select :tipo_tecido_id, @fabric_types, :id, :nome, { include_blank: 'Selecione um tipo...'}, class: "form-control #{f.object.errors[:tipo_tecido].any? ? 'is-invalid' : ''}" %>
-    </p>
+    </div>
+  </div>
 
-    <p>
-      <%= f.label :cor_id %><br />
+  <div class="form-group">
+    <%= f.label :cor_id, class: "col-md-4 control-label" %>
+    <div class="col-md-4 inputGroupContainer">
       <%= f.collection_select :cor_id, @colors, :id, :nome, { include_blank: 'Selecione uma cor...' }, class: "form-control #{f.object.errors[:cor].any? ? 'is-invalid' : ''}" %>
-    </p>
+    </div>
+  </div>
 
-    <p>
-      <%= f.label :quantidade %><br />
+  <div class="form-group">
+    <%= f.label :quantidade, class: "col-md-4 control-label" %>
+    <div class="col-md-4 inputGroupContainer">
       <%= f.text_field :quantidade, class: "form-control #{f.object.errors[:quantidade].any? ? 'is-invalid' : ''}" %>
-    </p>
+    </div>
+  </div>
 
-    <hr>
+  <br>
 
-    <div id="objetos-adicionais">
-      <%# implementar aqui %>
-      <% if @fabric_stocks.count > 1 %>
-        <% @fabric_stocks.each_with_index do |fabric_stock, index| %>
-          <% unless index == 0 %>
-            <p>Tecido <%= index + 1 %></p>
-            <p>
-              <label for="fabric_stock<%= index %>_tipo_tecido_id">Tipo de Tecido</label>
+  <div id="objetos-adicionais">
+    <% if @fabric_stocks.count > 1 %>
+      <% @fabric_stocks.each_with_index do |fabric_stock, index| %>
+        <% unless index == 0 %>
+          <div class="form-group">
+            <p class="col-md-4 control-label">Tecido <%= index + 1 %></p>
+            <div class="col-md-4 inputGroupContainer">
+              <label for="fabric_stock<%= index %>_tipo_tecido_id" class="control-label">Tipo de Tecido</label>
               <select name="fabric_stock<%= index %>[tipo_tecido_id]" id="fabric_stock<%= index %>_tipo_tecido_id" class="form-control <%= fabric_stock.errors[:tipo_tecido].any? ? 'is-invalid' : '' %>">
                 <option value="" selected>Selecione um tipo...</option> <!-- Placeholder -->
                 <%= options_from_collection_for_select(@fabric_types, :id, :nome, fabric_stock.tipo_tecido_id) %>
               </select>
-            </p>
+            </div>
+          </div>
 
-            <p>
-              <label for="fabric_stock<%= index %>_cor_id">Cor</label>
+          <div class="form-group">
+            <div class="col-md-4 inputGroupContainer">
+              <label for="fabric_stock<%= index %>_cor_id" class="control-label">Cor</label>
               <select name="fabric_stock<%= index %>[cor_id]" id="fabric_stock<%= index %>_cor_id" class="form-control <%= fabric_stock.errors[:cor].any? ? 'is-invalid' : '' %>">
                 <option value="" selected>Selecione uma cor...</option> <!-- Placeholder -->
                 <%= options_from_collection_for_select(@colors, :id, :nome, fabric_stock.cor_id) %>
               </select>
-            </p>
+            </div>
+          </div>
 
-            <p>
-              <label for="fabric_stock<%= index %>_quantidade">Quantidade</label>
+          <div class="form-group">
+            <div class="col-md-4 inputGroupContainer">
+              <label for="fabric_stock<%= index %>_quantidade" class="control-label">Quantidade</label>
               <input type="text" name="fabric_stock<%= index %>[quantidade]" id="fabric_stock<%= index %>_quantidade" value="<%= fabric_stock.quantidade %>" class="form-control <%= fabric_stock.errors[:quantidade].any? ? 'is-invalid' : '' %>">
-            </p>
-            <hr>
-          <% end %> 
-        <% end %>  
-      <% end %>
-    </div>
+            </div>
+          </div>
+          <br>
+        <% end %> 
+      <% end %>  
+    <% end %>
+  </div>
 
-    <p>
-      <button type="button" id="botao-mais-tecido" class="btn btn-primary">Mais um tecido</button>
-    </p>  
 
-    <p>
-      <%= f.submit 'Adicionar', class: "btn btn-success" %>
-    </p>
-  <% end %>
+  <p>
+    <button type="button" id="botao-mais-tecido" class="btn btn-primary">Mais um tecido</button>
+  </p>  
 
-  <% fabric_stock_groups = FabricStock.all.group_by { |fabric_stock| [fabric_stock.tipo_tecido.nome, fabric_stock.cor.nome] } %>
-  <% if fabric_stock_groups.any? %>
-    <table class="table table-striped">
-      <thead>
+  <p>
+    <%= f.submit 'Adicionar', class: "btn btn-success" %>
+  </p>
+<% end %>
+
+<%# Temporário %>
+<% fabric_stock_groups = FabricStock.all.group_by { |fabric_stock| [fabric_stock.tipo_tecido.nome, fabric_stock.cor.nome] } %>
+<% if fabric_stock_groups.any? %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Tipo de Tecido</th>
+        <th>Cor</th>
+        <th>Quantidade</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% fabric_stock_groups.each do |(tipo, cor), fabric_stocks| %>
         <tr>
-          <th>Tipo de Tecido</th>
-          <th>Cor</th>
-          <th>Quantidade</th>
-          <th></th>
+          <td><%= fabric_stocks.last.tipo_tecido.nome %></td>
+          <td><%= fabric_stocks.last.cor.nome %></td>
+          <td><%= fabric_stocks.last.saldo %></td>
+          <td></td>
         </tr>
-      </thead>
-      <tbody>
-        <% fabric_stock_groups.each do |(tipo, cor), fabric_stocks| %>
-          <tr>
-            <td><%= fabric_stocks.last.tipo_tecido.nome %></td>
-            <td><%= fabric_stocks.last.cor.nome %></td>
-            <td><%= fabric_stocks.last.saldo %></td>
-            <td></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% end %>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
 
-  <%# FabricStock.destroy_all if FabricStock.count > 0 %>
-
-</div>
-
-</body>
-</html>
+<%# FabricStock.destroy_all if FabricStock.count > 0 %>

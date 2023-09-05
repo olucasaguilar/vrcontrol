@@ -1,0 +1,40 @@
+<% if notice %>
+  <% if notice.is_a?(Array) %>
+    <% notice.each do |message| %>
+      <div class="alert alert-success" id="notice">
+        <li><%= message %></li>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="alert alert-success" id="notice"> <%= notice %> </div>
+  <% end %>
+  <% flash[:notice] = nil %>
+<% end %>
+
+<% if alert %>
+  <% if alert.is_a?(Array) %>
+    <% alert.each do |message| %>
+      <div class="alert alert-danger" id="alert">
+        <li><%= message %></li>
+      </div>
+    <% end %>
+    <% flash[:alert] = nil %>
+  <% else %>
+    <div class="alert alert-danger" id="alert"> <%= alert %> </div>
+  <% end %>
+  <% flash[:alert] = nil %>
+<% end %>
+
+<% if info %>
+  <% if info.is_a?(Array) %>
+    <% info.each do |message| %>
+      <div class="alert alert-info" id="info">
+        <li><%= message %></li>
+      </div>
+    <% end %>
+    <% flash[:info] = nil %>
+  <% else %>
+    <div class="alert alert-info" id="info"> <%= info %> </div>
+  <% end %>
+  <% flash[:info] = nil %>
+<% end %>

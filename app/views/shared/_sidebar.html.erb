@@ -1,0 +1,242 @@
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+   *{
+    list-style: none;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  /* a.nav-link {
+    background-color: #6c757d;
+  } */
+
+  ul, ol {
+    padding-left: 0; /* Removes any default padding */
+  }
+
+  body{
+    background: #f5f6fa;
+  }
+
+  .wrapper .sidebar{
+    background: rgb(5, 68, 104);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 225px;
+    height: 100%;
+    padding: 20px 0;
+    transition: all 0.5s ease;
+  }
+
+  .wrapper .sidebar .profile{
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .wrapper .sidebar .profile img{
+    display: block;
+    width: 100px;
+    height: 100px;
+      border-radius: 50%;
+    margin: 0 auto;
+  }
+
+  .wrapper .sidebar .profile h3{
+    color: #ffffff;
+    margin: 10px 0 5px;
+  }
+
+  .wrapper .sidebar .profile p{
+    color: rgb(206, 240, 253);
+    font-size: 14px;
+  }
+
+  .wrapper .sidebar ul li a{
+    display: block;
+    padding: 13px 30px;
+    border-bottom: 1px solid #10558d;
+    color: rgb(241, 237, 237);
+    font-size: 16px;
+    position: relative;
+  }
+
+  .wrapper .sidebar ul li a .icon{
+    color: #dee4ec;
+    width: 30px;
+    display: inline-block;
+  }
+
+  
+
+  .wrapper .sidebar ul li a:hover,
+  .wrapper .sidebar ul li a.active{
+    color: #0c7db1;
+
+    background:white;
+    border-right: 2px solid rgb(5, 68, 104);
+  }
+
+  .wrapper .sidebar ul li a:hover .icon,
+  .wrapper .sidebar ul li a.active .icon{
+    color: #0c7db1;
+  }
+
+  .wrapper .sidebar ul li a:hover:before,
+  .wrapper .sidebar ul li a.active:before{
+    display: block;
+  }
+
+  .wrapper .section{
+    width: calc(100% - 225px);
+    margin-left: 225px;
+    transition: all 0.5s ease;
+  }
+
+  .wrapper .section .top_navbar{
+    background: rgb(7, 105, 185);
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+  
+  }
+
+  .wrapper .section .top_navbar .hamburger a{
+    font-size: 28px;
+    color: #f4fbff;
+  }
+
+  .wrapper .section .top_navbar .hamburger a:hover{
+    color: #a2ecff;
+  }
+
+  .wrapper .section .container{
+    margin: 30px;
+    background: #fff;
+    padding: 50px;
+    line-height: 28px;
+    width: auto;
+    min-height: 85vh; /* Define uma altura mínima de 100% da altura da tela */
+  }
+  
+  body.active .wrapper .sidebar{
+    left: -225px;
+  }
+
+
+  body.active .wrapper .section{
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .link-sem-efeito {
+    text-decoration: none;
+    color: black;
+  }
+
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var hamburger = document.querySelector(".hamburger");
+
+    //document.querySelector("body").classList.add("active");
+    
+    hamburger.addEventListener("click", function(){
+      document.querySelector("body").classList.toggle("active");
+    })
+  })
+
+  var hamburger = document.querySelector(".hamburger");
+  
+  //document.querySelector("body").classList.add("active");
+
+  hamburger.addEventListener("click", function(){
+    document.querySelector("body").classList.toggle("active");
+  })
+</script>
+
+<div class="wrapper">
+  <div class="section">
+    <div class="top_navbar">
+      <div class="hamburger">
+        <a type="button">
+          <i class="fas fa-bars"></i>
+        </a>
+      </div>
+    </div>   
+    <%#= render "shared/navbar" %>
+    <div class="container">
+
+      <br>
+      <%= render "shared/messages" %>  
+      <%= yield %>      
+
+    </div>
+  </div>
+  <div class="sidebar">
+    <div class="profile">
+      <%# <img src="https://1.bp.blogspot.com/-vhmWFWO2r8U/YLjr2A57toI/AAAAAAAACO4/0GBonlEZPmAiQW4uvkCTm5LvlJVd_-l_wCNcBGAsYHQ/s16000/team-1-2.jpg" alt="profile_picture"> %>
+      <a href="<%= root_path %>" class="link-sem-efeito">
+        <h3>VRControle</h3>
+        <p>Gerente</p>
+      </a>
+
+    </div>
+    <ul>
+      <li>
+        <a href="<%= entities_by_type_path %>" class="nav-link <%= 'active' if current_page?(entities_by_type_path) %>">
+          <span class="icon"><i class="fas fa-home"></i></span>
+          <span class="item">Entidades</span>
+        </a>
+      </li>
+      <li>
+        <a href="<%= financial_records_path %>" class="nav-link <%= 'active' if current_page?(financial_records_path) %>">
+          <span class="icon"><i class="fas fa-desktop"></i></span>
+          <span class="item">Caixa</span>
+        </a>
+      </li>
+      <li>
+        <a class="nav-link disabled">Estoque</a>
+      </li>
+      <li>
+        <a href="<%= new_fabric_entry_path %>" class="nav-link <%= 'active' if current_page?(new_fabric_entry_path) || current_page?(new_fabric_entry_details_path) %>">
+          <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
+          <span class="item">Entrada Tecido</span>
+        </a>
+      </li>
+      <li>
+        <a class="nav-link disabled">Corte</a>
+      </li>
+      <li>
+        <a class="nav-link disabled">Serigrafia</a>
+      </li>
+      <li>
+        <a class="nav-link disabled">Costura</a>
+      </li>
+      <li>
+        <a class="nav-link disabled">Acabamento</a>
+      </li>
+      <li>
+        <a class="nav-link disabled">Venda</a>
+      </li>
+      <li>
+        <a class="nav-link disabled">Relatórios/Consulta</a>
+      </li>
+      <li>
+        <a href="<%= cadastros_extras_path %>" class="nav-link <%= 'active' if current_page?(cadastros_extras_path) %>">
+          <span class="icon"><i class="fas fa-cog"></i></span>
+          <span class="item">Cadastros Extras</span>
+        </a>
+      </li>
+    </ul>
+  </div>        
+</div>
+
