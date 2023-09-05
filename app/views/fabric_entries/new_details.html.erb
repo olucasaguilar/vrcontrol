@@ -1,34 +1,90 @@
 <%#= javascript_include_tag "entrada_tecidos" %>
-<%#= javascript_tag do %>
+<%= javascript_tag do %>
+  document.addEventListener("DOMContentLoaded", function () {
+    objetosAdicionais = document.getElementById('objetos-adicionais');
+    botaoMaisObjeto = document.getElementById('botao-mais-tecido');
+    objetoIndex = 1;
+
+    botaoMaisObjeto.addEventListener('click', function() {
+        const novoObjetoHTML = `
+          <p>Objeto ${objetoIndex}</p>
+          <p>
+            <label for="fabric_stock${objetoIndex}_tipo_tecido_id">Tipo de Tecido</label>
+            <select name="fabric_stock${objetoIndex}[tipo_tecido_id]" id="fabric_stock${objetoIndex}_tipo_tecido_id">
+              ${copiarOpcoes('fabric_stock_tipo_tecido_id')}
+            </select>
+          </p>
+
+          <p>
+            <label for="fabric_stock${objetoIndex}_cor_id">Cor</label>
+            <select name="fabric_stock${objetoIndex}[cor_id]" id="fabric_stock${objetoIndex}_cor_id">
+              ${copiarOpcoes('fabric_stock_cor_id')}
+            </select>
+          </p>
+
+          <p>
+            <label for="fabric_stock${objetoIndex}_quantidade">Quantidade</label>
+            <input type="text" name="fabric_stock${objetoIndex}[quantidade]" id="fabric_stock${objetoIndex}_quantidade">
+          </p>
+          <hr>
+        `;
+
+        const novoObjetoDiv = document.createElement('div');
+        novoObjetoDiv.innerHTML = novoObjetoHTML;
+        objetosAdicionais.appendChild(novoObjetoDiv);
+
+        objetoIndex++; 
+    });
+
+    function copiarOpcoes(origemId) {
+      const origemSelect = document.getElementById(origemId);
+      const opcoes = origemSelect.innerHTML;
+      return opcoes;
+    }
+  });  
+<% end %>
 
 Segunda tela
 <br>
 Adicionar Tecidos
 <hr>
-<%= form_with model: @fabric_stock, url: create_fabric_entry_details_path do |f| %>
-  <% if @fabric_stock.errors.any? %>
-    <div class="alert alert-danger">
-      <% @fabric_stock.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </div>
+<%= form_with model: @fabric_stocks.first, url: create_fabric_entry_details_path do |f| %>
+  <% if @fabric_stocks.any? { |fabric_stock| fabric_stock.errors.any? } %>
+    <% @fabric_stocks.each_with_index do |fabric_stock, index| %>
+      <div class="alert alert-danger">
+        <%= 'Tecido ' + (index + 1).to_s %>
+        <% fabric_stock.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </div>
+    <% end %>
   <% end %>
 
   <p>
     <%= f.label :tipo_tecido_id %><br />
-    <%= f.collection_select :tipo_tecido_id, @fabric_types, :id, :nome, prompt: true %>
+    <%= f.collection_select :tipo_tecido_id, @fabric_types, :id, :nome, { include_blank: 'Selecione um tipo...'} %>
   </p>
 
   <p>
     <%= f.label :cor_id %><br />
-    <%= f.collection_select :cor_id, @colors, :id, :nome, prompt: true %>
+    <%= f.collection_select :cor_id, @colors, :id, :nome, { include_blank: 'Selecione uma cor...' } %>
   </p>
 
   <p>
     <%= f.label :quantidade %><br />
     <%= f.text_field :quantidade %>
   </p>
+
+  <hr>
   
+  <div id="objetos-adicionais">
+    <%# implementar aqui %>
+  </div>
+
+  <p>
+    <button type="button" id="botao-mais-tecido">Mais um tecido</button>
+  </p>  
+
   <p>
     <%= f.submit 'Adicionar' %>
   </p>
@@ -58,5 +114,4 @@ Adicionar Tecidos
   </table>
 <% end %>
 
-<%# FabricStock.destroy_all %>
-
+<%# FabricStock.destroy_all if FabricStock.count > 0 %>
