@@ -76,30 +76,17 @@ class FabricEntriesController < ApplicationController
   end
 
   def new_details
-    @fabric_stocks = []
-    @fabric_stocks << FabricStock.new
-    @fabric_types = FabricType.all
-    @colors = Color.all
-    #@fabric_stock.tipo_movimento = 'Entrada'
-    #@fabric_stock.data_hora = FabricEntry.last.data_hora
+    if FabricEntry.any? && FabricEntry.last.total_tecido == nil
+      @fabric_stocks = []
+      @fabric_stocks << FabricStock.new
+      @fabric_types = FabricType.all
+      @colors = Color.all
+    else
+      redirect_to new_fabric_entry_path
+    end
   end
 
   def create_details
-    # flash[:notice] = 'Sem tecidos extras'
-    # @fabric_stock = FabricStock.new(fabric_stock_params)
-    # @fabric_stock.tipo_movimento = 'Entrada'
-    # @fabric_stock.data_hora = FabricEntry.last.data_hora
-
-    # if @fabric_stock.valid?
-    #   @fabric_stock.save
-    #   flash[:notice] = 'Entrada de tecido (details) criada com sucesso!'
-    #   redirect_to new_fabric_entry_details_path
-    # else
-    #   @fabric_types = FabricType.all
-    #   @colors = Color.all
-    #   render :new_details
-    # end
-
     @fabric_stocks = []
     parametros = extract_fabric_stock()
     parametros.count do |parametro|
