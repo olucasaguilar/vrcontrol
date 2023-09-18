@@ -37,10 +37,11 @@ Rails.application.routes.draw do
   post '/caixa', to: 'financial_records#create', as: 'create_financial_record'
 
   # Rotas de Entrada Tecido
-  # /tecidos/entrada - primeira tela de criar nova entrada
-  # /tecidos/entrada/detalhes - segunda tela de criar nova entrada
   get '/tecidos/entrada', to: 'fabric_entries#new', as: 'new_fabric_entry'
   post '/tecidos/entrada', to: 'fabric_entries#create', as: 'create_fabric_entry'
   get '/tecidos/entrada/detalhes', to: 'fabric_entries#new_details', as: 'new_fabric_entry_details'
   post '/tecidos/entrada/detalhes', to: 'fabric_entries#create_details', as: 'create_fabric_entry_details'
+
+  # Rota para tela de estoque
+  get '/estoque', to: 'stock#index', as: 'stock'
 end
