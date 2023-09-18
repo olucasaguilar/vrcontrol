@@ -1,60 +1,114 @@
+<script>
+  $(document).ready(function() {
+    // Evento de clique no botão "Adicionar Campo"
+    $('#add-field-button').click(function(e) {
+      e.preventDefault();
+
+      // Encontre a tabela
+      var table = $('table tbody');
+
+      // Crie uma nova linha
+      var newRow = $('<tr>');
+
+      // Adicione os campos "valor" e "observação"
+      newRow.append('<td><input type="text" name="valor[]"></td>');
+      newRow.append('<td><input type="text" name="observacao[]"></td>');
+
+      // Adicione um botão para remover a linha
+      newRow.append('<td><button type="button" class="remove-row-button">Remover</button></td>');
+
+      // Adicione a linha à tabela
+      table.append(newRow);
+
+      // Oculte o primeiro <tr> (índice 0) da tabela
+      $('#primeiraLinha').hide();
+    });
+
+    // Evento de clique no botão "Remover" na tabela
+    $('table').on('click', '.remove-row-button', function(e) {
+      e.preventDefault();
+
+      // Remova a linha pai do botão clicado
+      $(this).closest('tr').remove();
+
+      // Mostra no console quantos elementos restaram na tabela
+      //console.log($('table tbody tr').length);
+
+      // Se for 0, mostra a primeira linha
+      if ($('table tbody tr').length  == 1) {
+        if ($('#primeiraLinha').is(':hidden')) {
+          $('#primeiraLinha').show();
+        }
+      }
+
+      // Verifica se primeira linha está com hide, se sim, exibe ela
+      //if ($('#primeiraLinha').is(':hidden')) {
+      //  $('#primeiraLinha').show();
+      //}
+    });
+  });
+</script>
+
 <h1>Nova Entrada de Tecido</h1>
 
 <%= form_with model: @fabric_entry, url: create_fabric_entry_path do |form| %>
   <% if @fabric_entry.errors.any? %>
-    <div class="alert alert-danger">
+    <ul>
       <% @fabric_entry.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
-    </div>
+    </ul>
   <% end %>
 
-  <% if @financial_record.errors.any? %>
-    <div class="alert alert-danger">
-      <% @financial_record.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+  <% if @financial_records.any? %>
+    <ul>
+      <% @financial_records.each do |financial_record| %>
+        <% if financial_record.errors.any? %>
+          <% financial_record.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        <% end %>
       <% end %>
-    </div>
+    </ul>
   <% end %>
 
   <div class="form-group">
-    <%= form.label :entity_id, 'Malharia', class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= form.collection_select :entity_id, @malharias, :id, :nome, { prompt: true }, class: "form-control #{form.object.errors[:entity].any? ? 'is-invalid' : ''}" %>
-    </div>
+    <%= form.label :entity_id, 'Malharia<span class="required">*</span>'.html_safe %>
+    <%= form.collection_select :entity_id, @malharias, :id, :nome, { prompt: true } %>
   </div>
 
   <div class="form-group">
-    <%= form.label :data_hora, class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= form.datetime_select :data_hora, class: "form-control #{form.object.errors[:data_hora].any? ? 'is-invalid' : ''}" %>
-    </div>
+    <%= form.label :data_hora %>
+    <%= form.datetime_select :data_hora %>
   </div>
   
-  <%# Campos de FinancialRecord %>
-  <br><div>
-    <%= form.label :have_extra, 'Custom Extra' %>
-    <%= form.check_box :have_extra, { checked: @have_extra } %>
-  </div>
+  <button type="button" id="add-field-button">Adicionar Valor Extra</button>
+  <table>
+    <thead>
+      <tr>
+        <th>Valor Extra*</th>
+        <th>Observação</th>
+        <th>Ação</th>
+      </tr>      
+    </thead>
+    <tbody>
+      <tr id="primeiraLinha" <% if @financial_records.any? %> style="display: none;" <% end %>>
+        <td><input type="text" name="valor[]" value="" readonly disabled></td>
+        <td><input type="text" name="observacao[]" value="" readonly disabled></td>
+        <td><button type="button" class="remove-row-button" disabled>Remover</button></td>
+      </tr>
+      <% @financial_records.each do |record| %>
+        <tr>
+          <td><input type="text" name="valor[]" value="<%= record.valor %>"></td>
+          <td><input type="text" name="observacao[]" value="<%= record.observacao %>"></td>
+          <td><button type="button" class="remove-row-button">Remover</button></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
   <div class="form-group">
-    <%= form.label :valor_extra, class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= form.text_field :valor_extra, value: @valor_extra, class: "form-control #{@financial_record.errors[:valor].any? ? 'is-invalid' : ''}" %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= form.label :obs_extra, class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= form.text_field :obs_extra, value: @obs_extra, class: "form-control #{form.object.errors[:obs_extra].any? ? 'is-invalid' : ''}" %>
-    </div>
-  </div><br>
-
-  <div class="form-group">
-    <div class="col-md-4 col-md-offset-4">
-      <%= form.submit 'Criar Entrada de Tecido', class: "btn btn-primary" %>
-      <%= link_to 'Back', root_path, class: "btn btn-secondary" %>
-    </div>
+    <%= form.submit 'Criar Entrada de Tecido' %>
+    <%= link_to 'Back', root_path %>
   </div>
 <% end %>

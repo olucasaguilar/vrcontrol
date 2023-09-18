@@ -9,70 +9,50 @@ class FabricEntriesController < ApplicationController
       @fabric_entry = FabricEntry.new
       @fabric_entry.data_hora = data_hora
       
-      @financial_record = FinancialRecord.new
+      @financial_records = []
     end
   end
 
-  def create
-    @have_extra = true if params[:fabric_entry][:have_extra] == '1'
-    @valor_extra = params[:fabric_entry][:valor_extra]
-    @obs_extra = params[:fabric_entry][:obs_extra]
-    
+  def create    
     @fabric_entry = FabricEntry.new(fabric_entry_params)
-    
-    if @have_extra == true
-      observacao_original = @obs_extra
-      pre_msg = 'Entrada Tecido - Custo Extra'
-      pre_msg += ' - ' unless observacao_original.blank?
-      @obs_extra = pre_msg + @obs_extra
+    @financial_records = []
+    all_valid = true
 
-      valor = @valor_extra.to_f
-      tipo_movimento = 'Saída'
-      observacao = @obs_extra
-      data_hora = @fabric_entry.data_hora
-      @financial_record = FinancialRecord.new(valor: valor, tipo_movimento: tipo_movimento, observacao: observacao, data_hora: data_hora)
+    unless params[:valor].nil?
+      params[:valor].each_with_index do |valor, index|
+        tipo_movimento = 'Saída'
+        observacao = params[:observacao][index]
+        data_hora = @fabric_entry.data_hora
+        @financial_records << FinancialRecord.new(valor: valor, tipo_movimento: tipo_movimento, observacao: observacao, data_hora: data_hora)
+      end
       
-      @financial_record.valid?
-    else
-      @financial_record = FinancialRecord.new
+      @financial_records.each do |financial_record|
+        unless financial_record.valid?
+          all_valid = false
+        end      
+      end
     end
-
-    if @have_extra == true
-      if @fabric_entry.valid? && @financial_record.valid?
-        @fabric_entry.save
-        @financial_record.save
-
-        @financial_fabric_entry = FinancialFabricEntry.new(
-          registro_financeiro: @financial_record,
-          entrada_tecido: @fabric_entry
-        )
-            
-        if @financial_fabric_entry.valid?
-          @financial_fabric_entry.save
-        end
-
-        # temporario
-        # messages = [
-        #   'Entrada de tecido criada com sucesso!',
-        #   'Movimentação de caixa criada com sucesso!'
-        # ]
-        
-        flash[:notice] = messages
-        redirect_to new_fabric_entry_details_path # alterar depois
-      else
-        @obs_extra = observacao_original
-        busca_malharias()
-        render :new
+    
+    if @fabric_entry.valid? && all_valid
+      flash[:notice] = []
+      @fabric_entry.save
+      
+      @financial_records.each do |financial_record|
+        observacao_original = financial_record.observacao
+        pre_msg = 'Entrada Tecido - Custo Extra'
+        pre_msg += ' - ' unless observacao_original.blank?
+        financial_record.observacao = pre_msg + financial_record.observacao
+        financial_record.save
       end
+      if @financial_records.any?
+        flash[:notice] << 'Movimentação de caixa criada com sucesso!'
+      end
+
+      flash[:notice] << 'Entrada de tecido criada com sucesso!'
+      redirect_to new_fabric_entry_details_path
     else
-      if @fabric_entry.valid?
-        @fabric_entry.save
-        flash[:notice] = 'Entrada de tecido criada com sucesso!'
-        redirect_to new_fabric_entry_details_path
-      else
-        busca_malharias()
-        render :new
-      end
+      busca_malharias()
+      render :new
     end
   end
 
@@ -135,10 +115,6 @@ class FabricEntriesController < ApplicationController
   end
 
   def fabric_entry_params
-    params[:fabric_entry].delete(:have_extra)
-    params[:fabric_entry].delete(:valor_extra)
-    params[:fabric_entry].delete(:obs_extra)
-
     params.require(:fabric_entry).permit(:data_hora, :entity_id)
   end
 
