@@ -1,6 +1,6 @@
-<h1>Movimentações Caixa</h1><br>
+<h1>Registros Financeiros</h1><br>
 <p>
-  <%= link_to 'Nova Movimentação', new_financial_record_path, class: 'btn btn-primary' %>
+  <%= link_to 'Novo registro', new_financial_record_path, class: 'btn btn-primary' %>
 </p>
 <table class="table">
   <thead class="thead-light">
@@ -11,7 +11,6 @@
       </td>
     </tr>
     <tr>
-      <th>ID</th>
       <th>Tipo Movimento</th>
       <th>Valor</th>
       <th>Saldo</th>
@@ -23,7 +22,6 @@
     <!-- Loop pelos registros financeiros -->
     <% FinancialRecord.order(id: :desc).each do |financial_record| %>
       <tr>
-        <td><%= financial_record.id %></td>
         <td><%= financial_record.tipo_movimento %></td>
         <td><%= number_to_currency(financial_record.valor, unit: 'R$', separator: ',', delimiter: '.') %></td>
         <td><%= number_to_currency(financial_record.saldo, unit: 'R$', separator: ',', delimiter: '.') %></td>
