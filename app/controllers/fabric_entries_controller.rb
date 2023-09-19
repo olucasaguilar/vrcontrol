@@ -75,6 +75,7 @@ class FabricEntriesController < ApplicationController
       @fabric_stocks = [FabricStock.new]
       @fabric_types = FabricType.all
       @colors = Color.all
+      @valores_tecido = []
     else
       redirect_to new_fabric_entry_path
     end
@@ -85,42 +86,39 @@ class FabricEntriesController < ApplicationController
     @fabric_types = FabricType.all
     @colors = Color.all
     flash[:notice] = []
+    all_valid = true
 
     params[:fabric_stock].each do |parametro|
       fabric_stock = FabricStock.new(fabric_stock_params(parametro[1]))
       fabric_stock.tipo_movimento = 'Entrada'
       fabric_stock.data_hora = FabricEntry.last.data_hora
-      fabric_stock.valid?
+      all_valid = false unless fabric_stock.valid?
       @fabric_stocks << fabric_stock
     end
 
-    render :new_details and return
-
-    parametros.count do |parametro|
-      @fabric_stocks << FabricStock.new(fabric_stock_params(parametro))
-      @fabric_stocks.last.tipo_movimento = 'Entrada'
-      @fabric_stocks.last.data_hora = FabricEntry.last.data_hora
+    @valores_tecido = []
+    params[:valor_tecido].each do |parametro|
+      # parametro[1] == valor do tecido
+      # @fabric_stocks[parametro[0].to_i] == tecido
+      @valores_tecido << parametro[1].to_f
     end
 
-    all_valid = true
-    @fabric_stocks.each do |fabric_stock|
-      unless fabric_stock.valid?
-        all_valid = false
-      end      
-    end
+    # @valores_tecido será o valor salvo no FinancialRecord
+
+    # Debug
+    #render :new_details and return
+    # Debug
 
     unless all_valid
-      @fabric_types = FabricType.all
-      @colors = Color.all
-      render :new_details
-      return
+      render :new_details and return
     end
-
-    flash[:notice] = 'Entrada de tecido (details) criada com sucesso!'
+    
     @fabric_stocks.each do |fabric_stock|
       fabric_stock.save
     end
-    redirect_to new_fabric_entry_details_path
+
+    flash[:notice] = 'Entrada de tecido(s) criada com sucesso!'
+    redirect_to new_fabric_entry_details_path # Temp
   end
 
   private

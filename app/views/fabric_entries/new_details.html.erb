@@ -1,5 +1,7 @@
 <script>
   $(document).ready(function() {
+    updateValorTotal();
+
     // Evento de clique no botão "Adicionar Campo"
     $('#add-field-button').click(function(e) {
       e.preventDefault();
@@ -28,35 +30,60 @@
       cols += '</select></td>';
 
       cols += '<td><input type="text" name="fabric_stock[' + index + '][quantidade]" class="form-control"></td>';
+      cols += '<td><input type="text" name="valor_tecido[' + index + ']" class="form-control"></td>';
       cols += '<td><button type="button" class="btn btn-danger remove-row-button">Remover</button></td>';
       newRow.append(cols);
 
       // Adicione a nova linha à tabela
       $('table tbody').append(newRow);
+
+      updateValorTotal();
     });
 
     // Evento de clique no botão "Remover"
     $('table').on('click', '.remove-row-button', function() {
         $(this).closest('tr').remove();
     });
+
+    // Função para calcular e atualizar o valor total
+    function updateValorTotal() {
+      var valorTotal = 0;
+      $('input[name^="valor_tecido"]').each(function() {
+        var valorTecido = parseFloat($(this).val());
+        if (!isNaN(valorTecido)) {
+          valorTotal += valorTecido;
+        }
+      });
+      $('#valor-total').val(valorTotal.toFixed(2)); // Define o valor total com 2 casas decimais
+    }
+
+    // Evento de mudança nos campos de valor de tecido
+    $(document).on('input', 'input[name^="valor_tecido"]', function() {
+      updateValorTotal();
+    });
+
+    // Evento de clique no botão "Remover"
+    $('table').on('click', '.remove-row-button', function() {
+      $(this).closest('tr').remove();
+      updateValorTotal(); // Atualize o valor total após remover um campo de tecido
+    });    
   });
 </script>
 
 <h2>Entrada de Tecido</h2>
-<h5>Seleção de tecido(s)</h5>
 <br>
 
 <%= form_for @fabric_stocks.first, url: create_fabric_entry_details_path do |f| %>
   <% if @fabric_stocks.any? %>
     <% @fabric_stocks.each_with_index do |fabric_stock, index| %>
       <% if fabric_stock.errors.any? %>
-        <div class="alert alert-danger" role="alert">
-          <p>Tecido <%= (index + 1).to_s %></p>
-          <hr>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <p><%= (index + 1).to_s %>º</p>
           <% fabric_stock.errors.full_messages.each do |message| %>
             <p class="mb-0"><%= message %></p>
           <% end %>
-        </div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>        
       <% end %>      
     <% end %>
   <% end %>
@@ -72,7 +99,8 @@
         <th>Nº</th>
         <th>Tipo de Tecido*</th>
         <th>Cor*</th>
-        <th>Quantidade*</th>
+        <th>Quantidade (kg)*</th>
+        <th>Valor (R$)</th>
         <th>Ação</th>
       </tr>
     </thead>
@@ -88,7 +116,7 @@
             </td>
             <td>
               <%= fs.collection_select :cor_id, @colors, :id, :nome, { include_blank: 'Selecione uma cor...' }, class: "form-select #{'is-invalid' if fabric_stock.errors.has_key?(:cor)}" %>
-            </td>
+            </td>            
             <td>
               <%= fs.text_field :quantidade, class: "form-control #{'is-invalid' if fabric_stock.errors.has_key?(:quantidade)}" %>
               <% if fabric_stock.errors.has_key?(:quantidade) %>
@@ -97,6 +125,8 @@
                 </div>
               <% end %>
             </td>
+            <td>
+              <input type="text" name="valor_tecido[<%= index %>]" class="form-control" value="<%= @valores_tecido[index] %>">
             <td>
               <button type="button" class="btn btn-danger remove-row-button" <% if index == 0 %> disabled <% end %>>Remover</button>
             </td>
@@ -107,10 +137,16 @@
   </table> 
 <% end %>
 
+<div class="input-group mb-3">
+  <span class="input-group-text">Valor Total</span>
+  <input type="text" id="valor-total" class="form-control" value="" readonly>
+</div>
+
+
 <%# FabricEntry.delete_all %>
-<%# FinancialFabricEntry.delete_all %>
+<%# FinancialFabricEntry.delete_all 
 <br><br><p>Temporário</p>
-<% FabricEntry.all.each do |fabric_entry| %>
-  <%= fabric_entry.inspect %>  
+<% FabricEntry.all.each do |fabric_entry| 
+  <%= fabric_entry.inspect 
   <br>
 <% end %>
