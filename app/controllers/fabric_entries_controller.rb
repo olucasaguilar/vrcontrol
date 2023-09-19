@@ -102,20 +102,32 @@ class FabricEntriesController < ApplicationController
       # @fabric_stocks[parametro[0].to_i] == tecido
       @valores_tecido << parametro[1].to_f
     end
+    # @valores_tecido será o valor salvo no FinancialRecord    
 
-    # @valores_tecido será o valor salvo no FinancialRecord
-
-    # Debug
-    #render :new_details and return
-    # Debug
+    @financial_record = FinancialRecord.new
+    @financial_record.valor = @valores_tecido.sum
+    @financial_record.observacao = params[:FinancialRecord][:observacao]
+    @financial_record.tipo_movimento = 'Saída'
+    @financial_record.data_hora = FabricEntry.last.data_hora
+    all_valid = false unless @financial_record.valid?
 
     unless all_valid
       render :new_details and return
     end
+
+    # Debug
+    #render :new_details and return
+    # Debug
     
     @fabric_stocks.each do |fabric_stock|
       fabric_stock.save
     end
+
+    observacao_original = @financial_record.observacao
+    pre_msg = 'Entrada Tecido - Custo'
+    pre_msg += ' - ' unless observacao_original.blank?
+    @financial_record.observacao = pre_msg + @financial_record.observacao
+    @financial_record.save
 
     flash[:notice] = 'Entrada de tecido(s) criada com sucesso!'
     redirect_to new_fabric_entry_details_path # Temp

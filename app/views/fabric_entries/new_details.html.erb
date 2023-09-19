@@ -70,7 +70,7 @@
   });
 </script>
 
-<h2>Entrada de Tecido</h2>
+<h2>Seleção de Tecidos</h2>
 <br>
 
 <%= form_for @fabric_stocks.first, url: create_fabric_entry_details_path do |f| %>
@@ -78,13 +78,25 @@
     <% @fabric_stocks.each_with_index do |fabric_stock, index| %>
       <% if fabric_stock.errors.any? %>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <p><%= (index + 1).to_s %>º</p>
-          <% fabric_stock.errors.full_messages.each do |message| %>
-            <p class="mb-0"><%= message %></p>
+          <a>Tecido <%= (index + 1).to_s %></a>
+          <%# fabric_stock.errors.full_messages.each do |message| 
+            <p class="mb-0"><%= message </p>
           <% end %>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>        
       <% end %>      
+    <% end %>
+  <% end %>
+
+  <% unless @financial_record.nil? %>
+    <% if @financial_record.errors.any? %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <a>Registro Financeiro</a>
+        <% @financial_record.errors.full_messages.each do |message| %>
+          <p class="mb-0"><%= message %></p>
+        <% end %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
     <% end %>
   <% end %>
 
@@ -134,14 +146,19 @@
         <% end %>
       <% end %>
     </tbody>
-  </table> 
+  </table>
+
+  <%= fields_for "FinancialRecord", @financial_record do |fe| %>
+    <div class="input-group mb-3">
+      <span class="input-group-text">Valor Total</span>
+      <%= fe.text_field :valor, class: "form-control", id: "valor-total", readonly: true %>
+      
+      <span class="input-group-text">Observação (R$)</span>
+      <%= fe.text_area :observacao, class: "form-control" %>
+    </div>
+  <% end %>
+
 <% end %>
-
-<div class="input-group mb-3">
-  <span class="input-group-text">Valor Total</span>
-  <input type="text" id="valor-total" class="form-control" value="" readonly>
-</div>
-
 
 <%# FabricEntry.delete_all %>
 <%# FinancialFabricEntry.delete_all 
