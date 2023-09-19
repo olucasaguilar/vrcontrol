@@ -11,7 +11,7 @@
       var newRow = $('<tr>');
 
       // Adicione os campos "valor" e "observação"
-      newRow.append('<td><input type="text" name="valor[]"></td>');
+      newRow.append('<td><input type="text" name="valor[]" required></td>');
       newRow.append('<td><input type="text" name="observacao[]"></td>');
 
       // Adicione um botão para remover a linha
@@ -49,6 +49,14 @@
   });
 </script>
 
+<style>
+  .input-erro {
+    border: 1px solid red; /* Define uma borda vermelha */
+    box-shadow: 0 0 3px red; /* Define uma sombra vermelha */
+  }
+</style>
+
+
 <h1>Nova Entrada de Tecido</h1>
 
 <%= form_with model: @fabric_entry, url: create_fabric_entry_path do |form| %>
@@ -74,7 +82,7 @@
 
   <div class="form-group">
     <%= form.label :entity_id, 'Malharia<span class="required">*</span>'.html_safe %>
-    <%= form.collection_select :entity_id, @malharias, :id, :nome, { prompt: true } %>
+    <%= form.collection_select :entity_id, @malharias, :id, :nome, { prompt: true }, { class: @fabric_entry.errors[:entity].any? ? 'input-erro' : '', required: true } %>
   </div>
 
   <div class="form-group">
@@ -99,7 +107,7 @@
       </tr>
       <% @financial_records.each do |record| %>
         <tr>
-          <td><input type="text" name="valor[]" value="<%= record.valor %>"></td>
+          <td><input type="text" name="valor[]" value="<%= record.valor %>" required class="<%= record.errors[:valor].any? ? 'input-erro' : '' %>"></td>
           <td><input type="text" name="observacao[]" value="<%= record.observacao %>"></td>
           <td><button type="button" class="remove-row-button">Remover</button></td>
         </tr>
