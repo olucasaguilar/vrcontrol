@@ -159,7 +159,7 @@
 </style>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  $(document).ready(function() {  
     var hamburger = document.querySelector(".hamburger");
 
     //document.querySelector("body").classList.add("active");
@@ -167,15 +167,7 @@
     hamburger.addEventListener("click", function(){
       document.querySelector("body").classList.toggle("active");
     })
-  })
-
-  var hamburger = document.querySelector(".hamburger");
-  
-  //document.querySelector("body").classList.add("active");
-
-  hamburger.addEventListener("click", function(){
-    document.querySelector("body").classList.toggle("active");
-  })
+  });
 </script>
 
 <div class="wrapper">
