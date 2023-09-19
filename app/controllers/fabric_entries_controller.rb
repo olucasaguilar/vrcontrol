@@ -1,7 +1,7 @@
 class FabricEntriesController < ApplicationController
   def new
     # Alterar de unless para if
-    unless FabricEntry.any? && FabricEntry.last.total_tecido == nil
+    if FabricEntry.any? && FabricEntry.last.total_tecido == nil
       redirect_to new_fabric_entry_details_path
     else
       data_hora = Time.now - 3.hour
@@ -43,7 +43,21 @@ class FabricEntriesController < ApplicationController
         pre_msg += ' - ' unless observacao_original.blank?
         financial_record.observacao = pre_msg + financial_record.observacao
         financial_record.save
+
+        financial_fabric_entry = FinancialFabricEntry.new(
+          registro_financeiro: financial_record,
+          entrada_tecido: @fabric_entry
+        )
+
+        if financial_fabric_entry.valid?
+          financial_fabric_entry.save
+          # Temp
+          flash[:notice] << 'Vinculo entre movimentação de caixa e entrada de tecido criado com sucesso!'
+        else
+          flash[:notice] << 'Erro ao criar o vinculo entre movimentação de caixa e entrada de tecido!'
+        end
       end
+      # Temp
       if @financial_records.any?
         flash[:notice] << 'Movimentação de caixa criada com sucesso!'
       end
@@ -58,8 +72,7 @@ class FabricEntriesController < ApplicationController
 
   def new_details
     if FabricEntry.any? && FabricEntry.last.total_tecido == nil
-      @fabric_stocks = []
-      @fabric_stocks << FabricStock.new
+      @fabric_stocks = [FabricStock.new]
       @fabric_types = FabricType.all
       @colors = Color.all
     else
@@ -69,7 +82,20 @@ class FabricEntriesController < ApplicationController
 
   def create_details
     @fabric_stocks = []
-    parametros = extract_fabric_stock()
+    @fabric_types = FabricType.all
+    @colors = Color.all
+    flash[:notice] = []
+
+    params[:fabric_stock].each do |parametro|
+      fabric_stock = FabricStock.new(fabric_stock_params(parametro[1]))
+      fabric_stock.tipo_movimento = 'Entrada'
+      fabric_stock.data_hora = FabricEntry.last.data_hora
+      fabric_stock.valid?
+      @fabric_stocks << fabric_stock
+    end
+
+    render :new_details and return
+
     parametros.count do |parametro|
       @fabric_stocks << FabricStock.new(fabric_stock_params(parametro))
       @fabric_stocks.last.tipo_movimento = 'Entrada'
@@ -99,16 +125,6 @@ class FabricEntriesController < ApplicationController
 
   private
 
-  def extract_fabric_stock
-    parametros = []
-    params.each do |key, value|
-      if key.include? 'fabric_stock'
-        parametros << value
-      end
-    end
-    parametros
-  end
-
   def busca_malharias
     entity_type_malharia = EntityType.find_by(nome: 'Malharia')
     @malharias = Entity.where(entity_type: entity_type_malharia)
@@ -118,11 +134,7 @@ class FabricEntriesController < ApplicationController
     params.require(:fabric_entry).permit(:data_hora, :entity_id)
   end
 
-  def fabric_stock_params
-    params.require(:fabric_stock).permit(:tipo_tecido_id, :cor_id, :quantidade)
-  end
-
   def fabric_stock_params(parametros)
     parametros.permit(:tipo_tecido_id, :cor_id, :quantidade)
-  end
+  end  
 end

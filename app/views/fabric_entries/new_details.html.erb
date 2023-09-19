@@ -1,90 +1,116 @@
-<%= javascript_include_tag "entrada_tecidos" %>
-<%#= javascript_tag do %>
+<script>
+  $(document).ready(function() {
+    // Evento de clique no botão "Adicionar Campo"
+    $('#add-field-button').click(function(e) {
+      e.preventDefault();
+      var newRow = $('<tr>');
+      var cols = '';
+
+      var fabricTypes = <%= raw @fabric_types.to_json %>;
+      var colors = <%= raw @colors.to_json %>;
+
+      
+      index = $('table tbody tr').length
+
+      // Crie as colunas para a nova linha
+      cols += '<td>' + (index + 1).toString() + '</td>';
+
+      cols += '<td><select name="fabric_stock[' + index + '][tipo_tecido_id]" class="form-select"><option value="" selected>Selecione um tipo...</option>';
+      for (var i = 0; i < fabricTypes.length; i++) {
+          cols += '<option value="' + fabricTypes[i].id + '">' + fabricTypes[i].nome + '</option>';
+      }
+      cols += '</select></td>';
+
+      cols += '<td><select name="fabric_stock[' + index + '][cor_id]" class="form-select"><option value="" selected>Selecione uma cor...</option>';
+      for (var j = 0; j < colors.length; j++) {
+          cols += '<option value="' + colors[j].id + '">' + colors[j].nome + '</option>';
+      }
+      cols += '</select></td>';
+
+      cols += '<td><input type="text" name="fabric_stock[' + index + '][quantidade]" class="form-control"></td>';
+      cols += '<td><button type="button" class="btn btn-danger remove-row-button">Remover</button></td>';
+      newRow.append(cols);
+
+      // Adicione a nova linha à tabela
+      $('table tbody').append(newRow);
+    });
+
+    // Evento de clique no botão "Remover"
+    $('table').on('click', '.remove-row-button', function() {
+        $(this).closest('tr').remove();
+    });
+  });
+</script>
 
 <h2>Entrada de Tecido</h2>
 <h5>Seleção de tecido(s)</h5>
 <br>
 
-<%= form_with model: @fabric_stocks.first, url: create_fabric_entry_details_path do |f| %>
+<%= form_for @fabric_stocks.first, url: create_fabric_entry_details_path do |f| %>
   <% if @fabric_stocks.any? %>
     <% @fabric_stocks.each_with_index do |fabric_stock, index| %>
       <% if fabric_stock.errors.any? %>
-        <div class="alert alert-danger">
-          <%= 'Tecido ' + (index + 1).to_s %>
+        <div class="alert alert-danger" role="alert">
+          <p>Tecido <%= (index + 1).to_s %></p>
+          <hr>
           <% fabric_stock.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
+            <p class="mb-0"><%= message %></p>
           <% end %>
         </div>
-      <% end %>    
+      <% end %>      
     <% end %>
   <% end %>
 
   <div class="form-group">
-    <%= f.label :tipo_tecido_id, class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= f.collection_select :tipo_tecido_id, @fabric_types, :id, :nome, { include_blank: 'Selecione um tipo...'}, class: "form-control #{f.object.errors[:tipo_tecido].any? ? 'is-invalid' : ''}" %>
-    </div>
-  </div>
+    <button type="button" id="add-field-button" class="btn btn-primary">Mais um tecido</button>
+    <%= f.submit 'Finalizar', class: "btn btn-success" %>
+  </div><br>
 
-  <div class="form-group">
-    <%= f.label :cor_id, class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= f.collection_select :cor_id, @colors, :id, :nome, { include_blank: 'Selecione uma cor...' }, class: "form-control #{f.object.errors[:cor].any? ? 'is-invalid' : ''}" %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :quantidade, class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= f.text_field :quantidade, class: "form-control #{f.object.errors[:quantidade].any? ? 'is-invalid' : ''}" %>
-    </div>
-  </div>
-
-  <br>
-
-  <div id="objetos-adicionais">
-    <% if @fabric_stocks.count > 1 %>
+  <table class="mb-4 table table-bordered">
+    <thead>
+      <tr>
+        <th>Nº</th>
+        <th>Tipo de Tecido*</th>
+        <th>Cor*</th>
+        <th>Quantidade*</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody>
       <% @fabric_stocks.each_with_index do |fabric_stock, index| %>
-        <% unless index == 0 %>
-          <div class="form-group">
-            <p class="col-md-4 control-label">Tecido <%= index + 1 %></p>
-            <div class="col-md-4 inputGroupContainer">
-              <label for="fabric_stock<%= index %>_tipo_tecido_id" class="control-label">Tipo de Tecido</label>
-              <select name="fabric_stock<%= index %>[tipo_tecido_id]" id="fabric_stock<%= index %>_tipo_tecido_id" class="form-control <%= fabric_stock.errors[:tipo_tecido].any? ? 'is-invalid' : '' %>">
-                <option value="" selected>Selecione um tipo...</option> <!-- Placeholder -->
-                <%= options_from_collection_for_select(@fabric_types, :id, :nome, fabric_stock.tipo_tecido_id) %>
-              </select>
-            </div>
-          </div>
+        <%= fields_for "fabric_stock[#{index}]", fabric_stock do |fs| %>
+          <tr>
+            <td>
+              <%= (index + 1).to_s %>
+            </td>
+            <td>
+              <%= fs.collection_select :tipo_tecido_id, @fabric_types, :id, :nome, { include_blank: 'Selecione um tipo...' }, class: "form-select #{'is-invalid' if fabric_stock.errors.has_key?(:tipo_tecido)}" %>
+            </td>
+            <td>
+              <%= fs.collection_select :cor_id, @colors, :id, :nome, { include_blank: 'Selecione uma cor...' }, class: "form-select #{'is-invalid' if fabric_stock.errors.has_key?(:cor)}" %>
+            </td>
+            <td>
+              <%= fs.text_field :quantidade, class: "form-control #{'is-invalid' if fabric_stock.errors.has_key?(:quantidade)}" %>
+              <% if fabric_stock.errors.has_key?(:quantidade) %>
+                <div class="invalid-feedback">
+                  <%= fabric_stock.errors[:quantidade].any? %>
+                </div>
+              <% end %>
+            </td>
+            <td>
+              <button type="button" class="btn btn-danger remove-row-button" <% if index == 0 %> disabled <% end %>>Remover</button>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table> 
+<% end %>
 
-          <div class="form-group">
-            <div class="col-md-4 inputGroupContainer">
-              <label for="fabric_stock<%= index %>_cor_id" class="control-label">Cor</label>
-              <select name="fabric_stock<%= index %>[cor_id]" id="fabric_stock<%= index %>_cor_id" class="form-control <%= fabric_stock.errors[:cor].any? ? 'is-invalid' : '' %>">
-                <option value="" selected>Selecione uma cor...</option> <!-- Placeholder -->
-                <%= options_from_collection_for_select(@colors, :id, :nome, fabric_stock.cor_id) %>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="col-md-4 inputGroupContainer">
-              <label for="fabric_stock<%= index %>_quantidade" class="control-label">Quantidade</label>
-              <input type="text" name="fabric_stock<%= index %>[quantidade]" id="fabric_stock<%= index %>_quantidade" value="<%= fabric_stock.quantidade %>" class="form-control <%= fabric_stock.errors[:quantidade].any? ? 'is-invalid' : '' %>">
-            </div>
-          </div>
-          <br>
-        <% end %> 
-      <% end %>  
-    <% end %>
-  </div>
-
-
-  <p>
-    <button type="button" id="botao-mais-tecido" class="btn btn-primary">Mais um tecido</button>
-  </p>  
-
-  <p>
-    <%= f.submit 'Adicionar', class: "btn btn-success" %>
-  </p>
+<%# FabricEntry.delete_all %>
+<%# FinancialFabricEntry.delete_all %>
+<br><br><p>Temporário</p>
+<% FabricEntry.all.each do |fabric_entry| %>
+  <%= fabric_entry.inspect %>  
+  <br>
 <% end %>
