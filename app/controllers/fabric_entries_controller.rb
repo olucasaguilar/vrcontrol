@@ -76,6 +76,9 @@ class FabricEntriesController < ApplicationController
       @fabric_types = FabricType.all
       @colors = Color.all
       @valores_tecido = []
+      @valor_erro_index = []
+      @financial_record = FinancialRecord.new
+      @financial_record.valor = 0
     else
       redirect_to new_fabric_entry_path
     end
@@ -97,19 +100,29 @@ class FabricEntriesController < ApplicationController
     end
 
     @valores_tecido = []
+    index = 0
+    @valor_erro_index = []
     params[:valor_tecido].each do |parametro|
       # parametro[1] == valor do tecido
       # @fabric_stocks[parametro[0].to_i] == tecido
       @valores_tecido << parametro[1].to_f
-    end
-    # @valores_tecido será o valor salvo no FinancialRecord    
+      unless parametro[1].to_f > 0
+        all_valid = false
+        @valor_erro_index << index
+      end
+      index += 1
+    end  
 
     @financial_record = FinancialRecord.new
     @financial_record.valor = @valores_tecido.sum
+    @financial_record.valor = 0 unless @valor_erro_index.empty?
     @financial_record.observacao = params[:FinancialRecord][:observacao]
     @financial_record.tipo_movimento = 'Saída'
     @financial_record.data_hora = FabricEntry.last.data_hora
     all_valid = false unless @financial_record.valid?
+
+    total_peso = @fabric_stocks.each.map { |fabric_stock| fabric_stock.quantidade }
+    total_peso = total_peso.sum
 
     unless all_valid
       render :new_details and return
@@ -118,9 +131,15 @@ class FabricEntriesController < ApplicationController
     # Debug
     #render :new_details and return
     # Debug
-    
+
     @fabric_stocks.each do |fabric_stock|
       fabric_stock.save
+      
+      @fabric_stock_entry = FabricStockEntry.new
+      @fabric_stock_entry.entrada_tecido = FabricEntry.last
+      @fabric_stock_entry.estoque_tecido = fabric_stock
+      @fabric_stock_entry.valor_tecido = @valores_tecido[@fabric_stocks.index(fabric_stock)]
+      @fabric_stock_entry.save if @fabric_stock_entry.valid?
     end
 
     observacao_original = @financial_record.observacao
@@ -129,8 +148,19 @@ class FabricEntriesController < ApplicationController
     @financial_record.observacao = pre_msg + @financial_record.observacao
     @financial_record.save
 
-    flash[:notice] = 'Entrada de tecido(s) criada com sucesso!'
-    redirect_to new_fabric_entry_details_path # Temp
+    financial_fabric_entry = FinancialFabricEntry.new(
+      registro_financeiro: @financial_record,
+      entrada_tecido: FabricEntry.last
+    )
+    
+    if financial_fabric_entry.valid?
+      financial_fabric_entry.save
+    end
+
+    FabricEntry.last.update(total_tecido: total_peso)
+
+    flash[:notice] << 'Entrada de tecido(s) criada com sucesso!'
+    redirect_to new_fabric_entry_path # Temp
   end
 
   private

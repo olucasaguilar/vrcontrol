@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  entrada_tecido: 1
+  estoque_tecido: 1
+  valor_tecido: 9.99
+
+two:
+  entrada_tecido: 1
+  estoque_tecido: 1
+  valor_tecido: 9.99
