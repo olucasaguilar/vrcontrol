@@ -11,7 +11,7 @@
   <% end %>
 
   <div class="form-group">
-    <%= f.label :nome, class: "col-md-4 control-label" %>
+    <%= f.label :nome, "Nome*", class: "col-md-4 control-label" %>
     <div class="col-md-4 inputGroupContainer">
       <%= f.text_field :nome, class: "form-control #{f.object.errors[:nome].any? ? 'is-invalid' : ''}" %>
     </div>
@@ -35,6 +35,20 @@
     <%= f.label :estado, class: "col-md-4 control-label" %>
     <div class="col-md-4 inputGroupContainer">
       <%= f.text_field :estado, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :cnpj, "CNPJ", class: "col-md-4 control-label" %>
+    <div class="col-md-4 inputGroupContainer">
+      <%= f.text_field :cnpj, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :ie, "Inscrição Estadual", class: "col-md-4 control-label" %>
+    <div class="col-md-4 inputGroupContainer">
+      <%= f.text_field :ie, class: "form-control" %>
     </div>
   </div>
 
