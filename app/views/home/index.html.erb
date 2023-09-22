@@ -1,31 +1,14 @@
 <style>
-  /* Estilos de enfeite simples */
-  .container {
-    text-align: center;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 5px;
-  }
   h1 {
-    color: #333;
-  }
-  p {
-    color: #666;
-  }
-
-  .wrapper .section .container{
-    margin: 30px;
-    background: #fff;
-    padding: 50px;
-    line-height: 28px;
-    width: auto;
-    min-height: 60vh; /* Define uma altura para a pagina */
+    text-align: center;
+    font-size: 50px;
+    font-family: "Arial";
+    margin-top: 25vh;
+    margin-bottom: 30vh;
   }
 </style>
 
-<div class="container">
-  <h1>Bem-vindo ao VRControle</h1>
-</div>
+<h1>Bem-vindo ao VRControle</h1>
 
 <script>
   $(document).ready(function() {
@@ -36,7 +19,7 @@
     });
   });
 </script>
-<br><br><button type="button" class="add-field-button">Informações Temporárias</button>
+<button type="button" class="add-field-button">Informações Temporárias</button>
 <div id="div-valor-extra" style="display: none;">
   <%# Busca e da um inspect em todos os FinancialRecord %> <br>
   <% FinancialRecord.all.each do |financial_record| %>
