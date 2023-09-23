@@ -1,0 +1,41 @@
+<h1>Entidades</h1>
+
+<%= form_with url: entidades_path, method: :get do %>
+  <div class="btn-group" style="width: 100%;">
+    <% @entity_types.each do |type| %>
+      <%= button_tag type.nome, type: "submit", name: "filter", value: type.id, class: "btn btn-outline-secondary #{params[:filter] == type.id.to_s ? 'active' : ''}" %>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>Cidade</th>
+                <th>Estado</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%= turbo_frame_tag "entidades" do %>
+                <% @entities.each do |entity| %>
+                    <tr>
+                        <td><%= entity.nome %></td>
+                        <td><%= entity.entity_type.nome %></td>
+                        <td><%= entity.cidade %></td>
+                        <td><%= entity.estado %></td>
+                        <td>
+                            <a href="<%= entity_path(entity.id) %>" class="btn btn-info">Detalhes</a>
+                        </td>
+                    </tr>
+                <% end %>
+            <% end%>
+        </tbody>
+    </table>
+</div>
+
+<a href="<%= new_entity_path(1) %>" class="btn btn-success mt-3">+ Nova Entidade</a>
+<a href="<%= root_path %>" class="btn btn-secondary mt-3">Voltar</a>

@@ -1,17 +1,18 @@
 class EntitiesController < ApplicationController
   before_action :set_entity, only: [:edit, :show, :update, :destroy]
 
-  def entities_by_type
+  def index
     @entity_types = EntityType.all
-  end
-
-  def filter_by_type
-    @entity_type = EntityType.find(params[:entity_type_id])
-    if EntityType.exists?(params[:entity_type_id]) && Entity.exists?(entity_types_id: params[:entity_type_id])
-      @entities = Entity.where(entity_types_id: params[:entity_type_id])
+    if params[:filter] != "" && params[:filter] != nil
+      entity_type = EntityType.where(id: params[:filter]).first
+      if entity_type != nil
+        @entities = Entity.where(entity_types_id: entity_type.id).all
+      else
+        @entities = []
+      end
     else
-      @entities = []
-    end
+      @entities = Entity.all
+    end      
   end
 
   def show    
@@ -23,7 +24,8 @@ class EntitiesController < ApplicationController
 
   def update
     if @entity.update(entity_params)
-      redirect_to filter_by_type_path(entity_type_id: @entity.entity_types_id), notice: 'Entidade atualizada com sucesso'
+      #redirect_to entidades_path, notice: 'Entidade atualizada com sucesso'
+      redirect_to entity_path(@entity.id), notice: 'Entidade atualizada com sucesso'
     else
       @entity_types = EntityType.all   
       render :edit
@@ -40,7 +42,7 @@ class EntitiesController < ApplicationController
     @entity = Entity.new(entity_params)
 
     if @entity.save
-      redirect_to filter_by_type_path(entity_type_id: @entity.entity_types_id), notice: 'Entidade criada com sucesso'
+      redirect_to entity_path(@entity.id), notice: 'Entidade criada com sucesso'
     else
       @entity_types = EntityType.all
       render :new
@@ -49,9 +51,9 @@ class EntitiesController < ApplicationController
 
   def destroy
     if @entity.destroy
-      redirect_to filter_by_type_path(entity_type_id: @entity.entity_types_id), notice: 'Entidade excluída com sucesso'
+      redirect_to entidades_path, notice: 'Entidade excluída com sucesso'
     else
-      redirect_to filter_by_type_path(entity_type_id: @entity.entity_types_id), alert: 'Erro ao excluir entidade'
+      redirect_to entity_path(@entity.id), alert: 'Erro ao excluir entidade'
     end
   end
 
