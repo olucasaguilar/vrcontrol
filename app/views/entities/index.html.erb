@@ -18,10 +18,12 @@
   </div>
 <% end %>
 
+<button class="btn btn-outline-secondary" disabled style="visibility: hidden;">Filtrar</button>
+
 <div class="table-responsive">
   <table class="table table-bordered">
     <colgroup>
-      <col style="width: 5%;">
+      <col style="width: 3%;">
       <col style="width: 30%;">
       <col style="width: 15%;">
       <col style="width: 20%;">
@@ -73,7 +75,7 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>
-              <a href="" class="btn btn-info" disabled style="visibility: hidden;">Detalhes</a>
+              <a href="" class="btn btn-info" disabled style="visibility: hidden;"></a>
             </td>
           </tr>    
         <% end %>
@@ -82,13 +84,20 @@
   </table>  
 </div>
 
-<label for="itemsPerPage">Itens por página:</label>
-<% @quant_items.each do |quant| %>
-  <% is_active = params[:quant] == quant.to_s %>
-  <% button_class = "btn btn-outline #{is_active ? 'active' : ''}" %>
-  <%# <%= link_to "Botão", request.params.merge(teste: 'teste), class: "btn btn-primary" %>
-  <%= link_to quant, request.params.merge(quant: quant), class: button_class %>
-<% end %><br><br>
+
+<div style="display: flex; align-items: center;">
+  <label>Itens por página: </label>
+  <%= select_tag :quant, options_for_select(@quant_items, @pagy.items), class: "form-control", onchange: "changePerPage(this)", style: "width: 40px;" %>
+</div>
+
+<script>
+  function changePerPage(select) {
+    const selectedValue = select.value;
+    const currentParams = <%= raw(request.params.except("controller", "action").to_json) %>;
+    currentParams["quant"] = selectedValue;
+    window.location.href = '<%= entidades_path %>' + '?' + new URLSearchParams(currentParams);
+  }
+</script>
 
 <div class="text-center">
   <% if @pagy.prev %>
@@ -109,7 +118,6 @@
     <button class="btn btn-secondary" disabled>Última Página</button>
   <% end %>
 </div>
-
 
 <a href="<%= new_entity_path(1) %>" class="btn btn-success mt-3">+ Nova Entidade</a>
 <a href="<%= root_path %>" class="btn btn-secondary mt-3">Voltar</a>
