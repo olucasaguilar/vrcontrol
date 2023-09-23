@@ -16,6 +16,22 @@ class EntitiesController < ApplicationController
       @entities = Entity.all
     end
 
+    if params[:sort] != "" && params[:sort] != nil
+      if params[:sort] == "nome"
+        @entities = @entities.order(:nome)
+      elsif params[:sort] == "cidade"
+        @entities = @entities.order(:cidade)
+      elsif params[:sort] == "estado"
+        @entities = @entities.order(:estado)
+      elsif params[:sort] == "nome_"
+        @entities = @entities.order(nome: :desc)
+      elsif params[:sort] == "cidade_"
+        @entities = @entities.order(cidade: :desc)
+      elsif params[:sort] == "estado_"
+        @entities = @entities.order(estado: :desc)
+      end
+    end
+
     @quant_items = [4, 6, 8, 10, 16, 20]
     
     quant = params[:quant]

@@ -1,3 +1,11 @@
+<style>
+  .no-link-effect {
+    text-decoration: none; /* Remove a sublinhado */
+    color: inherit; /* Mantém a cor do texto padrão */
+    /* Outros estilos personalizados, se necessário */
+  }
+</style>
+
 <h1>Entidades</h1>
 
 <%= form_with url: entidades_path, method: :get do %>
@@ -23,10 +31,22 @@
     <thead>
       <tr>
         <th>Nº</th>
-        <th>Nome</th>
+        <% if params[:sort] == 'nome' %>
+          <th><%= link_to "Nome \\/", request.params.merge(sort: 'nome_'), class: 'no-link-effect' %></th>
+        <% else params[:sort] == 'nome_' %>
+          <th><%= link_to "Nome /\\", request.params.merge(sort: 'nome'), class: 'no-link-effect' %></th>
+        <% end %>
         <th>Tipo</th>
-        <th>Cidade</th>
-        <th>Estado</th>
+        <% if params[:sort] == 'cidade' %>
+          <th><%= link_to "Cidade \\/", request.params.merge(sort: 'cidade_'), class: 'no-link-effect' %></th>
+        <% else params[:sort] == 'cidade_' %>
+          <th><%= link_to "Cidade /\\", request.params.merge(sort: 'cidade'), class: 'no-link-effect' %></th>
+        <% end %>
+        <% if params[:sort] == 'estado' %>
+          <th><%= link_to "Estado \\/", request.params.merge(sort: 'estado_'), class: 'no-link-effect' %></th>
+        <% else params[:sort] == 'estado_' %>
+          <th><%= link_to "Estado /\\", request.params.merge(sort: 'estado'), class: 'no-link-effect' %></th>
+        <% end %>
         <th>Ações</th>
       </tr>
     </thead>
