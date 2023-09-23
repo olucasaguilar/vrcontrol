@@ -16,8 +16,11 @@ class EntitiesController < ApplicationController
       @entities = Entity.all
     end
 
+    @quant_items = [4, 6, 8, 10, 16, 20]
     
-    quant = 6
+    quant = params[:quant]
+    quant = 6 if quant == nil || quant == "" || quant.to_i <= 0
+    quant = 20 if quant.to_i > 20
     page = params[:page]
     if page == nil || page == "" || page.to_i <= 0
       page = 1
@@ -25,7 +28,6 @@ class EntitiesController < ApplicationController
       page = page.to_i
     end
     if page > (@entities.count / quant.to_f).ceil
-      # leva à maior página possível
       page = (@entities.count / quant.to_f).ceil      
     end
 

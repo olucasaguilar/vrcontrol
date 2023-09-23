@@ -61,6 +61,15 @@
     </tbody>
   </table>  
 </div>
+
+<label for="itemsPerPage">Itens por página:</label>
+<% @quant_items.each do |quant| %>
+  <% is_active = params[:quant] == quant.to_s %>
+  <% button_class = "btn btn-outline #{is_active ? 'active' : ''}" %>
+  <%# <%= link_to "Botão", request.params.merge(teste: 'teste), class: "btn btn-primary" %>
+  <%= link_to quant, request.params.merge(quant: quant), class: button_class %>
+<% end %><br><br>
+
 <div class="text-center">
   <% if @pagy.prev %>
     <%= link_to "Primeira Página", request.params.merge(page: 1), class: "btn btn-primary" %>
