@@ -1,40 +1,65 @@
-<% if notice %>
-  <% if notice.is_a?(Array) %>
-    <% notice.each do |message| %>
-      <div class="alert alert-success" id="notice">
-        <li><%= message %></li>
+<div id="notification-container">
+  <% if notice %>
+    <% if notice.is_a?(Array) %>
+      <% notice.each do |message| %>
+        <div class="alert alert-success alert-dismissible fade show notification" role="alert">
+          <li><%= message %></li>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="alert alert-success alert-dismissible fade show notification" role="alert">
+        <%= notice %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     <% end %>
-  <% else %>
-    <div class="alert alert-success" id="notice"> <%= notice %> </div>
+    <% flash[:notice] = nil %>
   <% end %>
-  <% flash[:notice] = nil %>
-<% end %>
 
-<% if alert %>
-  <% if alert.is_a?(Array) %>
-    <% alert.each do |message| %>
-      <div class="alert alert-danger" id="alert">
-        <li><%= message %></li>
+  <% if alert %>
+    <% if alert.is_a?(Array) %>
+      <% alert.each do |message| %>
+        <div class="alert alert-danger alert-dismissible fade show notification" role="alert">
+          <li><%= message %></li>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="alert alert-danger alert-dismissible fade show notification" role="alert">
+        <%= alert %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     <% end %>
     <% flash[:alert] = nil %>
-  <% else %>
-    <div class="alert alert-danger" id="alert"> <%= alert %> </div>
   <% end %>
-  <% flash[:alert] = nil %>
-<% end %>
 
-<% if info %>
-  <% if info.is_a?(Array) %>
-    <% info.each do |message| %>
-      <div class="alert alert-info" id="info">
-        <li><%= message %></li>
+  <% if info %>
+    <% if info.is_a?(Array) %>
+      <% info.each do |message| %>
+        <div class="alert alert-info alert-dismissible fade show notification" role="alert">
+          <li><%= message %></li>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="alert alert-info alert-dismissible fade show notification" role="alert">
+        <%= info %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     <% end %>
     <% flash[:info] = nil %>
-  <% else %>
-    <div class="alert alert-info" id="info"> <%= info %> </div>
   <% end %>
-  <% flash[:info] = nil %>
-<% end %>
+</div>
+
+<style>
+  #notification-container {
+    position: fixed;
+    top: 80px; /* Ajuste conforme necessário para a posição desejada */
+    left: 255px; /* Ajuste conforme necessário para a posição desejada */
+    z-index: 9999; /* Garante que o contêiner esteja à frente de tudo */
+  }
+
+  .notification {
+    margin-bottom: 10px; /* Espaço entre as notificações */
+  }
+</style>

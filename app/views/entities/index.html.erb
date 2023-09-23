@@ -3,39 +3,84 @@
 <%= form_with url: entidades_path, method: :get do %>
   <div class="btn-group" style="width: 100%;">
     <% @entity_types.each do |type| %>
-      <%= button_tag type.nome, type: "submit", name: "filter", value: type.id, class: "btn btn-outline-secondary #{params[:filter] == type.id.to_s ? 'active' : ''}" %>
+      <% is_active = params[:filter] == type.id.to_s %>
+      <% button_class = "btn btn-outline-secondary #{is_active ? 'active' : ''}" %>
+      <%= button_tag type.nome, type: "submit", name: "filter", value: is_active ? nil : type.id, class: button_class %>
     <% end %>
   </div>
 <% end %>
 
 <div class="table-responsive">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Tipo</th>
-                <th>Cidade</th>
-                <th>Estado</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            <%= turbo_frame_tag "entidades" do %>
-                <% @entities.each do |entity| %>
-                    <tr>
-                        <td><%= entity.nome %></td>
-                        <td><%= entity.entity_type.nome %></td>
-                        <td><%= entity.cidade %></td>
-                        <td><%= entity.estado %></td>
-                        <td>
-                            <a href="<%= entity_path(entity.id) %>" class="btn btn-info">Detalhes</a>
-                        </td>
-                    </tr>
-                <% end %>
-            <% end%>
-        </tbody>
-    </table>
+  <table class="table table-bordered">
+    <colgroup>
+      <col style="width: 5%;">
+      <col style="width: 30%;">
+      <col style="width: 15%;">
+      <col style="width: 20%;">
+      <col style="width: 15%;">
+      <col style="width: 10%;">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Nº</th>
+        <th>Nome</th>
+        <th>Tipo</th>
+        <th>Cidade</th>
+        <th>Estado</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @entities.each_with_index do |entity, index| %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td><%= entity.nome %></td>
+          <td><%= entity.entity_type.nome %></td>
+          <td><%= entity.cidade %></td>
+          <td><%= entity.estado %></td>
+          <td>
+            <a href="<%= entity_path(entity.id) %>" class="btn btn-info">Detalhes</a>
+          </td>
+        </tr>
+      <% end %>
+      <%# verifica se tem o numero de pagy.items %>
+      <% if @entities.count < @pagy.items %>
+        <%# se tiver, preenche o resto da tabela com linhas vazias %>
+        <% (@pagy.items - @entities.count).times do %>
+          <tr> <%# campo vazio, mas com espaço de como se tivesse algo %>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+              <a href="" class="btn btn-info" disabled style="visibility: hidden;">Detalhes</a>
+            </td>
+          </tr>    
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>  
 </div>
+<div class="text-center">
+  <% if @pagy.prev %>
+    <%= link_to "Primeira Página", request.params.merge(page: 1), class: "btn btn-primary" %>
+    <%= link_to "Página Anterior", request.params.merge(page: @pagy.prev), class: "btn btn-primary" %>
+  <% else %>
+    <button class="btn btn-secondary" disabled>Primeira Página</button>
+    <button class="btn btn-secondary" disabled>Página Anterior</button>
+  <% end %>
+
+  <span class="current-page">Página <%= @pagy.page %> de <%= @pagy.pages %></span>
+
+  <% if @pagy.next %>
+    <%= link_to "Próxima Página", request.params.merge(page: @pagy.next), class: "btn btn-primary" %>
+    <%= link_to "Última Página", request.params.merge(page: @pagy.last), class: "btn btn-primary" %>
+  <% else %>
+    <button class="btn btn-secondary" disabled>Próxima Página</button>
+    <button class="btn btn-secondary" disabled>Última Página</button>
+  <% end %>
+</div>
+
 
 <a href="<%= new_entity_path(1) %>" class="btn btn-success mt-3">+ Nova Entidade</a>
 <a href="<%= root_path %>" class="btn btn-secondary mt-3">Voltar</a>

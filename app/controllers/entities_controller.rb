@@ -1,4 +1,6 @@
 class EntitiesController < ApplicationController
+  include Pagy::Backend
+
   before_action :set_entity, only: [:edit, :show, :update, :destroy]
 
   def index
@@ -12,7 +14,25 @@ class EntitiesController < ApplicationController
       end
     else
       @entities = Entity.all
-    end      
+    end
+
+    
+    quant = 6
+    page = params[:page]
+    if page == nil || page == "" || page.to_i <= 0
+      page = 1
+    else
+      page = page.to_i
+    end
+    if page > (@entities.count / quant.to_f).ceil
+      # leva à maior página possível
+      page = (@entities.count / quant.to_f).ceil      
+    end
+
+    @pagy, @entities = pagy(@entities, items: quant, page: page)
+
+    flash[:notice] = []
+    #flash[:notice] << params.inspect
   end
 
   def show    
