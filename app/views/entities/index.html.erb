@@ -121,3 +121,30 @@
 
 <a href="<%= new_entity_path(1) %>" class="btn btn-success mt-3">+ Nova Entidade</a>
 <a href="<%= root_path %>" class="btn btn-secondary mt-3">Voltar</a>
+
+<button class="teste-ajax">Teste Ajax</button>
+<div class="teste-ajax-result"></div>
+
+<script>
+  $(document).ready(function() {
+    $('.teste-ajax').click(function() {
+      $.ajax({
+        url: '/entidades',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+          $('.teste-ajax-result').html(data.message);
+        }
+      });
+    });
+  });
+</script>
+
+class EntitiesController < ApplicationController
+  def index
+    respond_to do |format|
+      format.html
+      format.json { render json: { message: 'Hello World!' } }
+    end
+  end
+end
