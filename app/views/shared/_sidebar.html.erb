@@ -151,11 +151,6 @@
     text-decoration: none;
     color: black;
   }
-
-  .dropdown-menu {
-    background-color: rgb(7, 105, 185);
-    border: 1px solid black;
-  }
 </style>
 
 <script>
@@ -204,7 +199,7 @@
         </a>
       </li>
       <li>
-        <a href="<%= financial_records_path %>" class="nav-link <%= 'active' if current_page?(financial_records_path) %>">
+        <a href="<%= financial_records_path %>" class="nav-link <%= 'active' if current_page?('/caixa') %>">
           <span class="icon"><i class="fas fa-desktop"></i></span>
           <span class="item">Transações</span>
         </a>
@@ -264,11 +259,36 @@
         </a>
         <div class="btn-group dropup">
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownCadastros">
-            <li><a class="dropdown-item" href="<%= entity_types_path %>">Tipos de Entidade</a></li>
-            <li><a class="dropdown-item" href="<%= fabric_types_path %>">Tipos de Tecidos</a></li>
-            <li><a class="dropdown-item" href="<%= colors_path %>">Cores</a></li>
-            <li><a class="dropdown-item" href="<%= garment_types_path %>">Tipos de Peças</a></li>
-            <li><a class="dropdown-item" href="<%= garment_sizes_path %>">Tamanhos de Peças</a></li>
+            <li>
+              <a class="dropdown-item" href="<%= entity_types_path %>">
+                <span class="icon"><i class="fas fa-cog"></i></span>
+                <span class="item">Tipos de Entidades</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="<%= fabric_types_path %>">
+                <span class="icon"><i class="fas fa-cog"></i></span>
+                <span class="item">Tipos de Tecidos</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="<%= colors_path %>">
+                <span class="icon"><i class="fas fa-cog"></i></span>
+                <span class="item">Cores</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="<%= garment_types_path %>">
+                <span class="icon"><i class="fas fa-cog"></i></span>
+                <span class="item">Tipos de Peças</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="<%= garment_sizes_path %>">
+                <span class="icon"><i class="fas fa-cog"></i></span>
+                <span class="item">Tamanhos de Peças</span>
+              </a>
+            </li>
           </ul>
         </div>
       </li>
@@ -278,6 +298,12 @@
 
 <style>
   .dropdown-item {
-    margin-left: 1px;
+    margin-left: -5px;
+    /* margin-top: -10px; */
+  }
+
+  .dropdown-menu {
+    background-color: #265E7F;
+    /* border: 5px solid black; */
   }
 </style>
