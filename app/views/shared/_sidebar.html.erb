@@ -222,25 +222,43 @@
         </a>
       </li>
       <li>
-        <a class="nav-link disabled">Corte</a>
+        <a href="<%= root_path %>" class="nav-link <%= 'active' if current_page?(root_path) %>">
+          <span class="icon"><i class="fas fa-cut"></i></span>
+          <span class="item">Corte</span>
+        </a>
       </li>
       <li>
-        <a class="nav-link disabled">Serigrafia</a>
+        <a href="<%= root_path %>" class="nav-link <%= 'active' if current_page?(root_path) %>">
+          <span class="icon"><i class="fas fa-paint-roller"></i></span>
+          <span class="item">Serigrafia</span>
+        </a>
       </li>
       <li>
-        <a class="nav-link disabled">Costura</a>
+        <a href="<%= root_path %>" class="nav-link <%= 'active' if current_page?(root_path) %>">
+          <span class="icon"><i class="fas fa-cut"></i></span>
+          <span class="item">Costura</span>
+        </a>
       </li>
       <li>
-        <a class="nav-link disabled">Acabamento</a>
+        <a href="<%= root_path %>" class="nav-link <%= 'active' if current_page?(root_path) %>">
+          <span class="icon"><i class="fas fa-tools"></i></span>
+          <span class="item">Acabamento</span>
+        </a>
       </li>
       <li>
-        <a class="nav-link disabled">Venda</a>
+        <a href="<%= root_path %>" class="nav-link <%= 'active' if current_page?(root_path) %>">
+          <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+          <span class="item">Venda</span>
+        </a>
       </li>
       <li>
-        <a class="nav-link disabled">Relatórios/Consulta</a>
-      </li>  
+        <a href="<%= root_path %>" class="nav-link <%= 'active' if current_page?(root_path) %>">
+          <span class="icon"><i class="fas fa-file-alt"></i></span>
+          <span class="item">Relatórios</span>
+        </a>
+      </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCadastros" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" id="navbarDropdownCadastros" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="icon"><i class="fas fa-cog"></i></span>
           <span class="item">Cadastros Extras</span>
         </a>
@@ -255,3 +273,9 @@
     </ul>
   </div>        
 </div>
+
+<style>
+  .dropdown-item {
+    margin-left: 1px;
+  }
+</style>

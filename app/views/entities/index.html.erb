@@ -43,21 +43,54 @@
       <tr>
         <th>Nº</th>
         <th>Tipo</th>
-        <% if params[:sort] == 'nome' %>
-          <th><%= link_to "Nome \\/", request.params.merge(sort: 'nome_'), class: 'no-link-effect' %></th>
-        <% else params[:sort] == 'nome_' %>
-          <th><%= link_to "Nome /\\", request.params.merge(sort: 'nome'), class: 'no-link-effect' %></th>
-        <% end %>
-        <% if params[:sort] == 'cidade' %>
-          <th><%= link_to "Cidade \\/", request.params.merge(sort: 'cidade_'), class: 'no-link-effect' %></th>
-        <% else params[:sort] == 'cidade_' %>
-          <th><%= link_to "Cidade /\\", request.params.merge(sort: 'cidade'), class: 'no-link-effect' %></th>
-        <% end %>
-        <% if params[:sort] == 'estado' %>
-          <th><%= link_to "Estado \\/", request.params.merge(sort: 'estado_'), class: 'no-link-effect' %></th>
-        <% else params[:sort] == 'estado_' %>
-          <th><%= link_to "Estado /\\", request.params.merge(sort: 'estado'), class: 'no-link-effect' %></th>
-        <% end %>
+        <th>
+          <% if params[:sort] == 'nome' %>
+            <%= link_to request.params.merge(sort: 'nome_'), class: 'no-link-effect' do %>
+              Nome <i class="fas fa-caret-down"></i>
+            <% end %>
+          <% elsif params[:sort] == 'nome_' %>
+            <%= link_to request.params.merge(sort: 'nome'), class: 'no-link-effect' do %>
+              Nome <i class="fas fa-caret-up"></i>
+            <% end %>
+          <% else %>
+            <%= link_to request.params.merge(sort: 'nome'), class: 'no-link-effect' do %>
+              Nome <i class="fas fa-caret-up"></i>
+            <% end %>
+          <% end %>
+        </th>
+
+        <th>
+          <% if params[:sort] == 'cidade' %>
+            <%= link_to request.params.merge(sort: 'cidade_'), class: 'no-link-effect' do %>
+              Cidade <i class="fas fa-caret-down"></i>
+            <% end %>
+          <% elsif params[:sort] == 'cidade_' %>
+            <%= link_to request.params.merge(sort: 'cidade'), class: 'no-link-effect' do %>
+              Cidade <i class="fas fa-caret-up"></i>
+            <% end %>
+          <% else %>
+            <%= link_to request.params.merge(sort: 'cidade'), class: 'no-link-effect' do %>
+              Cidade <i class="fas fa-caret-up"></i>
+            <% end %>
+          <% end %>
+        </th>
+
+        <th>
+          <% if params[:sort] == 'estado' %>
+            <%= link_to request.params.merge(sort: 'estado_'), class: 'no-link-effect' do %>
+              Estado <i class="fas fa-caret-down"></i>
+            <% end %>
+          <% elsif params[:sort] == 'estado_' %>
+            <%= link_to request.params.merge(sort: 'estado'), class: 'no-link-effect' do %>
+              Estado <i class="fas fa-caret-up"></i>
+            <% end %>
+          <% else %>
+            <%= link_to request.params.merge(sort: 'estado'), class: 'no-link-effect' do %>
+              Estado <i class="fas fa-caret-up"></i>
+            <% end %>
+          <% end %>
+        </th>
+
         <th>Ações</th>
       </tr>
     </thead>
