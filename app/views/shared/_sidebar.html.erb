@@ -257,18 +257,20 @@
           <span class="item">Relatórios</span>
         </a>
       </li>
-      <li class="nav-item dropdown">
+      <li>
         <a class="nav-link dropdown-toggle" id="navbarDropdownCadastros" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="icon"><i class="fas fa-cog"></i></span>
           <span class="item">Cadastros Extras</span>
         </a>
-        <ul class="dropdown-menu" aria-labelledby="navbarDropdownCadastros">
-          <li><a class="dropdown-item" href="<%= entity_types_path %>">Tipos de Entidade</a></li>
-          <li><a class="dropdown-item" href="<%= fabric_types_path %>">Tipos de Tecidos</a></li>
-          <li><a class="dropdown-item" href="<%= colors_path %>">Cores</a></li>
-          <li><a class="dropdown-item" href="<%= garment_types_path %>">Tipos de Peças</a></li>
-          <li><a class="dropdown-item" href="<%= garment_sizes_path %>">Tamanhos de Peças</a></li>
-        </ul>
+        <div class="btn-group dropup">
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownCadastros">
+            <li><a class="dropdown-item" href="<%= entity_types_path %>">Tipos de Entidade</a></li>
+            <li><a class="dropdown-item" href="<%= fabric_types_path %>">Tipos de Tecidos</a></li>
+            <li><a class="dropdown-item" href="<%= colors_path %>">Cores</a></li>
+            <li><a class="dropdown-item" href="<%= garment_types_path %>">Tipos de Peças</a></li>
+            <li><a class="dropdown-item" href="<%= garment_sizes_path %>">Tamanhos de Peças</a></li>
+          </ul>
+        </div>
       </li>
     </ul>
   </div>        
