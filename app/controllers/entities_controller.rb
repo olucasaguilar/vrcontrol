@@ -49,7 +49,7 @@ class EntitiesController < ApplicationController
 
     @pagy, @entities = pagy(@entities, items: quant, page: page)
 
-    flash[:notice] = []
+    #flash[:notice] = []
     #flash[:notice] << params.inspect
   end
 

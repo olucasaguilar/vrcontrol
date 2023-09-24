@@ -1,3 +1,12 @@
+<script>
+  function changePerPage(select) {
+    const selectedValue = select.value;
+    const currentParams = <%= raw(request.params.except("controller", "action").to_json) %>;
+    currentParams["quant"] = selectedValue;
+    window.location.href = '<%= entidades_path %>' + '?' + new URLSearchParams(currentParams);
+  }
+</script>
+
 <style>
   .no-link-effect {
     text-decoration: none; /* Remove a sublinhado */
@@ -24,21 +33,21 @@
   <table class="table table-bordered">
     <colgroup>
       <col style="width: 3%;">
-      <col style="width: 30%;">
-      <col style="width: 15%;">
-      <col style="width: 20%;">
-      <col style="width: 15%;">
       <col style="width: 10%;">
+      <col style="width: 25%;">
+      <col style="width: 13%;">
+      <col style="width: 8%;">
+      <col style="width: 8%;">
     </colgroup>
     <thead>
       <tr>
         <th>Nº</th>
+        <th>Tipo</th>
         <% if params[:sort] == 'nome' %>
           <th><%= link_to "Nome \\/", request.params.merge(sort: 'nome_'), class: 'no-link-effect' %></th>
         <% else params[:sort] == 'nome_' %>
           <th><%= link_to "Nome /\\", request.params.merge(sort: 'nome'), class: 'no-link-effect' %></th>
         <% end %>
-        <th>Tipo</th>
         <% if params[:sort] == 'cidade' %>
           <th><%= link_to "Cidade \\/", request.params.merge(sort: 'cidade_'), class: 'no-link-effect' %></th>
         <% else params[:sort] == 'cidade_' %>
@@ -56,8 +65,8 @@
       <% @entities.each_with_index do |entity, index| %>
         <tr>
           <td><%= index + 1 %></td>
-          <td><%= entity.nome %></td>
           <td><%= entity.entity_type.nome %></td>
+          <td><%= entity.nome %></td>
           <td><%= entity.cidade %></td>
           <td><%= entity.estado %></td>
           <td>
@@ -75,7 +84,7 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>
-              <a href="" class="btn btn-info" disabled style="visibility: hidden;"></a>
+              <a href="" class="btn btn-info" disabled style="visibility: hidden;">a</a>
             </td>
           </tr>    
         <% end %>
@@ -89,15 +98,6 @@
   <label>Itens por página: </label>
   <%= select_tag :quant, options_for_select(@quant_items, @pagy.items), class: "form-control", onchange: "changePerPage(this)", style: "width: 40px;" %>
 </div>
-
-<script>
-  function changePerPage(select) {
-    const selectedValue = select.value;
-    const currentParams = <%= raw(request.params.except("controller", "action").to_json) %>;
-    currentParams["quant"] = selectedValue;
-    window.location.href = '<%= entidades_path %>' + '?' + new URLSearchParams(currentParams);
-  }
-</script>
 
 <div class="text-center">
   <% if @pagy.prev %>
@@ -122,29 +122,4 @@
 <a href="<%= new_entity_path(1) %>" class="btn btn-success mt-3">+ Nova Entidade</a>
 <a href="<%= root_path %>" class="btn btn-secondary mt-3">Voltar</a>
 
-<button class="teste-ajax">Teste Ajax</button>
-<div class="teste-ajax-result"></div>
-
-<script>
-  $(document).ready(function() {
-    $('.teste-ajax').click(function() {
-      $.ajax({
-        url: '/entidades',
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-          $('.teste-ajax-result').html(data.message);
-        }
-      });
-    });
-  });
-</script>
-
-class EntitiesController < ApplicationController
-  def index
-    respond_to do |format|
-      format.html
-      format.json { render json: { message: 'Hello World!' } }
-    end
-  end
-end
+<%# <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="arrowIcon"><path d="M4 8L8 12L12 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg> %>

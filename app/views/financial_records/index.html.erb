@@ -2,7 +2,7 @@
 <p>
   <%= link_to 'Novo registro', new_financial_record_path, class: 'btn btn-primary' %>
 </p>
-<table class="table">
+<table class="table table-bordered">
   <thead class="thead-light">
     <tr>
       <td colspan="5">
@@ -26,7 +26,7 @@
         <td><%= number_to_currency(financial_record.valor, unit: 'R$', separator: ',', delimiter: '.') %></td>
         <td><%= number_to_currency(financial_record.saldo, unit: 'R$', separator: ',', delimiter: '.') %></td>
         <td><%= financial_record.observacao %></td>
-        <td><%= financial_record.data_hora %></td>
+        <td><%= financial_record.data_hora.strftime("%d/%m/%Y %H:%M:%S") %></td>
       </tr>
     <% end %>
   </tbody>
