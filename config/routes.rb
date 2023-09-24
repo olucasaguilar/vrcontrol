@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   root "home#index"
-  get '/cadastros_extras', to: 'cadastros_extras#index', as: 'cadastros_extras'
 
   # Rotas dentro de Cadastros Extras
   resources :entity_types, except: [:show]
@@ -42,4 +41,9 @@ Rails.application.routes.draw do
 
   # Rota para tela de estoque
   get '/estoque', to: 'stock#index', as: 'stock'
+
+  # Rota para tela temporária de caixa
+  get '/caixa/temp_view', to: 'financial_records#temp_view', as: 'temp_view_financial_records'
+  # Rota para tela temporária estoque
+  get '/estoque/temp_view', to: 'stock#temp_view', as: 'temp_view_stock'
 end

@@ -81,7 +81,7 @@
   .wrapper .sidebar ul li a.active{
     color: #0c7db1;
 
-    background:white;
+    background: white;
     border-right: 2px solid rgb(5, 68, 104);
   }
 
@@ -152,6 +152,10 @@
     color: black;
   }
 
+  .dropdown-menu {
+    background-color: rgb(7, 105, 185);
+    border: 1px solid black;
+  }
 </style>
 
 <script>
@@ -234,14 +238,20 @@
       </li>
       <li>
         <a class="nav-link disabled">Relatórios/Consulta</a>
-      </li>
-      <li>
-        <a href="<%= cadastros_extras_path %>" class="nav-link <%= 'active' if current_page?(cadastros_extras_path) %>">
+      </li>  
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCadastros" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="icon"><i class="fas fa-cog"></i></span>
           <span class="item">Cadastros Extras</span>
         </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdownCadastros">
+          <li><a class="dropdown-item" href="<%= entity_types_path %>">Tipos de Entidade</a></li>
+          <li><a class="dropdown-item" href="<%= fabric_types_path %>">Tipos de Tecidos</a></li>
+          <li><a class="dropdown-item" href="<%= colors_path %>">Cores</a></li>
+          <li><a class="dropdown-item" href="<%= garment_types_path %>">Tipos de Peças</a></li>
+          <li><a class="dropdown-item" href="<%= garment_sizes_path %>">Tamanhos de Peças</a></li>
+        </ul>
       </li>
     </ul>
   </div>        
 </div>
-

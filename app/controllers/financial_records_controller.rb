@@ -25,6 +25,9 @@ class FinancialRecordsController < ApplicationController
     end
   end
 
+  def temp_view
+  end
+
   private
 
   def financial_record_params
