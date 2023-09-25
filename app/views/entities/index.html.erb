@@ -29,6 +29,19 @@
 
 <button class="btn btn-outline-secondary" disabled style="visibility: hidden;">Filtrar</button>
 
+<%# <table class="table table-bordered">
+  <thead>
+    <tr>
+      <td>
+        <div class="form-group">
+          <label for="valor">Filtrar por Nome:</label>
+          <input type="text" class="form-control" id="valor">
+        </div>
+      </td>
+    </tr>
+  </thead>
+</table> %>
+
 <div class="table-responsive">
   <table class="table table-striped table-bordered">
     <colgroup>
@@ -121,7 +134,12 @@
             </td>
           </tr>    
         <% end %>
-      <% end %>
+      <% end %> 
+      <tr> 
+        <td colspan="6">
+          <a href="<%= new_entity_path(1) %>" type="button" class="btn btn-success" style="float: left;">+ Nova Entidade</a>
+        </td>
+      </tr>
     </tbody>
   </table>  
 </div>
@@ -176,9 +194,5 @@
     <% end %>
   </ul>
 </nav>
-
-
-<a href="<%= new_entity_path(1) %>" class="btn btn-success mt-3">+ Nova Entidade</a>
-<a href="<%= root_path %>" class="btn btn-secondary mt-3">Voltar</a>
 
 <%# <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="arrowIcon"><path d="M4 8L8 12L12 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg> %>
