@@ -151,6 +151,15 @@
     text-decoration: none;
     color: black;
   }
+  
+  .dropdown-menu {
+    background-color: #265E7F;
+  }
+
+  /* Estilize o dropdown-item */
+  .dropdown-item {
+    min-width: 300px; /* Defina o tamanho mínimo desejado */
+  }
 </style>
 
 <script>
@@ -205,10 +214,26 @@
         </a>
       </li>
       <li>
-        <a href="<%= stock_path %>" class="nav-link <%= 'active' if current_page?(stock_path) %>">
+        <a class="nav-link dropdown-toggle" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="icon"><i class="fas fa-chart-line"></i></span>
           <span class="item">Estoque</span>
         </a>
+        <div class="dropup">
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
+            <li>
+              <a class="dropdown-item" href="<%= tecidos_temp_view_stock_path %>">
+                <span class="icon"><i class="fas fa-chart-line"></i></span>
+                <span class="item">Tecidos</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="<%= pecas_temp_view_stock_path %>">
+                <span class="icon"><i class="fas fa-chart-line"></i></span>
+                <span class="item">Peças</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </li>
       <li>
         <a href="<%= new_fabric_entry_path %>" class="nav-link <%= 'active' if current_page?(new_fabric_entry_path) || current_page?(new_fabric_entry_details_path) %>">
@@ -247,7 +272,7 @@
         </a>
       </li>
       <li>
-        <a href="<%= temp_view_relatorios_path %>" class="nav-link <%= 'active' if current_page?(temp_view_relatorios_path) %>">
+        <a href="<%= root_path %>" class="nav-link">
           <span class="icon"><i class="fas fa-file-alt"></i></span>
           <span class="item">Relatórios</span>
         </a>
@@ -295,15 +320,3 @@
     </ul>
   </div>        
 </div>
-
-<style>
-  .dropdown-item {
-    margin-left: -5px;
-    /* margin-top: -10px; */
-  }
-
-  .dropdown-menu {
-    background-color: #265E7F;
-    /* border: 5px solid black; */
-  }
-</style>

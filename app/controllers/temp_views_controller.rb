@@ -18,8 +18,4 @@ class TempViewsController < ApplicationController
   def venda
     @venda = 'venda teste'
   end
-
-  def relatorios
-    @relatorios = 'relatorios teste'
-  end
 end

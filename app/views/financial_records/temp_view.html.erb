@@ -1,5 +1,5 @@
 <% financial_records = [
-  { entidade: 'Fornecedor A', tipo_movimento: 'Saída', valor: 'R$111,00', saldo: '-R$360,00', observacao: 'Entrada Tecido - Custo - Vrau', data_hora: '19/09/2023 21:56:00' },
+  { entidade: 'Fornecedor A', tipo_movimento: 'Saída', valor: 'R$111,00', saldo: '-R$360,00', observacao: 'Entrada Tecido - Custo - Ficticio', data_hora: '19/09/2023 21:56:00' },
   { entidade: 'Fornecedor B', tipo_movimento: 'Saída', valor: 'R$222,00', saldo: '-R$249,00', observacao: 'Entrada Tecido - Custo Extra', data_hora: '19/09/2023 21:56:00' },
   { entidade: 'Fornecedor C', tipo_movimento: 'Saída', valor: 'R$6,00', saldo: '-R$27,00', observacao: 'Entrada Tecido - Custo - Comprado no desconto', data_hora: '19/09/2023 21:45:00' },
   { entidade: '', tipo_movimento: 'Saída', valor: 'R$15,00', saldo: '-R$21,00', observacao: 'Mov. manual - Combustível', data_hora: '19/09/2023 21:51:00' },
@@ -97,11 +97,6 @@
         </tr>
       <% end %>
     <% end %>    
-    <tr> 
-      <td colspan="6">
-        <button class="btn btn-secondary" style="float: right;">Imprimir</button>
-      </td>
-    </tr>
   </tbody>
 </table>
 
@@ -125,3 +120,6 @@
     </li>
   </ul>
 </nav>
+
+<!-- Botão de Impressão -->
+<button class="btn btn-secondary" style="float: right;">Imprimir</button>

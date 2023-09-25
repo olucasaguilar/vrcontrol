@@ -44,8 +44,10 @@ Rails.application.routes.draw do
 
   # Rota para tela temporária de caixa
   get '/caixa/temp_view', to: 'financial_records#temp_view', as: 'temp_view_financial_records'
-  # Rota para tela temporária estoque
-  get '/estoque/temp_view', to: 'stock#temp_view', as: 'temp_view_stock'
+  # Rota para tela temporária estoque tecidos
+  get '/estoque/tecidos/temp_view', to: 'stock#tecidos_temp_view', as: 'tecidos_temp_view_stock'
+  # Rota para tela temporária estoque peças
+  get '/estoque/pecas/temp_view', to: 'stock#pecas_temp_view', as: 'pecas_temp_view_stock'
   # Rota para tela temporária corte
   get '/temp_view/corte', to: 'temp_views#corte', as: 'temp_view_corte'
   # Rota para tela temporária serigrafia
@@ -56,6 +58,4 @@ Rails.application.routes.draw do
   get '/temp_view/acabamento', to: 'temp_views#acabamento', as: 'temp_view_acabamento'
   # Rota para tela temporária venda
   get '/temp_view/venda', to: 'temp_views#venda', as: 'temp_view_venda'
-  # Rota para tela temporária relatórios
-  get '/temp_view/relatorios', to: 'temp_views#relatorios', as: 'temp_view_relatorios'
 end
