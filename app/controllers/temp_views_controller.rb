@@ -18,4 +18,7 @@ class TempViewsController < ApplicationController
   def venda
     @venda = 'venda teste'
   end
+
+  def login
+  end
 end

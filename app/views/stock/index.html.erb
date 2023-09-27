@@ -1,3 +1,4 @@
+<% @fabric_stock_groups = FabricStock.all.group_by { |fabric_stock| [fabric_stock.tipo_tecido.nome, fabric_stock.cor.nome] } %>
 <% if @fabric_stock_groups.any? %>
   <table class="table table-bordered">
     <thead>
@@ -22,5 +23,3 @@
 <% end %>
 
 <%# FabricStock.destroy_all if FabricStock.count > 0 %>
-
-<%= link_to 'Temp View', temp_view_stock_path, class: 'btn btn-primary' %>

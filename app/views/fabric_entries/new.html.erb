@@ -4,18 +4,18 @@
     $('#add-field-button').click(function(e) {
       e.preventDefault();
 
-      // Encontre a tabela
-      var table = $('table tbody');
+      // Encontre a tabela <table> <tbody id="table-body">
+      var table = $('#table-body');
 
       // Crie uma nova linha
       var newRow = $('<tr>');
 
-      // Adicione os campos "valor" e "observação"
-      newRow.append('<td><input type="text" name="valor[]" required></td>');
-      newRow.append('<td><input type="text" name="observacao[]"></td>');
+      // Adicione os campos "valor" e "observação" com classes do Bootstrap
+      newRow.append('<td><input type="text" name="valor[]" required class="form-control"></td>');
+      newRow.append('<td><input type="text" name="observacao[]" class="form-control"></td>');
 
-      // Adicione um botão para remover a linha
-      newRow.append('<td><button type="button" class="remove-row-button">Remover</button></td>');
+      // Adicione um botão para remover a linha com classe do Bootstrap
+      newRow.append('<td><button type="button" class="btn btn-danger remove-row-button">Remover</button></td>');
 
       // Adicione a linha à tabela
       table.append(newRow);
@@ -35,7 +35,7 @@
       //console.log($('table tbody tr').length);
 
       // Se for 0, mostra a primeira linha
-      if ($('table tbody tr').length  == 1) {
+      if ($('#table-body tr').length == 1) {
         if ($('#primeiraLinha').is(':hidden')) {
           $('#primeiraLinha').show();
         }
@@ -56,42 +56,55 @@
   }
 </style>
 
-
 <h1>Nova Entrada de Tecido</h1>
 
-<%= form_with model: @fabric_entry, url: create_fabric_entry_path do |form| %>
+<%= form_with model: @fabric_entry, url: create_fabric_entry_path, class: "mt-4" do |form| %>
   <% if @fabric_entry.errors.any? %>
-    <ul>
-      <% @fabric_entry.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
+    <div class="alert alert-danger">
+      <ul>
+        <% @fabric_entry.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
   <% end %>
 
   <% if @financial_records.any? %>
-    <ul>
-      <% @financial_records.each do |financial_record| %>
-        <% if financial_record.errors.any? %>
-          <% financial_record.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
+    <div class="alert alert-danger">
+      <ul>
+        <% @financial_records.each do |financial_record| %>
+          <% if financial_record.errors.any? %>
+            <% financial_record.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
           <% end %>
         <% end %>
-      <% end %>
-    </ul>
+      </ul>
+    </div>
   <% end %>
 
-  <div class="form-group">
-    <%= form.label :entity_id, 'Malharia<span class="required">*</span>'.html_safe %>
-    <%= form.collection_select :entity_id, @malharias, :id, :nome, { prompt: true }, { class: @fabric_entry.errors[:entity].any? ? 'input-erro' : '', required: true } %>
-  </div>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Malharia<span class="required">*</span></th>
+        <th>Data e Hora</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= form.collection_select :entity_id, @malharias, :id, :nome, { prompt: true }, { class: "form-select" } %></td>
+        <td><%= form.datetime_local_field :data_hora, class: "form-control" %></td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="form-group">
-    <%= form.label :data_hora %>
-    <%= form.datetime_select :data_hora %>
+    <%= form.submit 'Criar Entrada de Tecido', class: 'btn btn-success' %>
+    <%= link_to 'Voltar', root_path, class: 'btn btn-secondary' %>
+    <button type="button" id="add-field-button" class="btn btn-primary float-end">Adicionar Valor Extra</button>
   </div>
   
-  <button type="button" id="add-field-button">Adicionar Valor Extra</button>
-  <table>
+  <table class="table table-bordered mt-3">
     <thead>
       <tr>
         <th>Valor Extra*</th>
@@ -99,24 +112,19 @@
         <th>Ação</th>
       </tr>      
     </thead>
-    <tbody>
+    <tbody id="table-body">
       <tr id="primeiraLinha" <% if @financial_records.any? %> style="display: none;" <% end %>>
-        <td><input type="text" name="valor[]" value="" readonly disabled></td>
-        <td><input type="text" name="observacao[]" value="" readonly disabled></td>
-        <td><button type="button" class="remove-row-button" disabled>Remover</button></td>
+        <td><input type="text" name="valor[]" value="" readonly disabled class="form-control"></td>
+        <td><input type="text" name="observacao[]" value="" readonly disabled class="form-control"></td>
+        <td><button type="button" class="remove-row-button btn btn-secondary" disabled>Remover</button></td>
       </tr>
       <% @financial_records.each do |record| %>
         <tr>
-          <td><input type="text" name="valor[]" value="<%= record.valor %>" required class="<%= record.errors[:valor].any? ? 'input-erro' : '' %>"></td>
-          <td><input type="text" name="observacao[]" value="<%= record.observacao %>"></td>
-          <td><button type="button" class="remove-row-button">Remover</button></td>
+          <td><input type="text" name="valor[]" value="<%= record.valor %>" required class="form-control <%= record.errors[:valor].any? ? 'is-invalid' : '' %>"></td>
+          <td><input type="text" name="observacao[]" value="<%= record.observacao %>" class="form-control"></td>
+          <td><button type="button" class="remove-row-button btn btn-danger">Remover</button></td>
         </tr>
       <% end %>
     </tbody>
   </table>
-
-  <div class="form-group">
-    <%= form.submit 'Criar Entrada de Tecido' %>
-    <%= link_to 'Back', root_path %>
-  </div>
 <% end %>

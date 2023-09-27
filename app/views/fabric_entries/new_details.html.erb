@@ -90,7 +90,7 @@
   });
 </script>
 
-<h2>Seleção de Tecidos</h2>
+<h1>Seleção de Tecidos</h1>
 <br>
 
 <%= form_for @fabric_stocks.first, url: create_fabric_entry_details_path do |f| %>
@@ -120,6 +120,21 @@
     <% end %>
   <% end %>
 
+  <div class="input-group mb-3">
+    <span class="input-group-text">Total (kg)</span>
+    <input type="text" id="valor-total-peso" class="form-control" value="0.00" readonly>
+  </div>
+
+  <%= fields_for "FinancialRecord", @financial_record do |fe| %>
+    <div class="input-group mb-3">
+      <span class="input-group-text">Valor Total</span>
+      <%= fe.text_field :valor_, id: "valor-total", readonly: true, value: "#{sprintf('%.2f', @financial_record.valor)}", class: "form-control" %>
+    
+      <span class="input-group-text">Observação (R$)</span>
+      <%= fe.text_area :observacao, class: "form-control" %>
+    </div>
+  <% end %>
+  
   <div class="form-group">
     <button type="button" id="add-field-button" class="btn btn-primary">Mais um tecido</button>
     <%= f.submit 'Finalizar', class: "btn btn-success" %>
@@ -161,21 +176,5 @@
         <% end %>
       <% end %>
     </tbody>
-  </table>
-
-  <div class="input-group mb-3">
-    <span class="input-group-text">Total (kg)</span>
-    <input type="text" id="valor-total-peso" class="form-control" value="0.00" readonly>
-  </div>
-
-  <%= fields_for "FinancialRecord", @financial_record do |fe| %>
-    <div class="input-group mb-3">
-      <span class="input-group-text">Valor Total</span>
-      <%= fe.text_field :valor_, id: "valor-total", readonly: true, value: "#{sprintf('%.2f', @financial_record.valor)}", class: "form-control" %>
-    
-      <span class="input-group-text">Observação (R$)</span>
-      <%= fe.text_area :observacao, class: "form-control" %>
-    </div>
-  <% end %>
-
+  </table>  
 <% end %>
