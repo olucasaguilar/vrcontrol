@@ -242,10 +242,26 @@
         </a>
       </li>
       <li>
-        <a href="<%= temp_view_corte_path %>" class="nav-link <%= 'active' if current_page?(temp_view_corte_path) %>">
+        <a class="nav-link dropdown-toggle" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="icon"><i class="fas fa-cut"></i></span>
           <span class="item">Corte</span>
         </a>
+        <div class="dropup">
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
+            <li>
+              <a class="dropdown-item" href="<%= temp_view_corte_ida_path %>">
+                <span class="icon"><i class="fas fa-cut"></i></span>
+                <span class="item">Corte Ida</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="<%= temp_view_corte_volta_path %>">
+                <span class="icon"><i class="fas fa-cut"></i></span>
+                <span class="item">Corte Volta</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </li>
       <li>
         <a href="<%= temp_view_serigrafia_path %>" class="nav-link <%= 'active' if current_page?(temp_view_serigrafia_path) %>">
@@ -272,7 +288,7 @@
         </a>
       </li>
       <li>
-        <a href="<%= root_path %>" class="nav-link">
+        <a href="<%= temp_view_login_path %>" class="nav-link <%= 'active' if current_page?(temp_view_login_path) %>">
           <span class="icon"><i class="fas fa-file-alt"></i></span>
           <span class="item">Relatórios</span>
         </a>

@@ -48,8 +48,10 @@ Rails.application.routes.draw do
   get '/estoque/tecidos/temp_view', to: 'stock#tecidos_temp_view', as: 'tecidos_temp_view_stock'
   # Rota para tela temporária estoque peças
   get '/estoque/pecas/temp_view', to: 'stock#pecas_temp_view', as: 'pecas_temp_view_stock'
-  # Rota para tela temporária corte
-  get '/temp_view/corte', to: 'temp_views#corte', as: 'temp_view_corte'
+  # Rota para tela temporária corte ida
+  get '/temp_view/corte/ida', to: 'temp_views#corte_ida', as: 'temp_view_corte_ida'
+  # Rota para tela temporária corte volta
+  get '/temp_view/corte/volta', to: 'temp_views#corte_volta', as: 'temp_view_corte_volta'
   # Rota para tela temporária serigrafia
   get '/temp_view/serigrafia', to: 'temp_views#serigrafia', as: 'temp_view_serigrafia'
   # Rota para tela temporária costura
