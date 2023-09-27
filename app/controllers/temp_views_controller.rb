@@ -1,6 +1,5 @@
 class TempViewsController < ApplicationController
   def corte_ida
-    @corte_ida = 'corte ida teste'
   end
 
   def corte_volta
