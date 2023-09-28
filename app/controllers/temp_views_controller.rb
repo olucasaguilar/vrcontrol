@@ -6,7 +6,6 @@ class TempViewsController < ApplicationController
   end
 
   def serigrafia_envio
-    @serigrafia_envio = 'serigrafia_envio'
   end
 
   def serigrafia_retorno
