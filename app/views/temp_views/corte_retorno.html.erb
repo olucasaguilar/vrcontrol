@@ -57,26 +57,8 @@
 <% end %>
 
 <h1>Tecido ao Corte - Retorno</h1>
+<h5>Informações do Envio</h5>
 
-<%# 
-  informações do corte (automático)
-
-  valor corte
-
-  valor extra
-
-  data e hora (automático e pode ser alterado)
-
-  tabela com os tecidos enviados (automático)
-  tecido1 cor 1 qtd(kg) tipo de peça
-  quantidade (peças) rendidas
-  (opcioonal) tramanho1
-  (opcioonal) tramanho2
-  (opcioonal) ...
-%>
-
-<%# informações do corte (automático) %>
-<h5>Informações do Corte</h5>
 <table class="table table-bordered">
   <thead>
     <tr>
@@ -111,7 +93,6 @@
   </tbody>
 </table>
 
-<%# tabela com os tecidos enviados (automático) %>
 <br><h5>Tecidos Enviados</h5>
 <table class="table table-bordered">
   <thead>
@@ -131,7 +112,6 @@
       <td>Preto</td>
       <td>10</td>
       <td>Camiseta</td>
-      <%# o campo de tamanhoo usuario digita %>
       <td><input type="text" class="form-control"></td>
     </tr>
     <tr>
@@ -146,9 +126,6 @@
 
 <% @garment_sizes = ['P', 'M', 'G', 'GG', 'XG', 'XXG'] %>
 <br><h5>Especificar Tamanhos</h5>
-<%# para cada tecido, um botao para adicionar tamanhos %>
-<%# se não for precionado, a tabela não muda %>
-<%# se for clicado, na tabela aparece o numero do tecido e os tamanhos na horizontal %>
 <table class="table table-bordered">
   <thead>
     <tr>
@@ -177,7 +154,6 @@
   </tbody>
 </table>
 
-<%# valor corte %>
 <table class="table table-bordered">
   <br><thead>
     <tr>
@@ -197,7 +173,6 @@
   <button type="button" id="add-field-button" class="btn btn-primary float-end">Adicionar Valor Extra</button>
 </div><br>
 
-<%# valor extra %>
 <table class="table table-bordered mt-3">
   <thead>
     <tr>
@@ -212,6 +187,5 @@
       <td><input type="text" name="observacao[]" value="" readonly disabled class="form-control"></td>
       <td><button type="button" class="remove-row-button btn btn-secondary" disabled>Remover</button></td>
     </tr>
-    <!-- Aqui você pode adicionar linhas fictícias, se desejar -->
   </tbody>
 </table>

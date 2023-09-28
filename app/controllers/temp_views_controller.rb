@@ -9,7 +9,6 @@ class TempViewsController < ApplicationController
   end
 
   def serigrafia_retorno
-    @serigrafia_retorno = 'serigrafia_retorno'
   end
 
   def costura
