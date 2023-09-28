@@ -90,7 +90,8 @@
   });
 </script>
 
-<h1>Seleção de Tecidos</h1>
+<h1>Entrada de Tecido</h1>
+<h3>Seleção de Tecidos</h3>
 <br>
 
 <%= form_for @fabric_stocks.first, url: create_fabric_entry_details_path do |f| %>
@@ -120,7 +121,7 @@
     <% end %>
   <% end %>
 
-  <div class="input-group mb-3">
+  <div class="input-group mb-3" style="width: 50%;">
     <span class="input-group-text">Total (kg)</span>
     <input type="text" id="valor-total-peso" class="form-control" value="0.00" readonly>
     <span class="input-group-text"></span>

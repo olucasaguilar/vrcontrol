@@ -1,9 +1,9 @@
 class TempViewsController < ApplicationController
-  def corte_ida
+  def corte_envio
   end
 
-  def corte_volta
-    @corte_volta = 'corte volta teste'
+  def corte_retorno
+    @corte_retorno = 'corte retorno teste'
   end
 
   def serigrafia
