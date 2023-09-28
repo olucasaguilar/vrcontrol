@@ -15,11 +15,13 @@ class TempViewsController < ApplicationController
   end
 
   def costura_retorno
-    @costura_retorno = 'costura_retorno'
   end
 
-  def acabamento
-    @acabamento = 'acabamento teste'
+  def acabamento_envio
+  end
+
+  def acabamento_retorno
+    @acabamento_retorno = 'acabamento_retorno teste'
   end
 
   def venda
