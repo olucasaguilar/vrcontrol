@@ -1,0 +1,151 @@
+<% @acabamentos = [
+  'Acabamentos Elegantes Ltda.',
+  'Acabamento Fino S.A.',
+  'Acabamentos Sulbrasileiros',
+  'Acabamentos Mineiros Ltda.',
+  'Acabamentos do Norte'
+] %>
+
+<h1>Peça para o Acabamento - Envio</h1>
+<h3>Abertura</h3>
+
+<form class="mt-4">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Acabamento<span class="required">*</span></th>
+        <th>Data e Hora</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <select class="form-select">
+            <option selected class="form-control">Selecione um Acabamento</option>
+            <% @acabamentos.each do |acabamento| %>
+              <option value="<%= acabamento %>"><%= acabamento %></option>
+            <% end %>
+          </select>
+        </td>
+        <td><input type="datetime-local" name="data_hora" class="form-control"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="form-group">
+    <input type="submit" value="Registrar Envio para a Acabamento" class="btn btn-success">
+    <a href="#" class="btn btn-secondary">Voltar</a>
+    <button type="button" id="add-field-button" class="btn btn-primary float-end">Adicionar Valor Extra</button>
+  </div>
+  
+  <table class="table table-bordered mt-3">
+    <thead>
+      <tr>
+        <th>Valor Extra*</th>
+        <th>Observação</th>
+        <th>Ação</th>
+      </tr>      
+    </thead>
+    <tbody id="table-body">
+      <tr id="primeiraLinha">
+        <td><input type="text" name="valor[]" value="" readonly disabled class="form-control"></td>
+        <td><input type="text" name="observacao[]" value="" readonly disabled class="form-control"></td>
+        <td><button type="button" class="remove-row-button btn btn-secondary" disabled>Remover</button></td>
+      </tr>
+      <!-- Aqui você pode adicionar linhas fictícias, se desejar -->
+    </tbody>
+  </table>
+</form>
+
+<% 15.times do %>
+  <br>
+<% end %>
+
+<% @colors = [
+  'Preto',
+  'Branco',
+  'Vermelho',
+  'Azul',
+  'Amarelo',
+  'Verde',
+  'Rosa',
+  'Laranja',
+  'Roxo'
+]
+
+@garment_types = ['Camiseta', 'Calça', 'Bermuda'] %>
+
+<h1>Peça para o Acabamento - Envio</h1>
+<h3>Seleção de Peças</h3>
+<br>
+
+<form>
+  <div class="input-group mb-3" style="width: 50%;">
+    <span class="input-group-text">Total (peças)</span>
+    <input type="text" id="valor-total-peso" class="form-control" value="0.00" readonly>
+    <span class="input-group-text"></span>
+  </div>
+  
+  <div class="form-group mb-3">
+    <button type="button" id="add-field-button" class="btn btn-primary">Mais um Tipo de Peça</button>
+    <input type="submit" value="Finalizar" class="btn btn-success">
+  </div>
+
+  <table class="mb-4 table table-bordered">
+    <thead>
+      <tr>
+        <th>Nº</th>
+        <th>Tipo de Peça*</th>
+        <th>Estampada</th>
+        <th>Quantidade (peças)*</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>
+          <select class="form-select">
+            <option value="">Selecione um tipo...</option>
+            <% @garment_types.each do |garment_type| %>
+              <option value="<%= garment_type %>"><%= garment_type %></option>
+            <% end %>
+          </select>
+        </td>
+        <td>
+          <input type="checkbox" name="costurada" value="costurada" class="form-check-input">
+        </td>
+        <td>
+          <input type="text" class="form-control" value="300">
+        </td>
+        <td>
+          <button type="button" class="btn btn-danger remove-row-button" disabled>Remover</button>
+        </td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>
+          <select class="form-select">
+            <option value="">Selecione um tipo...</option>
+            <% @garment_types.each do |garment_type| %>
+              <option value="<%= garment_type %>"><%= garment_type %></option>
+            <% end %>
+          </select>
+        </td>
+        <td>
+          <input type="checkbox" name="costurada" value="costurada" class="form-check-input" checked>
+        </td>
+        <td>
+          <input type="text" class="form-control" value="200">
+        </td>
+        <td>
+          <button type="button" class="btn btn-danger remove-row-button" disabled>Remover</button>
+        </td>
+      </tr>                
+    </tbody>
+  </table>  
+</form>
+
+<% 15.times do %>
+  <br>
+<% end %>
