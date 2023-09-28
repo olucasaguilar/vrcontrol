@@ -11,8 +11,11 @@ class TempViewsController < ApplicationController
   def serigrafia_retorno
   end
 
-  def costura
-    @costura = 'costura teste'
+  def costura_envio
+  end
+
+  def costura_retorno
+    @costura_retorno = 'costura_retorno'
   end
 
   def acabamento

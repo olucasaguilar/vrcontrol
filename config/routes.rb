@@ -56,8 +56,10 @@ Rails.application.routes.draw do
   get '/temp_view/serigrafia/envio', to: 'temp_views#serigrafia_envio', as: 'temp_view_serigrafia_envio'
   # Rota para tela temporária serigrafia retorno
   get '/temp_view/serigrafia/retorno', to: 'temp_views#serigrafia_retorno', as: 'temp_view_serigrafia_retorno'
-  # Rota para tela temporária costura
-  get '/temp_view/costura', to: 'temp_views#costura', as: 'temp_view_costura'
+  # Rota para tela temporária costura envio
+  get '/temp_view/costura/envio', to: 'temp_views#costura_envio', as: 'temp_view_costura_envio'
+  # Rota para tela temporária costura retorno
+  get '/temp_view/costura/retorno', to: 'temp_views#costura_retorno', as: 'temp_view_costura_retorno'
   # Rota para tela temporária acabamento
   get '/temp_view/acabamento', to: 'temp_views#acabamento', as: 'temp_view_acabamento'
   # Rota para tela temporária venda
