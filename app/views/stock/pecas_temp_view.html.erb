@@ -1,10 +1,10 @@
 <% @garment_stock_groups = [
   # Grupo 1: Camisetas Cortadas e Estampadas
-  [["Camiseta", "Cortada", "Estampada"], { tipo_peca: { nome: "Camiseta" }, cortada: true, costurada: false, estampada: true, quantidade: 50, data_hora: "2023-09-25 10:00:00" }],
-  [["Camiseta", "Costurada", "Estampada"], { tipo_peca: { nome: "Camiseta" }, cortada: false, costurada: true, estampada: true, quantidade: 30, data_hora: "2023-09-25 11:00:00" }],
-  [["Camiseta", "Cortada"], { tipo_peca: { nome: "Camiseta" }, cortada: true, costurada: false, estampada: false, quantidade: 20, data_hora: "2023-09-25 12:00:00" }],
-  [["Calça", "Cortada"], { tipo_peca: { nome: "Calça" }, cortada: true, costurada: false, estampada: false, quantidade: 15, data_hora: "2023-09-25 13:00:00" }],
-  [["Camiseta", "Costurada"], { tipo_peca: { nome: "Camiseta" }, cortada: false, costurada: true, estampada: false, quantidade: 25, data_hora: "2023-09-25 14:00:00" }]
+  [["Camiseta", "Cortada", "Estampada"], { tipo_peca: { nome: "Camiseta" }, costurada: false, estampada: true, quantidade: 50, data_hora: "2023-09-25 10:00:00" }],
+  [["Camiseta", "Costurada", "Estampada"], { tipo_peca: { nome: "Camiseta" }, costurada: true, estampada: true, quantidade: 30, data_hora: "2023-09-25 11:00:00" }],
+  [["Camiseta", "Cortada"], { tipo_peca: { nome: "Camiseta" }, costurada: false, estampada: false, quantidade: 20, data_hora: "2023-09-25 12:00:00" }],
+  [["Calça", "Cortada"], { tipo_peca: { nome: "Calça" }, costurada: false, estampada: false, quantidade: 15, data_hora: "2023-09-25 13:00:00" }],
+  [["Camiseta", "Costurada"], { tipo_peca: { nome: "Camiseta" }, costurada: true, estampada: false, quantidade: 25, data_hora: "2023-09-25 14:00:00" }]
 ] 
 %>
 
@@ -30,14 +30,6 @@
     <tr>
       <th>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="cortada_filter" checked>
-          <label class="form-check-label" for="cortada_filter">
-            Cortada
-          </label>
-        </div>
-      </th>
-      <th>
-        <div class="form-check">
           <input class="form-check-input" type="checkbox" id="costurada_filter" checked>
           <label class="form-check-label" for="costurada_filter">
             Costurada
@@ -60,7 +52,6 @@
   <thead>
     <tr>
       <th>Tipo de Peça <i class="fas fa-caret-up"></i></th>
-      <th>Cortada <i class="fas fa-caret-up"></i></th>
       <th>Costurada <i class="fas fa-caret-up"></i></th>
       <th>Estampada <i class="fas fa-caret-up"></i></th>
       <th>Quantidade <i class="fas fa-caret-up"></i></th>
@@ -68,10 +59,9 @@
     </tr>
   </thead>
   <tbody>
-    <% @garment_stock_groups.each do |(tipo, cortada, costurada, estampada), garment_stock| %>
+    <% @garment_stock_groups.each do |(tipo, costurada, estampada), garment_stock| %>
       <tr>
         <td><%= garment_stock[:tipo_peca][:nome] %></td>
-        <td><%= garment_stock[:cortada] ? "Sim" : "Não" %></td>
         <td><%= garment_stock[:costurada] ? "Sim" : "Não" %></td>
         <td><%= garment_stock[:estampada] ? "Sim" : "Não" %></td>
         <td><%= garment_stock[:quantidade] %></td>
