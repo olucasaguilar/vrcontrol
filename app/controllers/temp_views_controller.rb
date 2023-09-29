@@ -24,8 +24,11 @@ class TempViewsController < ApplicationController
     @acabamento_retorno = 'acabamento_retorno teste'
   end
 
-  def venda
-    @venda = 'venda teste'
+  def venda_saida
+  end
+
+  def venda_retorno
+    @venda_retorno = 'venda_retorno'
   end
 
   def login

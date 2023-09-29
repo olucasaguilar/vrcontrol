@@ -330,10 +330,26 @@
         </div>
       </li>
       <li>
-        <a href="<%= temp_view_venda_path %>" class="nav-link <%= 'active' if current_page?(temp_view_venda_path) %>">
+        <a class="nav-link dropdown-toggle" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="icon"><i class="fas fa-shopping-cart"></i></span>
           <span class="item">Venda</span>
         </a>
+        <div class="dropup">
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
+            <li>
+              <a class="dropdown-item" href="<%= temp_view_venda_saida_path %>">
+                <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+                <span class="item">Venda Saída</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="<%= temp_view_venda_retorno_path %>">
+                <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+                <span class="item">Venda Retorno</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </li>
       <li>
         <a href="<%= temp_view_login_path %>" class="nav-link <%= 'active' if current_page?(temp_view_login_path) %>">

@@ -64,8 +64,10 @@ Rails.application.routes.draw do
   get '/temp_view/acabamento/envio', to: 'temp_views#acabamento_envio', as: 'temp_view_acabamento_envio'
   # Rota para tela temporária acabamento retorno
   get '/temp_view/acabamento/retorno', to: 'temp_views#acabamento_retorno', as: 'temp_view_acabamento_retorno'
-  # Rota para tela temporária venda
-  get '/temp_view/venda', to: 'temp_views#venda', as: 'temp_view_venda'
+  # Rota para tela temporária venda saida
+  get '/temp_view/venda/saida', to: 'temp_views#venda_saida', as: 'temp_view_venda_saida'
+  # Rota para tela temporária venda retorno
+  get '/temp_view/venda/retorno', to: 'temp_views#venda_retorno', as: 'temp_view_venda_retorno'
   # Rota para tela temporária login
   get '/temp_view/login', to: 'temp_views#login', as: 'temp_view_login'
 end
