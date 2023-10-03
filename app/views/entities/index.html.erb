@@ -145,11 +145,6 @@
 </div>
 
 <nav aria-label="Page navigation">
-  <div style="display: flex; align-items: center;">
-    <label style="margin-right: 10px;">Itens por página: </label>
-    <%= select_tag :quant, options_for_select(@quant_items, @pagy.items), class: "form-control", onchange: "changePerPage(this)", style: "width: 40px;" %>
-  </div>
-
   <ul class="pagination justify-content-center">
     <% if @pagy.prev %>
       <li class="page-item">
@@ -193,6 +188,11 @@
       </li>
     <% end %>
   </ul>
+  
+  <div style="display: flex; align-items: center;">
+    <label style="margin-right: 10px;">Itens por página: </label>
+    <%= select_tag :quant, options_for_select(@quant_items, @pagy.items), class: "form-control", onchange: "changePerPage(this)", style: "width: 40px;" %>
+  </div>
 </nav>
 
 <%# <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="arrowIcon"><path d="M4 8L8 12L12 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg> %>

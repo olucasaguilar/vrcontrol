@@ -42,8 +42,6 @@ Rails.application.routes.draw do
   # Rota para tela de estoque
   get '/estoque', to: 'stock#index', as: 'stock'
 
-  # Rota para tela temporária de caixa
-  get '/caixa/temp_view', to: 'financial_records#temp_view', as: 'temp_view_financial_records'
   # Rota para tela temporária estoque tecidos
   get '/estoque/tecidos/temp_view', to: 'stock#tecidos_temp_view', as: 'tecidos_temp_view_stock'
   # Rota para tela temporária estoque peças

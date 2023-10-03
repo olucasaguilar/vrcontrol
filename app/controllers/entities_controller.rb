@@ -32,8 +32,7 @@ class EntitiesController < ApplicationController
       end
     end
 
-    @quant_items = [4, 6, 8, 10, 16, 20]
-    
+    @quant_items = [4, 6, 8, 10, 16, 20]    
     quant = params[:quant]
     quant = 6 if quant == nil || quant == "" || quant.to_i <= 0
     quant = 20 if quant.to_i > 20
