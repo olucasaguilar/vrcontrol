@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  tecido_corte: one
+  estoque_tecido: one
+  multiplicador: 1.5
+  rendimento: 1.5
+  tipo_peca: one
+
+two:
+  tecido_corte: two
+  estoque_tecido: two
+  multiplicador: 1.5
+  rendimento: 1.5
+  tipo_peca: two

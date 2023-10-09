@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_22_222402) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_09_142838) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -29,7 +29,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_22_222402) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "cnpj"
-    t.string "ie"cle
+    t.string "ie"
     t.index ["entity_types_id"], name: "index_entities_on_entity_types_id"
   end
 
@@ -37,6 +37,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_22_222402) do
     t.string "nome"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "fabric_cuts", force: :cascade do |t|
+    t.datetime "data_hora_ida"
+    t.decimal "total_tecido_envio"
+    t.decimal "total_peca_retorno"
+    t.boolean "finalizado"
+    t.datetime "data_hora_volta"
+    t.bigint "cortador_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cortador_id"], name: "index_fabric_cuts_on_cortador_id"
   end
 
   create_table "fabric_entries", force: :cascade do |t|
@@ -58,6 +70,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_22_222402) do
     t.index ["estoque_tecido_id"], name: "index_fabric_stock_entries_on_estoque_tecido_id"
   end
 
+  create_table "fabric_stock_exits", force: :cascade do |t|
+    t.bigint "tecido_corte_id", null: false
+    t.bigint "estoque_tecido_id", null: false
+    t.float "multiplicador"
+    t.float "rendimento"
+    t.bigint "tipo_peca_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["estoque_tecido_id"], name: "index_fabric_stock_exits_on_estoque_tecido_id"
+    t.index ["tecido_corte_id"], name: "index_fabric_stock_exits_on_tecido_corte_id"
+    t.index ["tipo_peca_id"], name: "index_fabric_stock_exits_on_tipo_peca_id"
+  end
+
   create_table "fabric_stocks", force: :cascade do |t|
     t.bigint "tipo_tecido_id", null: false
     t.bigint "cor_id", null: false
@@ -75,6 +100,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_22_222402) do
     t.string "nome"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "financial_fabric_cuts", force: :cascade do |t|
+    t.bigint "registro_financeiro_id", null: false
+    t.bigint "tecido_corte_id", null: false
+    t.boolean "retorno"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["registro_financeiro_id"], name: "index_financial_fabric_cuts_on_registro_financeiro_id"
+    t.index ["tecido_corte_id"], name: "index_financial_fabric_cuts_on_tecido_corte_id"
   end
 
   create_table "financial_fabric_entries", force: :cascade do |t|
@@ -109,11 +144,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_22_222402) do
   end
 
   add_foreign_key "entities", "entity_types", column: "entity_types_id"
+  add_foreign_key "fabric_cuts", "entities", column: "cortador_id"
   add_foreign_key "fabric_entries", "entities"
   add_foreign_key "fabric_stock_entries", "fabric_entries", column: "entrada_tecido_id"
   add_foreign_key "fabric_stock_entries", "fabric_stocks", column: "estoque_tecido_id"
+  add_foreign_key "fabric_stock_exits", "fabric_cuts", column: "tecido_corte_id"
+  add_foreign_key "fabric_stock_exits", "fabric_stocks", column: "estoque_tecido_id"
+  add_foreign_key "fabric_stock_exits", "garment_types", column: "tipo_peca_id"
   add_foreign_key "fabric_stocks", "colors", column: "cor_id"
   add_foreign_key "fabric_stocks", "fabric_types", column: "tipo_tecido_id"
+  add_foreign_key "financial_fabric_cuts", "fabric_cuts", column: "tecido_corte_id"
+  add_foreign_key "financial_fabric_cuts", "financial_records", column: "registro_financeiro_id"
   add_foreign_key "financial_fabric_entries", "fabric_entries", column: "entrada_tecido_id"
   add_foreign_key "financial_fabric_entries", "financial_records", column: "registro_financeiro_id"
 end

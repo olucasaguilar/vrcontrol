@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  registro_financeiro: one
+  tecido_corte: one
+  retorno: false
+
+two:
+  registro_financeiro: two
+  tecido_corte: two
+  retorno: false

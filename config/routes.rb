@@ -28,9 +28,7 @@ Rails.application.routes.draw do
 
   # Rotas de Caixa
   get '/caixa', to: 'financial_records#index', as: 'financial_records'
-  # Rota para criar uma nova movimentação de caixa
   get '/caixa/new', to: 'financial_records#new', as: 'new_financial_record'
-  # Rota para criar uma nova movimentação de caixa
   post '/caixa', to: 'financial_records#create', as: 'create_financial_record'
 
   # Rotas de Entrada Tecido
@@ -40,12 +38,16 @@ Rails.application.routes.draw do
   post '/tecidos/entrada/detalhes', to: 'fabric_entries#create_details', as: 'create_fabric_entry_details'
 
   # Rota para tela de estoque
-  get '/estoque', to: 'stock#index', as: 'stock'
+  get '/estoque/tecidos', to: 'stock#tecidos_view', as: 'tecidos_view_stock'
+  get '/estoque/pecas', to: 'stock#pecas_view', as: 'pecas_view_stock'
 
-  # Rota para tela temporária estoque tecidos
-  get '/estoque/tecidos/temp_view', to: 'stock#tecidos_temp_view', as: 'tecidos_temp_view_stock'
-  # Rota para tela temporária estoque peças
-  get '/estoque/pecas/temp_view', to: 'stock#pecas_temp_view', as: 'pecas_temp_view_stock'
+  # Rota para tela de Corte
+  get '/corte/envio', to: 'fabric_cuts#new', as: 'new_fabric_cut'
+  post '/corte/envio', to: 'fabric_cuts#create', as: 'create_fabric_cut'
+  get '/corte/envio/detalhes', to: 'fabric_cuts#new_details', as: 'new_fabric_cut_details'
+  post '/corte/envio/detalhes', to: 'fabric_cuts#create_details', as: 'create_fabric_cut_details'
+  get '/corte/retorno', to: 'fabric_cuts#return', as: 'return_fabric_cut'
+
   # Rota para tela temporária corte envio
   get '/temp_view/corte/envio', to: 'temp_views#corte_envio', as: 'temp_view_corte_envio'
   # Rota para tela temporária corte retorno

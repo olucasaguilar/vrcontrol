@@ -1,15 +1,5 @@
-<% @fabric_stock_groups = [
-  [["Malha", "Preto"], { tipo_tecido: { nome: "Malha" }, cor: { nome: "Preto" }, quantidade_kilos: 1.0 }],
-  [["Algodão", "Branco"], { tipo_tecido: { nome: "Algodão" }, cor: { nome: "Branco" }, quantidade_kilos: 10.0 }],
-  [["Malha", "Branco"], { tipo_tecido: { nome: "Malha" }, cor: { nome: "Branco" }, quantidade_kilos: 3.0 }],
-  [["Algodão", "Azul"], { tipo_tecido: { nome: "Algodão" }, cor: { nome: "Azul" }, quantidade_kilos: 5.0 }],
-  [["Seda", "Vermelho"], { tipo_tecido: { nome: "Seda" }, cor: { nome: "Vermelho" }, quantidade_kilos: 2.0 }],
-  [["Lã", "Verde"], { tipo_tecido: { nome: "Lã" }, cor: { nome: "Verde" }, quantidade_kilos: 7.0 }]
-] %>
-
 <h1>Estoque de Tecidos</h1>
 
-<!-- Tabela para botões e campos de filtro -->
 <table class="table table-bordered">
   <thead>
     <tr>
@@ -18,8 +8,8 @@
           <label for="tipo_tecido">Tipo de Tecido:</label>
           <select class="form-control" id="tipo_tecido">
             <option value="">Todos</option>
-            <% @fabric_stock_groups.map { |(_, fabric_stock)| fabric_stock[:tipo_tecido][:nome] }.uniq.each do |tipo| %>
-              <option value="<%= tipo %>"><%= tipo %></option>
+            <% @fabric_types.each do |fabric_type| %>
+              <option value="<%= fabric_type %>"><%= fabric_type %></option>
             <% end %>
           </select>
         </div>
@@ -29,8 +19,8 @@
           <label for="cor">Cor:</label>
           <select class="form-control" id="cor">
             <option value="">Todas</option>
-            <% @fabric_stock_groups.map { |(_, fabric_stock)| fabric_stock[:cor][:nome] }.uniq.each do |cor| %>
-              <option value="<%= cor %>"><%= cor %></option>
+            <% @colors.each do |colour| %>
+              <option value="<%= colour %>"><%= colour %></option>
             <% end %>
           </select>
         </div>
@@ -50,9 +40,9 @@
   <tbody>
     <% @fabric_stock_groups.each do |(tipo, cor), fabric_stock| %>
       <tr>
-        <td><%= fabric_stock[:tipo_tecido][:nome] %></td>
-        <td><%= fabric_stock[:cor][:nome] %></td>
-        <td><%= fabric_stock[:quantidade_kilos] %> kg</td>
+        <td><%= fabric_stock.last.tipo_tecido.nome %></td>
+        <td><%= fabric_stock.last.cor.nome %></td>
+        <td><%= fabric_stock.last.saldo %></td>
       </tr>
     <% end %>
   </tbody>

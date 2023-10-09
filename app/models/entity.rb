@@ -4,4 +4,5 @@ class Entity < ApplicationRecord
   validates :entity_types_id, presence: true
 
   has_many :fabric_entries
+  has_many :fabric_cuts
 end
