@@ -89,9 +89,16 @@ class FabricCutsController < ApplicationController
       session[:tecidos] ||= []
       
       @fabric_stock_groups = FabricStock.all.group_by { |fabric_stock| [fabric_stock.tipo_tecido.nome, fabric_stock.cor.nome] }
+      @fabric_stock_groups.each do |fabric_stock_group|
+        last_saldo = fabric_stock_group[1].last.saldo
+        if last_saldo <= 0
+          @fabric_stock_groups.delete(fabric_stock_group[0])
+        end
+      end
+
       colors_estoque = @fabric_stock_groups.map { |fabric_stock_group| fabric_stock_group[0][1] }.uniq
       fabric_types_estoque = @fabric_stock_groups.map { |fabric_stock_group| fabric_stock_group[0][0] }.uniq
-      
+
       @fabric_types = FabricType.where(nome: fabric_types_estoque)
       @colors = Color.where(nome: colors_estoque)
       @garment_types = GarmentType.all      
@@ -106,9 +113,16 @@ class FabricCutsController < ApplicationController
 
   def create_details
     @fabric_stock_groups = FabricStock.all.group_by { |fabric_stock| [fabric_stock.tipo_tecido.nome, fabric_stock.cor.nome] }
+    @fabric_stock_groups.each do |fabric_stock_group|
+      last_saldo = fabric_stock_group[1].last.saldo
+      if last_saldo <= 0
+        @fabric_stock_groups.delete(fabric_stock_group[0])
+      end
+    end
+
     colors_estoque = @fabric_stock_groups.map { |fabric_stock_group| fabric_stock_group[0][1] }.uniq
     fabric_types_estoque = @fabric_stock_groups.map { |fabric_stock_group| fabric_stock_group[0][0] }.uniq
-    
+
     @fabric_types = FabricType.where(nome: fabric_types_estoque)
     @colors = Color.where(nome: colors_estoque)
     @garment_types = GarmentType.all      
@@ -210,10 +224,26 @@ class FabricCutsController < ApplicationController
     FabricCut.last.update(finalizado: true)
   end
 
-  def get_colors_for_fabric_type
+  def get_colors_for_fabric_type    
+    session.delete(:color_id)
+    session[:color_id] ||= []
+
     fabric_type_id = params[:fabric_type_id]
-    colors = FabricStock.where(tipo_tecido_id: fabric_type_id).map { |fabric_stock| { id: fabric_stock.cor.id, nome: fabric_stock.cor.nome } }
-    #{"colors":[{"id":2,"nome":"Branco"},{"id":2,"nome":"Branco"},{"id":3,"nome":"Vermelho"},{"id":3,"nome":"Vermelho"},{"id":4,"nome":"Azul"}]}
+
+    fabric_stock_groups = FabricStock.all.group_by { |fabric_stock| [fabric_stock.tipo_tecido.nome, fabric_stock.cor.nome] }
+    fabric_stock_groups.each do |fabric_stock_group|
+      last_saldo = fabric_stock_group[1].last.saldo
+      if last_saldo <= 0
+        fabric_stock_groups.delete(fabric_stock_group[0])
+      end
+      if fabric_stock_group[0][0] != FabricType.find(fabric_type_id).nome
+        fabric_stock_groups.delete(fabric_stock_group[0])
+      end
+    end
+
+    colors_estoque = fabric_stock_groups.map { |fabric_stock_group| fabric_stock_group[0][1] }.uniq
+    colors = Color.where(nome: colors_estoque)
+    colors = colors.map { |color| { id: color.id, nome: color.nome } }
     colors = colors.uniq { |color| color[:id] }
 
     session.delete(:fabric_type_id)
@@ -240,6 +270,7 @@ class FabricCutsController < ApplicationController
     fabric_stock.tipo_movimento = 'Saida'
     fabric_stock.data_hora = FabricCut.last.data_hora_ida
     flash[:notice] = []
+    flash[:alert] = []
     
     validation = true
 
@@ -256,6 +287,12 @@ class FabricCutsController < ApplicationController
     @fabric_stock_exit_errors = fabric_stock_exit.errors
     #flash[:notice] << @fabric_stock_exit_errors.full_messages
 
+    unless validation
+      session.delete(:color_id)
+      session[:color_id] ||= []
+      session[:color_id] << tecido[:color_id]
+    end
+    
     validation
   end
 

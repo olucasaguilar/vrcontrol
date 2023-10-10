@@ -1,7 +1,6 @@
 <script>
   $(document).ready(function() {
-    $('#fabric_type_select').change(function() {
-      var fabricTypeId = $(this).val();
+    function carregarCoresParaTipoTecido(fabricTypeId) {
       $.ajax({
         url: '/get_colors_for_fabric_type',
         method: 'GET',
@@ -9,33 +8,34 @@
         dataType: 'json',
         success: function(data) {
           var options = ['<option value="">Selecione uma cor...</option>'];
-          //{"colors":[{"id":2,"nome":"Branco"},{"id":2,"nome":"Branco"},{"id":3,"nome":"Vermelho"},{"id":3,"nome":"Vermelho"},{"id":4,"nome":"Azul"}]}
           data.colors.forEach(function(color) {
             options.push('<option value="' + color.id + '">' + color.nome + '</option>');
           });
           $('#color_select').html(options.join(''));
-        }
-      });
-    });
-    // verifica se o tipo tecido está preenchido, se sim, ja busca as cores
-    var fabricTypeId = $('#fabric_type_select').val();
-    if (fabricTypeId) {
-      $.ajax({
-        url: '/get_colors_for_fabric_type',
-        method: 'GET',
-        data: { fabric_type_id: fabricTypeId },
-        dataType: 'json',
-        success: function(data) {
-          var options = ['<option value="">Selecione uma cor...</option>'];
-          //{"colors":[{"id":2,"nome":"Branco"},{"id":2,"nome":"Branco"},{"id":3,"nome":"Vermelho"},{"id":3,"nome":"Vermelho"},{"id":4,"nome":"Azul"}]}
-          data.colors.forEach(function(color) {
-            options.push('<option value="' + color.id + '">' + color.nome + '</option>');
-          });
-          $('#color_select').html(options.join(''));
+          <% if session[:color_id].first.to_i > 0 %>
+            //alert('color_id: <%= session[:color_id].first.to_i %>');
+            // define o valor do color_id
+            // verifica se data contem a cor
+            data.colors.forEach(function(color) {
+              if (color.id == <%= session[:color_id].first.to_i %>) {
+                $('#color_select').val('<%= session[:color_id].first.to_i %>');
+              }
+            });            
+          <% end %>
         }
       });
     }
 
+    $('#fabric_type_select').change(function() {
+      var fabricTypeId = $(this).val();
+      carregarCoresParaTipoTecido(fabricTypeId);
+    });
+
+    var fabricTypeId = $('#fabric_type_select').val();
+    if (fabricTypeId) {
+      carregarCoresParaTipoTecido(fabricTypeId);
+    }
+    
     //////////////////////////
 
     // @tecido[:color_id] == "" || @tecido[:color_id] == 0
@@ -128,22 +128,6 @@
 <h3>Seleção de Tecidos</h3><br>
 
 <%= form_tag create_fabric_cut_details_path do %>
-  <%# <% if @fabric_stocks.any?
-    <% @fabric_stocks.each_with_index do |fabric_stock, index|
-      <% if fabric_stock.errors.any?
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <a>Tecido <%= (index + 1).to_s 
-          <% fabric_stock.errors.full_messages.each do |message|
-            <p class="mb-0"><%= message
-          <% end 
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>        
-      <% end
-    <% end
-  <% end %>
-
-  <% flash[:alert] = [] %>
-
   <% unless @fabric_stock_errors.nil? %>
     <% if @fabric_stock_errors.any? %>
       <% @fabric_stock_errors.each do |message| %>          

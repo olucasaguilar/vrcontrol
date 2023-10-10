@@ -58,30 +58,24 @@
 
 <h1>Tecido ao Corte - Envio</h1>
 <h3>Abertura</h3>
-
+<% flash[:alert] = [] %>
+<% erro_cortador = false %>
 <%= form_with model: @fabric_cut, url: create_fabric_cut_path, class: "mt-4" do |form| %>
   <% if @fabric_cut.errors.any? %>
-    <div class="alert alert-danger">
-      <ul>
-        <% @fabric_cut.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
+    <% @fabric_cut.errors.full_messages.each do |message| %>
+      <% flash[:alert] << message %>
+      <% erro_cortador = true if message.include? "Cortador" %>
+    <% end %>
   <% end %>
 
   <% if @financial_records.any? %>
-    <div class="alert alert-danger">
-      <ul>
-        <% @financial_records.each do |financial_record| %>
-          <% if financial_record.errors.any? %>
-            <% financial_record.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          <% end %>
+    <% @financial_records.each do |financial_record| %>
+      <% if financial_record.errors.any? %>
+        <% financial_record.errors.full_messages.each do |message| %>
+          <% flash[:alert] << message %>
         <% end %>
-      </ul>
-    </div>
+      <% end %>
+    <% end %>
   <% end %>
 
   <table class="table table-bordered">
@@ -93,7 +87,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><%= form.collection_select :cortador_id, @cortadores, :id, :nome, { prompt: true }, { class: "form-select" } %></td>
+        <td><%= form.collection_select :cortador_id, @cortadores, :id, :nome, { prompt: "Selecione um cortador" }, { class: "form-select #{erro_cortador ? 'input-erro' : ''}" } %></td>
         <td><%= form.datetime_local_field :data_hora_ida, class: "form-control" %></td>
       </tr>
     </tbody>
