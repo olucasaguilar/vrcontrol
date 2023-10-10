@@ -142,25 +142,21 @@
     <% end
   <% end %>
 
+  <% flash[:alert] = [] %>
+
   <% unless @fabric_stock_errors.nil? %>
     <% if @fabric_stock_errors.any? %>
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <% @fabric_stock_errors.each do |message| %>
-          <p class="mb-0"><%= message.full_message %></p>
-        <% end %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
+      <% @fabric_stock_errors.each do |message| %>          
+        <% flash[:alert] << message.full_message %>
+      <% end %>
     <% end %>
   <% end %>
 
   <% unless @fabric_stock_exit_errors.nil? %>
     <% if @fabric_stock_exit_errors.any? %>
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <% @fabric_stock_exit_errors.each do |message| %>
-          <p class="mb-0"><%= message.full_message %></p>
-        <% end %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
+      <% @fabric_stock_exit_errors.each do |message| %>
+        <% flash[:alert] << message.full_message %>
+      <% end %>
     <% end %>
   <% end %>
 
