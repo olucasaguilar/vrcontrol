@@ -71,21 +71,192 @@ class FabricCutsController < ApplicationController
   end
 
   def new_details
-    if (FabricCut.any? && (FabricCut.last.finalizado == false))
+    unless (FabricCut.any? && (FabricCut.last.finalizado == false))
+      redirect_to new_fabric_cut_path
+    else
+      @tecido = {
+        fabric_type_id: 0,
+        color_id: 0,
+        quantidade: 0,
+        garment_type_id: 0,
+        multiplicador_x: 4.6,
+        rendimento: 0
+      }
+
+      @tecidos = []
+      # @fabric_stock_errors = []
+      session.delete(:tecidos)
+      session[:tecidos] ||= []
+      
       @fabric_stock_groups = FabricStock.all.group_by { |fabric_stock| [fabric_stock.tipo_tecido.nome, fabric_stock.cor.nome] }
       colors_estoque = @fabric_stock_groups.map { |fabric_stock_group| fabric_stock_group[0][1] }.uniq
       fabric_types_estoque = @fabric_stock_groups.map { |fabric_stock_group| fabric_stock_group[0][0] }.uniq
+      
       @fabric_types = FabricType.where(nome: fabric_types_estoque)
       @colors = Color.where(nome: colors_estoque)
-      @garment_types = GarmentType.all
-      
-      @fabric_stocks = [FabricStock.new]
-    #   @fabric_types = FabricType.all
-    #   @valores_tecido = []
-    #   @valor_erro_index = []
-    else
-      redirect_to new_fabric_cut_path
+      @garment_types = GarmentType.all      
     end
+  end
+
+  def quantity_to_float(quantity)
+    # "15,66" => 15.66
+    quantity = quantity.gsub(',', '.')
+    quantity.to_f
+  end
+
+  def create_details
+    @fabric_stock_groups = FabricStock.all.group_by { |fabric_stock| [fabric_stock.tipo_tecido.nome, fabric_stock.cor.nome] }
+    colors_estoque = @fabric_stock_groups.map { |fabric_stock_group| fabric_stock_group[0][1] }.uniq
+    fabric_types_estoque = @fabric_stock_groups.map { |fabric_stock_group| fabric_stock_group[0][0] }.uniq
+    
+    @fabric_types = FabricType.where(nome: fabric_types_estoque)
+    @colors = Color.where(nome: colors_estoque)
+    @garment_types = GarmentType.all      
+
+    @tecidos = []
+    button = params[:commit]
+    flash[:notice] = []
+    #flash[:notice] = params[:commit]
+
+    if button == 'Adicionar' || button == 'Remover' || button == 'Finalizar'
+      session[:tecidos].each do |tecido_session|
+        tecido = {
+          fabric_type_id: tecido_session["fabric_type_id"],
+          color_id: tecido_session["color_id"],
+          quantidade: tecido_session["quantidade"],
+          garment_type_id: tecido_session["garment_type_id"],
+          multiplicador_x: tecido_session["multiplicador_x"],
+          rendimento: tecido_session["rendimento"]
+        }      
+        @tecidos << tecido
+      end
+
+      if button == 'Adicionar'
+        tecido_validar = {
+          fabric_type_id: params[:tecido][:fabric_type_id],
+          color_id: params[:tecido][:color_id],
+          quantidade: params[:tecido][:quantidade],
+          garment_type_id: params[:tecido][:garment_type_id],
+          multiplicador_x: params[:tecido][:multiplicador_x],
+          rendimento: params[:tecido][:rendimento]
+        }
+
+        tecido_validar[:quantidade] = quantity_to_float(tecido_validar[:quantidade])
+
+        if validate_tecido(tecido_validar) 
+          session[:tecidos] << tecido_validar
+          @tecidos << tecido_validar
+        else
+          @tecido = tecido_validar
+        end
+      elsif button == 'Remover'
+        index_tecido = params[:tecido_index].to_i
+        session[:tecidos].delete_at(index_tecido)
+        @tecidos.delete_at(index_tecido)
+      elsif button == 'Finalizar'
+        if @tecidos.any?
+          # session.delete(:tecidos)
+          # session[:tecidos] ||= []
+          save_tecidos(@tecidos)
+          flash[:notice] << 'Envio ao corte finalizado com sucesso!'
+          redirect_to root_path and return
+        else
+          flash[:alert] = 'Nenhum tecido adicionado!'
+        end
+      end
+    end
+
+    if @tecido.nil?
+      @tecido = {
+        fabric_type_id: 0,
+        color_id: 0,
+        quantidade: 0,
+        garment_type_id: 0,
+        multiplicador_x: 4.6,
+        rendimento: 0
+      }
+    end
+
+    render :new_details
+    #redirect_to new_fabric_cut_details_path
+  end
+
+  def save_tecidos(tecidos)
+    flash[:notice] = []
+    #flash[:notice] << tecidos.inspect
+    #flash[:notice] << 'teste'
+    # exemplo
+    # [{:fabric_type_id=>"1", :color_id=>"1", :quantidade=>1.0, :garment_type_id=>"1", :multiplicador_x=>"4.6", :rendimento=>"4.60"}, {:fabric_type_id=>"2", :color_id=>"2", :quantidade=>5.0, :garment_type_id=>"1", :multiplicador_x=>"4.6", :rendimento=>"23.00"}]
+    tecidos.each do |tecido|
+      fabric_stock = FabricStock.new
+      fabric_stock.tipo_tecido_id = tecido[:fabric_type_id]
+      fabric_stock.cor_id = tecido[:color_id]
+      fabric_stock.quantidade = tecido[:quantidade]
+      fabric_stock.tipo_movimento = 'Saida'
+      fabric_stock.data_hora = FabricCut.last.data_hora_ida
+      flash[:notice] << "Saida invalida" unless fabric_stock.valid?
+      fabric_stock.save
+
+      fabric_stock_exit = FabricStockExit.new
+      fabric_stock_exit.tecido_corte = FabricCut.last
+      fabric_stock_exit.estoque_tecido = fabric_stock
+      fabric_stock_exit.multiplicador = tecido[:multiplicador_x]
+      fabric_stock_exit.rendimento = tecido[:rendimento]
+      fabric_stock_exit.tipo_peca_id = tecido[:garment_type_id]
+      flash[:notice] << "Vinculo invalido" unless fabric_stock_exit.valid?
+      fabric_stock_exit.save
+    end
+
+    FabricCut.last.update(finalizado: true)
+  end
+
+  def get_colors_for_fabric_type
+    fabric_type_id = params[:fabric_type_id]
+    colors = FabricStock.where(tipo_tecido_id: fabric_type_id).map { |fabric_stock| { id: fabric_stock.cor.id, nome: fabric_stock.cor.nome } }
+    #{"colors":[{"id":2,"nome":"Branco"},{"id":2,"nome":"Branco"},{"id":3,"nome":"Vermelho"},{"id":3,"nome":"Vermelho"},{"id":4,"nome":"Azul"}]}
+    colors = colors.uniq { |color| color[:id] }
+
+    session.delete(:fabric_type_id)
+    session[:fabric_type_id] ||= []
+    session[:fabric_type_id] << fabric_type_id
+
+    render json: { colors: colors }
+  end
+
+  def get_total_quantity_for_color
+    color_id = params[:color_id]
+    fabric_type_id = session[:fabric_type_id].last
+    total_quantity = FabricStock.where(tipo_tecido_id: fabric_type_id, cor_id: color_id).map { |fabric_stock| fabric_stock.quantidade }.sum
+    render json: { total_quantity: total_quantity }
+  end
+
+
+  def validate_tecido(tecido)
+    fabric_stock = FabricStock.new
+
+    fabric_stock.tipo_tecido_id = tecido[:fabric_type_id]
+    fabric_stock.cor_id = tecido[:color_id]
+    fabric_stock.quantidade = tecido[:quantidade]
+    fabric_stock.tipo_movimento = 'Saida'
+    fabric_stock.data_hora = FabricCut.last.data_hora_ida
+    flash[:notice] = []
+    
+    validation = true
+
+    unless fabric_stock.valid?
+      @fabric_stock_errors = fabric_stock.errors
+      validation = false
+    end
+
+    fabric_stock_exit = FabricStockExit.new
+    fabric_stock_exit.tecido_corte = FabricCut.last
+    fabric_stock_exit.estoque_tecido = fabric_stock
+    fabric_stock_exit.tipo_peca_id = tecido[:garment_type_id]    
+    validation = false unless fabric_stock_exit.valid?
+    @fabric_stock_exit_errors = fabric_stock_exit.errors
+    #flash[:notice] << @fabric_stock_exit_errors.full_messages
+
+    validation
   end
 
   def create_details__

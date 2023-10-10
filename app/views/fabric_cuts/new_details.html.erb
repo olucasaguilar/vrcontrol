@@ -1,33 +1,195 @@
+<script>
+  $(document).ready(function() {
+    $('#fabric_type_select').change(function() {
+      var fabricTypeId = $(this).val();
+      $.ajax({
+        url: '/get_colors_for_fabric_type',
+        method: 'GET',
+        data: { fabric_type_id: fabricTypeId },
+        dataType: 'json',
+        success: function(data) {
+          var options = ['<option value="">Selecione uma cor...</option>'];
+          //{"colors":[{"id":2,"nome":"Branco"},{"id":2,"nome":"Branco"},{"id":3,"nome":"Vermelho"},{"id":3,"nome":"Vermelho"},{"id":4,"nome":"Azul"}]}
+          data.colors.forEach(function(color) {
+            options.push('<option value="' + color.id + '">' + color.nome + '</option>');
+          });
+          $('#color_select').html(options.join(''));
+        }
+      });
+    });
+    // verifica se o tipo tecido está preenchido, se sim, ja busca as cores
+    var fabricTypeId = $('#fabric_type_select').val();
+    if (fabricTypeId) {
+      $.ajax({
+        url: '/get_colors_for_fabric_type',
+        method: 'GET',
+        data: { fabric_type_id: fabricTypeId },
+        dataType: 'json',
+        success: function(data) {
+          var options = ['<option value="">Selecione uma cor...</option>'];
+          //{"colors":[{"id":2,"nome":"Branco"},{"id":2,"nome":"Branco"},{"id":3,"nome":"Vermelho"},{"id":3,"nome":"Vermelho"},{"id":4,"nome":"Azul"}]}
+          data.colors.forEach(function(color) {
+            options.push('<option value="' + color.id + '">' + color.nome + '</option>');
+          });
+          $('#color_select').html(options.join(''));
+        }
+      });
+    }
+
+    //////////////////////////
+
+    // @tecido[:color_id] == "" || @tecido[:color_id] == 0
+    // // Se os dois forem false, então o color_id deve ser selecionado na lista.
+    // <% unless @tecido[:color_id] == "" || @tecido[:color_id] == 0 %>
+    //   // Se o color_id estiver preenchido, então o color_id deve ser selecionado na lista.
+    //   alert('color_id: <%= @tecido[:color_id] %>');
+    //   $('#color_select').val('<%= @tecido[:color_id] %>');
+    // <% end %>
+    
+    //////////////////////////
+
+    $('#color_select').change(function() {
+      var colorId = $(this).val();
+      $.ajax({
+        url: '/get_total_quantity_for_color',
+        method: 'GET',
+        data: { color_id: colorId },
+        dataType: 'json',
+        success: function(data) {
+          var totalQuantity = parseFloat(data.total_quantity);
+          var quantidadeField = $('#quantidade_field');
+          //alert('Quantidade total disponível: ' + totalQuantity);
+          // <%= text_field_tag "tecido[quantidade]", @tecido[:quantidade], class: "form-control", id: "quantidade_field" %>
+          // defini o quantidade com o valr total
+          quantidadeField.val(totalQuantity.toFixed(2));
+        }
+      });
+    });
+
+    //////////////////////////
+    // Seletor para o campo de entrada de texto
+    var inputField = $("input#quantidade_field");
+
+    inputField.keypress(function(e) {
+      var key = e.which;
+
+      // Código ASCII para números (48-57) e vírgula (44)
+      if ((key < 48 || key > 57) && key !== 44) {
+        e.preventDefault();
+      }
+    });
+
+    inputField.on('input', function() {
+      var currentValue = inputField.val();
+      
+      // Substitua todas as vírgulas por pontos
+      currentValue = currentValue.replace(/,/g, '.');
+      
+      // Atualize o valor do campo de entrada
+      inputField.val(currentValue);
+    });
+
+
+    //////////////////////////
+
+    // Seleciona a tabela pelo ID (substitua 'myTable' pelo ID da sua tabela)
+    $("#myTable").on("keydown", function(event) {
+      // Verifica se a tecla pressionada é a tecla "Enter" (código 13)
+      if (event.which === 13) {
+        // Impede o comportamento padrão do "Enter" (enviar o formulário)
+        event.preventDefault();
+
+        // Encontra o botão "Adicionar" e aciona seu evento de clique
+        $("input[value='Adicionar']").click();
+      }
+    });
+
+    //////////////////////////
+
+    // <%= text_field_tag "tecido[quantidade]", @tecido[:quantidade], class: "form-control", id: "quantidade_field" %>
+    // <%= text_field_tag "tecido[multiplicador_x]", @tecido[:multiplicador_x], class: "form-control" %>
+    // <%= text_field_tag "tecido[rendimento]", @tecido[:rendimento], class: "form-control" %>
+    // ao detectar mudança no quantidade, multiplica o valor pelo multiplicador_x e atualiza o rendimento
+    inputField.change(function() {
+      var quantidade = parseFloat($(this).val());
+      var multiplicadorX = parseFloat($("input#tecido_multiplicador_x").val());
+      var rendimento = quantidade * multiplicadorX;
+      $("input#tecido_rendimento").val(rendimento.toFixed(2));
+    });
+
+    // Para fazer o calculo também quando alterar o multiplicador_x, reaproveitamos o código acima
+    $("input#tecido_multiplicador_x").change(function() {
+      inputField.change();
+    });
+  });
+</script>
+
 <h1>Tecido ao Corte - Envio</h1>
-<h3>Seleção de Tecidos</h3>
-<br>
-<%= form_for @fabric_stocks.first, url: create_fabric_cut_details_path do |f| %>
-  <% if @fabric_stocks.any? %>
-    <% @fabric_stocks.each_with_index do |fabric_stock, index| %>
-      <% if fabric_stock.errors.any? %>
+<h3>Seleção de Tecidos</h3><br>
+
+<%= form_tag create_fabric_cut_details_path do %>
+  <%# <% if @fabric_stocks.any?
+    <% @fabric_stocks.each_with_index do |fabric_stock, index|
+      <% if fabric_stock.errors.any?
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <a>Tecido <%= (index + 1).to_s %></a>
-          <% fabric_stock.errors.full_messages.each do |message| %>
-            <p class="mb-0"><%= message %> </p>
-          <% end %>
+          <a>Tecido <%= (index + 1).to_s 
+          <% fabric_stock.errors.full_messages.each do |message|
+            <p class="mb-0"><%= message
+          <% end 
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>        
-      <% end %>      
+      <% end
+    <% end
+  <% end %>
+
+  <% unless @fabric_stock_errors.nil? %>
+    <% if @fabric_stock_errors.any? %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <% @fabric_stock_errors.each do |message| %>
+          <p class="mb-0"><%= message.full_message %></p>
+        <% end %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
     <% end %>
   <% end %>
 
-  <div class="input-group mb-3" style="width: 50%;">
-    <span class="input-group-text">Total (kg)</span>
-    <input type="text" id="valor-total-peso" class="form-control" value="0.00" readonly>
-    <span class="input-group-text"></span>
-  </div>
+  <% unless @fabric_stock_exit_errors.nil? %>
+    <% if @fabric_stock_exit_errors.any? %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <% @fabric_stock_exit_errors.each do |message| %>
+          <p class="mb-0"><%= message.full_message %></p>
+        <% end %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% erro_tipo_tecido = false
+  erro_cor = false
+  erro_quantidade = false
+  unless @fabric_stock_errors.nil?
+    erro_tipo_tecido = true if @fabric_stock_errors[:tipo_tecido].any?
+    erro_cor = true if @fabric_stock_errors[:cor].any?
+    erro_quantidade = true if @fabric_stock_errors[:quantidade].any?
+  end 
   
+  erro_tipo_peca = false
+  unless @fabric_stock_exit_errors.nil?
+    erro_tipo_peca = true if @fabric_stock_exit_errors[:tipo_peca].any?
+  end %>
+
   <div class="form-group">
-    <button type="button" id="add-field-button" class="btn btn-primary">Mais um tecido</button>
-    <%= f.submit 'Finalizar', class: "btn btn-success" %>
+    <%= submit_tag 'Finalizar', class: "btn btn-success" %>
   </div><br>
 
-  <table class="mb-4 table table-bordered">
+  <div class="input-group mb-3" style="width: 50%;">
+    <span class="input-group-text">Total (kg)</span>
+    <% quantidade = @tecidos.sum { |tecido| tecido[:quantidade].to_f } %>
+    <input type="text" id="valor-total-peso" class="form-control" value="<%= sprintf('%.2f', quantidade) %>" readonly>
+    <span class="input-group-text"></span>
+  </div>
+
+  <table class="mb-4 table table-bordered" id="myTable">
     <thead>
       <tr>
         <th>Nº</th>
@@ -41,42 +203,65 @@
       </tr>
     </thead>
     <tbody>
-      <% @fabric_stocks.each_with_index do |fabric_stock, index| %>
-        <%= fields_for "fabric_stock[#{index}]", fabric_stock do |fs| %>
-          <tr>
-            <td>
-              <%= (index + 1).to_s %>
-            </td>
-            <td>
-              <%= fs.collection_select :tipo_tecido_id, @fabric_types, :id, :nome, { include_blank: 'Selecione um tipo...' }, class: "form-select #{'is-invalid' if fabric_stock.errors.has_key?(:tipo_tecido)}" %>
-            </td>
-            <td>
-              <%= fs.collection_select :cor_id, @colors, :id, :nome, { include_blank: 'Selecione uma cor...' }, class: "form-select #{'is-invalid' if fabric_stock.errors.has_key?(:cor)}" %>
-            </td>            
-            <td>
-              <%= fs.text_field :quantidade, class: "form-control #{'is-invalid' if fabric_stock.errors.has_key?(:quantidade)}" %>
-            </td>
-            <td>
-              <%# abaixo, tipo_peca_id, que não existe no modelo FabricStock, então será recebido de forma avulsa %>
-              <select class="form-select">
-                <option value="">Selecione um tipo...</option>
-                <% @garment_types.each do |garment_type| %>
-                  <option value="<%= garment_type.nome %>"><%= garment_type.nome %></option>
-                <% end %>
-              </select>
-            </td>
-            <td>
-              <input type="text" class="form-control" value="4.6">
-            </td>
-            <td>
-              <input type="text" class="form-control" value="46">
-            </td>
-            <td>
-              <button type="button" class="btn btn-danger remove-row-button" <% if index == 0 %> disabled <% end %>>Remover</button>
-            </td>
-          </tr>
-        <% end %>
+      <tr>
+        <td>0</td>
+        <td>
+          <%= select_tag "tecido[fabric_type_id]", options_from_collection_for_select(@fabric_types, :id, :nome, selected: @tecido[:fabric_type_id]), class: "form-select #{'is-invalid' if erro_tipo_tecido}", include_blank: "Selecione um tipo...", id: "fabric_type_select" %>
+        </td>
+        <td>
+          <%= select_tag "tecido[color_id]", options_for_select([]), class: "form-select #{'is-invalid' if erro_cor}", include_blank: "Selecione uma cor...", id: "color_select" %>
+        </td>
+        <td>
+          <%= text_field_tag "tecido[quantidade]", @tecido[:quantidade], class: "form-control #{'is-invalid' if erro_quantidade}", id: "quantidade_field" %>
+        </td>
+        <td>
+          <%= select_tag "tecido[garment_type_id]", options_from_collection_for_select(@garment_types, :id, :nome, selected: @tecido[:garment_type_id]), class: "form-select #{'is-invalid' if erro_tipo_peca}", include_blank: "Selecione um tipo..." %>
+        </td>
+        <td>
+          <%= text_field_tag "tecido[multiplicador_x]", @tecido[:multiplicador_x], class: "form-control" %>
+        </td>
+        <td>
+          <%= text_field_tag "tecido[rendimento]", @tecido[:rendimento], class: "form-control" %>
+        </td>
+        <td>
+          <%= submit_tag 'Adicionar', class: "btn btn-primary" %>
+        </td>
+      </tr>
+      <% @tecidos.each_with_index do |tecido, index| %>
+        <tr>
+          <td>
+            <%= (index + 1).to_s %>
+          </td>
+          <td>
+            <%= select_tag "tecidos[#{index}][fabric_type_id]", options_from_collection_for_select(@fabric_types, :id, :nome, selected: tecido[:fabric_type_id]), class: "form-select", include_blank: "Selecione um tipo...", disabled: true %>
+          </td>
+          <td>
+            <%= select_tag "tecidos[#{index}][color_id]", options_from_collection_for_select(@colors, :id, :nome, selected: tecido[:color_id]), class: "form-select", include_blank: "Selecione uma cor...", disabled: true %>
+          </td>
+          <td>
+            <%= text_field_tag "tecidos[#{index}][quantidade]", tecido[:quantidade], class: "form-control", disabled: true %>
+          </td>
+          <td>
+            <%= select_tag "tecidos[#{index}][garment_type_id]", options_from_collection_for_select(@garment_types, :id, :nome, selected: tecido[:garment_type_id]), class: "form-select", include_blank: "Selecione um tipo...", disabled: true %>
+          </td>
+          <td>
+            <%= text_field_tag "tecidos[#{index}][multiplicador_x]", tecido[:multiplicador_x], class: "form-control", disabled: true %>
+          </td>
+          <td>
+            <%= text_field_tag "tecidos[#{index}][rendimento]", tecido[:rendimento], class: "form-control", disabled: true %>
+          </td>
+          <%# <td>
+            <%= submit_tag 'Remover', class: "btn btn-danger remove-row-button"
+          </td> %>
+          <td>
+            <%= form_tag create_fabric_cut_details_path do %>
+              <%= hidden_field_tag "tecido_index", index %>
+              <%= submit_tag 'Remover', class: "btn btn-danger remove-row-button" %>
+            <% end %>
+          </td>
+        </tr>
       <% end %>
     </tbody>
-  </table>  
+  </table>
 <% end %>
+

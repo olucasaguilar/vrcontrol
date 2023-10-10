@@ -47,6 +47,9 @@ Rails.application.routes.draw do
   get '/corte/envio/detalhes', to: 'fabric_cuts#new_details', as: 'new_fabric_cut_details'
   post '/corte/envio/detalhes', to: 'fabric_cuts#create_details', as: 'create_fabric_cut_details'
   get '/corte/retorno', to: 'fabric_cuts#return', as: 'return_fabric_cut'
+  get 'get_colors_for_fabric_type', to: 'fabric_cuts#get_colors_for_fabric_type'
+  get 'get_total_quantity_for_color', to: 'fabric_cuts#get_total_quantity_for_color'
+
 
   # Rota para tela temporária corte envio
   get '/temp_view/corte/envio', to: 'temp_views#corte_envio', as: 'temp_view_corte_envio'
