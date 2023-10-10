@@ -62,6 +62,7 @@
           // <%= text_field_tag "tecido[quantidade]", @tecido[:quantidade], class: "form-control", id: "quantidade_field" %>
           // defini o quantidade com o valr total
           quantidadeField.val(totalQuantity.toFixed(2));
+          inputField.change();
         }
       });
     });

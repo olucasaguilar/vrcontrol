@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  tecido_corte_peca: one
+  qtd_tamanho: 1
+  tamanho: one
+
+two:
+  tecido_corte_peca: two
+  qtd_tamanho: 1
+  tamanho: two

@@ -157,7 +157,7 @@ class FabricCutsController < ApplicationController
 
         tecido_validar[:quantidade] = quantity_to_float(tecido_validar[:quantidade])
 
-        if validate_tecido(tecido_validar) 
+        if validate_tecido(tecido_validar)
           session[:tecidos] << tecido_validar
           @tecidos << tecido_validar
         else
@@ -222,6 +222,7 @@ class FabricCutsController < ApplicationController
     end
 
     FabricCut.last.update(finalizado: true)
+    FabricCut.last.update(total_tecido_envio: tecidos.sum { |tecido| tecido[:quantidade].to_f })
   end
 
   def get_colors_for_fabric_type    
@@ -256,10 +257,9 @@ class FabricCutsController < ApplicationController
   def get_total_quantity_for_color
     color_id = params[:color_id]
     fabric_type_id = session[:fabric_type_id].last
-    total_quantity = FabricStock.where(tipo_tecido_id: fabric_type_id, cor_id: color_id).map { |fabric_stock| fabric_stock.quantidade }.sum
-    render json: { total_quantity: total_quantity }
+    total_quantity = FabricStock.where(tipo_tecido_id: fabric_type_id, cor_id: color_id).last
+    render json: { total_quantity: total_quantity.saldo }
   end
-
 
   def validate_tecido(tecido)
     fabric_stock = FabricStock.new
@@ -271,7 +271,9 @@ class FabricCutsController < ApplicationController
     fabric_stock.data_hora = FabricCut.last.data_hora_ida
     flash[:notice] = []
     flash[:alert] = []
+    #flash[:notice] << s
     
+
     validation = true
 
     unless fabric_stock.valid?
@@ -296,48 +298,155 @@ class FabricCutsController < ApplicationController
     validation
   end
 
-  def create_details__
-    @fabric_stocks = []
-    @fabric_types = FabricType.all
-    @colors = Color.all
-    all_valid_fabric = true
-
-    params[:fabric_stock].each do |parametro|
-      fabric_stock = FabricStock.new(fabric_stock_params(parametro[1]))
-      fabric_stock.tipo_movimento = 'Saida'
-      fabric_stock.data_hora = FabricCut.last.data_hora
-      all_valid_fabric = false unless fabric_stock.valid?
-      @fabric_stocks << fabric_stock
-    end
-
-    total_peso = @fabric_stocks.each.map { |fabric_stock| fabric_stock.quantidade }
-    total_peso = total_peso.sum
-
-    unless all_valid
-      render :new_details and return
-    end
-
-    # Debug
-    #render :new_details and return
-    # Debug
-
-    @fabric_stocks.each do |fabric_stock|
-      fabric_stock.save
-      
-      @fabric_stock_entry = FabricStockEntry.new
-      @fabric_stock_entry.entrada_tecido = FabricEntry.last
-      @fabric_stock_entry.estoque_tecido = fabric_stock
-      @fabric_stock_entry.valor_tecido = @valores_tecido[@fabric_stocks.index(fabric_stock)]
-      @fabric_stock_entry.save if @fabric_stock_entry.valid?
-    end
-
-    FabricEntry.last.update(total_tecido: total_peso)
-
-    flash[:notice] << 'Entrada de tecido(s) criada com sucesso!'
-    redirect_to new_fabric_entry_path # Temp
+  def return
+    @fabric_cuts = FabricCut.where(data_hora_volta: nil)
   end
 
-  def return    
+  def return_details
+    @garment_sizes = GarmentSize.all
+    @lote_tamanhos = []
+    @financial = {
+      valor: nil,
+      observacao: ''
+    }
+
+    @financial_extra = []
+      
+
+    fabric_cut = FabricCut.find(params[:id])
+    data_hora_volta = Time.now - 3.hour
+    fabric_stock_exits = FabricStockExit.where(tecido_corte: fabric_cut)
+
+    @lote = {
+      tecido_corte: fabric_cut,
+      data_hora_volta: data_hora_volta,
+      fabric_stock_exits: []
+    }
+
+    fabric_stock_exits.each_with_index do |fabric_stock_exit, index|
+      @lote_tamanhos << {}
+      @lote[:fabric_stock_exits] << {
+        tipo_tecido: fabric_stock_exit.estoque_tecido.tipo_tecido.nome,
+        cor: fabric_stock_exit.estoque_tecido.cor.nome,
+        quantidade: fabric_stock_exit.estoque_tecido.quantidade,
+        tipo_peca: fabric_stock_exit.tipo_peca.nome,
+        pecas: 0,
+        tamanhos: false,
+      }
+    end
+  end
+
+  def create_fabric_cut_return    
+    all_valid = false
+    flash[:notice] = []
+    button = params[:commit]
+    button = 'Remover' unless params[:remove_button].nil?
+    #flash[:notice] << button
+
+    @garment_sizes = GarmentSize.all
+    @lote_tamanhos = []
+    unless params['financial'].nil?
+      @financial = {
+        valor: params['financial']['valor'],
+        observacao: params['financial']['obs']
+      }
+    else
+      @financial = {
+        valor: nil,
+        observacao: ''
+      }
+    end
+
+    # params['financial_extra'] => "financial_extra"=>{"0"=>{"valor"=>"", "obs"=>"aaaaa"}}
+    @financial_extra = []
+    unless params['financial_extra'].nil?
+      params['financial_extra'].each do |key, value|
+        @financial_extra << {
+          valor: value['valor'],
+          observacao: value['obs']
+        }
+      end
+    end
+
+    fabric_cut = FabricCut.find(params[:fabric_cut_id])
+    data_hora_volta = params[:data_hora_volta].to_datetime
+    fabric_stock_exits = FabricStockExit.where(tecido_corte: fabric_cut)
+
+    @lote = {
+      tecido_corte: fabric_cut,
+      data_hora_volta: data_hora_volta,
+      fabric_stock_exits: []
+    }
+
+    fabric_stock_exits.each_with_index do |fabric_stock_exit, index|
+      unless params[:tam].nil?
+        unless params[:tam]["#{index}"].nil?
+          #flash[:notice] << params[:tam]["#{index}"]
+          tamanhos = params[:tam]["#{index}"]
+          @lote_tamanhos << tamanhos
+        else
+          @lote_tamanhos << {}
+        end
+      else
+        @lote_tamanhos << {}
+      end      
+
+      tamanho = false
+
+      unless params[:tamanhos].nil?
+        tamanho = true if params[:tamanhos]["#{index}"] == 'true'
+      end
+      
+      @lote[:fabric_stock_exits] << {
+        tipo_tecido: fabric_stock_exit.estoque_tecido.tipo_tecido.nome,
+        cor: fabric_stock_exit.estoque_tecido.cor.nome,
+        quantidade: fabric_stock_exit.estoque_tecido.quantidade,
+        tipo_peca: fabric_stock_exit.tipo_peca.nome,
+        pecas: params[:pecas]["#{index}"].to_i,
+        tamanho: tamanho,
+      }
+    end
+
+    if button == 'Remover'
+      financial_extra_index = params[:remove_button].keys.first.to_i
+      @financial_extra.delete_at(financial_extra_index)
+    elsif button == 'Adicionar Valor Extra'
+      if financial_validate(@financial, @lote[:data_hora_volta])
+        @financial_extra << @financial.clone
+        @financial = {
+          valor: nil,
+          observacao: ''
+        }
+      end
+    else
+      # 
+      # @lote
+      # @lote_tamanhos
+      # @financial ///
+      # @financial_extra ///
+      # 
+      all_valid = true
+      all_valid = false unless financial_validate(@financial, @lote[:data_hora_volta])
+    end
+    
+    #temp
+    flash[:notice] << all_valid
+    all_valid = false
+
+    unless all_valid
+      render :return_details and return
+    else
+      # salva tudo
+      # render de confirmação
+    end
+  end
+
+  def financial_validate(financial, data_hora)
+    financial_record = FinancialRecord.new(valor: financial[:valor], tipo_movimento: 'Entrada', observacao: financial[:observacao], data_hora: data_hora)
+    financial_record.valid?
+    #@financial_errors = financial_record.errors
+    @financial_errors = financial_record.errors
+    financial_record.valid?
   end
 
   private
@@ -350,8 +459,4 @@ class FabricCutsController < ApplicationController
   def fabric_cut_params
     params.require(:fabric_cut).permit(:data_hora_ida, :cortador_id)
   end
-
-  def fabric_stock_params(parametros)
-    parametros.permit(:tipo_tecido_id, :cor_id, :quantidade)
-  end  
 end

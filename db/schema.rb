@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_09_142838) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_10_183416) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -37,6 +37,25 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_09_142838) do
     t.string "nome"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "fabric_cut_garment_sizes", force: :cascade do |t|
+    t.bigint "tecido_corte_peca_id", null: false
+    t.integer "qtd_tamanho"
+    t.bigint "tamanho_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tamanho_id"], name: "index_fabric_cut_garment_sizes_on_tamanho_id"
+    t.index ["tecido_corte_peca_id"], name: "index_fabric_cut_garment_sizes_on_tecido_corte_peca_id"
+  end
+
+  create_table "fabric_cut_garments", force: :cascade do |t|
+    t.bigint "estoque_pecas_id", null: false
+    t.bigint "saida_tecido_estoque_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["estoque_pecas_id"], name: "index_fabric_cut_garments_on_estoque_pecas_id"
+    t.index ["saida_tecido_estoque_id"], name: "index_fabric_cut_garments_on_saida_tecido_estoque_id"
   end
 
   create_table "fabric_cuts", force: :cascade do |t|
@@ -137,6 +156,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_09_142838) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "garment_stocks", force: :cascade do |t|
+    t.bigint "tipo_peca_id", null: false
+    t.boolean "costurada"
+    t.boolean "estampada"
+    t.integer "quantidade"
+    t.string "tipo_movimento"
+    t.datetime "data_hora"
+    t.integer "saldo"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tipo_peca_id"], name: "index_garment_stocks_on_tipo_peca_id"
+  end
+
   create_table "garment_types", force: :cascade do |t|
     t.string "nome"
     t.datetime "created_at", null: false
@@ -144,6 +176,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_09_142838) do
   end
 
   add_foreign_key "entities", "entity_types", column: "entity_types_id"
+  add_foreign_key "fabric_cut_garment_sizes", "fabric_cut_garments", column: "tecido_corte_peca_id"
+  add_foreign_key "fabric_cut_garment_sizes", "garment_sizes", column: "tamanho_id"
+  add_foreign_key "fabric_cut_garments", "fabric_stock_entries", column: "saida_tecido_estoque_id"
+  add_foreign_key "fabric_cut_garments", "garment_stocks", column: "estoque_pecas_id"
   add_foreign_key "fabric_cuts", "entities", column: "cortador_id"
   add_foreign_key "fabric_entries", "entities"
   add_foreign_key "fabric_stock_entries", "fabric_entries", column: "entrada_tecido_id"
@@ -157,4 +193,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_09_142838) do
   add_foreign_key "financial_fabric_cuts", "financial_records", column: "registro_financeiro_id"
   add_foreign_key "financial_fabric_entries", "fabric_entries", column: "entrada_tecido_id"
   add_foreign_key "financial_fabric_entries", "financial_records", column: "registro_financeiro_id"
+  add_foreign_key "garment_stocks", "garment_types", column: "tipo_peca_id"
 end

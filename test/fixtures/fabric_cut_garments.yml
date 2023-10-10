@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  estoque_pecas: one
+  saida_tecido_estoque: one
+
+two:
+  estoque_pecas: two
+  saida_tecido_estoque: two
