@@ -12,15 +12,17 @@
             options.push('<option value="' + color.id + '">' + color.nome + '</option>');
           });
           $('#color_select').html(options.join(''));
-          <% if session[:color_id].first.to_i > 0 %>
-            //alert('color_id: <%= session[:color_id].first.to_i %>');
-            // define o valor do color_id
-            // verifica se data contem a cor
-            data.colors.forEach(function(color) {
-              if (color.id == <%= session[:color_id].first.to_i %>) {
-                $('#color_select').val('<%= session[:color_id].first.to_i %>');
-              }
-            });            
+          <% unless session[:color_id].nil? %>
+            <% if session[:color_id].first.to_i > 0 %>
+              //alert('color_id: <%= session[:color_id].first.to_i %>');
+              // define o valor do color_id
+              // verifica se data contem a cor
+              data.colors.forEach(function(color) {
+                if (color.id == <%= session[:color_id].first.to_i %>) {
+                  $('#color_select').val('<%= session[:color_id].first.to_i %>');
+                }
+              });
+            <% end %>
           <% end %>
         }
       });
@@ -35,7 +37,7 @@
     if (fabricTypeId) {
       carregarCoresParaTipoTecido(fabricTypeId);
     }
-    
+
     //////////////////////////
 
     // @tecido[:color_id] == "" || @tecido[:color_id] == 0
@@ -45,7 +47,7 @@
     //   alert('color_id: <%= @tecido[:color_id] %>');
     //   $('#color_select').val('<%= @tecido[:color_id] %>');
     // <% end %>
-    
+
     //////////////////////////
 
     $('#color_select').change(function() {
@@ -82,10 +84,10 @@
 
     inputField.on('input', function() {
       var currentValue = inputField.val();
-      
+
       // Substitua todas as vírgulas por pontos
       currentValue = currentValue.replace(/,/g, '.');
-      
+
       // Atualize o valor do campo de entrada
       inputField.val(currentValue);
     });
@@ -131,7 +133,7 @@
 <%= form_tag create_fabric_cut_details_path do %>
   <% unless @fabric_stock_errors.nil? %>
     <% if @fabric_stock_errors.any? %>
-      <% @fabric_stock_errors.each do |message| %>          
+      <% @fabric_stock_errors.each do |message| %>
         <% flash[:alert] << message.full_message %>
       <% end %>
     <% end %>
@@ -152,8 +154,8 @@
     erro_tipo_tecido = true if @fabric_stock_errors[:tipo_tecido].any?
     erro_cor = true if @fabric_stock_errors[:cor].any?
     erro_quantidade = true if @fabric_stock_errors[:quantidade].any?
-  end 
-  
+  end
+
   erro_tipo_peca = false
   unless @fabric_stock_exit_errors.nil?
     erro_tipo_peca = true if @fabric_stock_exit_errors[:tipo_peca].any?
@@ -245,4 +247,3 @@
     </tbody>
   </table>
 <% end %>
-

@@ -29,9 +29,9 @@ class GarmentStock < ApplicationRecord
       last_record_saldo = GarmentStock.where(tipo_peca_id: self.tipo_peca_id).last.saldo
     end
 
-    if last_record_saldo - self.quantidade < 0
-      unless self.cor.nil?
-        errors.add(:quantidade, " disponível para o tipo de peça #{self.tipo_peca.nome} é de #{last_record_saldo}")
+    if self.tipo_movimento == 'Saída'
+      if last_record_saldo - self.quantidade < 0
+        errors.add(:quantidade, " disponível para o tipo de peça #{self.tipo_peca_id.nome} é de #{last_record_saldo}")
       end
     end
   end

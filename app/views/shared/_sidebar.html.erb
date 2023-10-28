@@ -46,7 +46,7 @@
     display: block;
     width: 100px;
     height: 100px;
-      border-radius: 50%;
+    border-radius: 50%;
     margin: 0 auto;
   }
 
@@ -167,9 +167,21 @@
     var hamburger = document.querySelector(".hamburger");
 
     //document.querySelector("body").classList.add("active");
+    if (localStorage.getItem("menu") == "fechado") {
+      document.querySelector("body").classList.add("active");
+    } else {
+      document.querySelector("body").classList.remove("active");
+    }
     
     hamburger.addEventListener("click", function(){
       document.querySelector("body").classList.toggle("active");
+
+      // abaixo, salva o estado do menu aberto ou fechado no localStorage
+      if (document.querySelector("body").classList.contains("active")) {
+        localStorage.setItem("menu", "fechado");
+      } else {
+        localStorage.setItem("menu", "aberto");
+      }
     })
   });
 </script>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_10_183416) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_27_234756) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,9 +51,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_10_183416) do
 
   create_table "fabric_cut_garments", force: :cascade do |t|
     t.bigint "estoque_pecas_id", null: false
-    t.bigint "saida_tecido_estoque_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "saida_tecido_estoque_id"
     t.index ["estoque_pecas_id"], name: "index_fabric_cut_garments_on_estoque_pecas_id"
     t.index ["saida_tecido_estoque_id"], name: "index_fabric_cut_garments_on_saida_tecido_estoque_id"
   end
@@ -178,7 +178,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_10_183416) do
   add_foreign_key "entities", "entity_types", column: "entity_types_id"
   add_foreign_key "fabric_cut_garment_sizes", "fabric_cut_garments", column: "tecido_corte_peca_id"
   add_foreign_key "fabric_cut_garment_sizes", "garment_sizes", column: "tamanho_id"
-  add_foreign_key "fabric_cut_garments", "fabric_stock_entries", column: "saida_tecido_estoque_id"
+  add_foreign_key "fabric_cut_garments", "fabric_stock_exits", column: "saida_tecido_estoque_id"
   add_foreign_key "fabric_cut_garments", "garment_stocks", column: "estoque_pecas_id"
   add_foreign_key "fabric_cuts", "entities", column: "cortador_id"
   add_foreign_key "fabric_entries", "entities"

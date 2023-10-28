@@ -158,8 +158,32 @@ class FabricCutsController < ApplicationController
         tecido_validar[:quantidade] = quantity_to_float(tecido_validar[:quantidade])
 
         if validate_tecido(tecido_validar)
-          session[:tecidos] << tecido_validar
-          @tecidos << tecido_validar
+          combinacao_existe = false
+          @tecidos.each do |tecido|
+            if (tecido[:fabric_type_id] == tecido_validar[:fabric_type_id]) && (tecido[:color_id] == tecido_validar[:color_id]) && (tecido[:garment_type_id] == tecido_validar[:garment_type_id])
+              combinacao_existe = true
+            end
+          end
+
+          unless combinacao_existe
+            session[:tecidos] << tecido_validar
+            @tecidos << tecido_validar
+          else
+            # irá apenas atualizar a quantidade
+            @tecidos.each do |tecido|
+              if (tecido[:fabric_type_id] == tecido_validar[:fabric_type_id]) && (tecido[:color_id] == tecido_validar[:color_id]) && (tecido[:garment_type_id] == tecido_validar[:garment_type_id])
+                tecido[:quantidade] += tecido_validar[:quantidade]
+                tecido[:rendimento] = (tecido[:rendimento].to_f + tecido_validar[:rendimento].to_f).round(2)
+
+                session[:tecidos].each do |tecido_session|
+                  if (tecido_session["fabric_type_id"] == tecido_validar[:fabric_type_id]) && (tecido_session["color_id"] == tecido_validar[:color_id]) && (tecido_session["garment_type_id"] == tecido_validar[:garment_type_id])
+                    tecido_session["quantidade"] = tecido[:quantidade]
+                    tecido_session["rendimento"] = tecido[:rendimento]
+                  end
+                end
+              end
+            end
+          end
         else
           @tecido = tecido_validar
         end
@@ -271,8 +295,13 @@ class FabricCutsController < ApplicationController
     fabric_stock.data_hora = FabricCut.last.data_hora_ida
     flash[:notice] = []
     flash[:alert] = []
-    #flash[:notice] << s
     
+    quantidade_original = tecido[:quantidade]
+    @tecidos.each do |tecido_session|
+      if (tecido_session[:fabric_type_id] == tecido[:fabric_type_id]) && (tecido_session[:color_id] == tecido[:color_id])
+        fabric_stock.quantidade += tecido_session[:quantidade] unless fabric_stock.quantidade <= 0
+      end
+    end
 
     validation = true
 
@@ -303,6 +332,13 @@ class FabricCutsController < ApplicationController
   end
 
   def return_details
+    flash[:notice] = []
+    
+    unless FabricCut.find(params[:id]).data_hora_volta.nil?
+      flash[:notice] << 'Corte já finalizado!'
+      redirect_to root_path and return
+    end
+    
     @garment_sizes = GarmentSize.all
     @lote_tamanhos = []
     @financial = {
@@ -311,10 +347,10 @@ class FabricCutsController < ApplicationController
     }
 
     @financial_extra = []
-      
+    @errors = {}
 
     fabric_cut = FabricCut.find(params[:id])
-    data_hora_volta = Time.now - 3.hour
+    data_hora_volta = Time.now #- 3.hour
     fabric_stock_exits = FabricStockExit.where(tecido_corte: fabric_cut)
 
     @lote = {
@@ -336,7 +372,9 @@ class FabricCutsController < ApplicationController
     end
   end
 
-  def create_fabric_cut_return    
+  def create_fabric_cut_return
+    @errors = {}
+    #@errors[:teste] = ['teste1', 'teste2']
     all_valid = false
     flash[:notice] = []
     button = params[:commit]
@@ -398,6 +436,7 @@ class FabricCutsController < ApplicationController
       end
       
       @lote[:fabric_stock_exits] << {
+        id: fabric_stock_exit.id,
         tipo_tecido: fabric_stock_exit.estoque_tecido.tipo_tecido.nome,
         cor: fabric_stock_exit.estoque_tecido.cor.nome,
         quantidade: fabric_stock_exit.estoque_tecido.quantidade,
@@ -405,6 +444,7 @@ class FabricCutsController < ApplicationController
         pecas: params[:pecas]["#{index}"].to_i,
         tamanho: tamanho,
       }
+      #flash[:notice] << params[:pecas]["#{index}"].to_i
     end
 
     if button == 'Remover'
@@ -419,25 +459,141 @@ class FabricCutsController < ApplicationController
         }
       end
     else
-      # 
-      # @lote
-      # @lote_tamanhos
-      # @financial ///
-      # @financial_extra ///
-      # 
       all_valid = true
       all_valid = false unless financial_validate(@financial, @lote[:data_hora_volta])
+      @lote[:fabric_stock_exits].each_with_index do |fabric_stock_exit, index|
+        if fabric_stock_exit[:pecas] <= 0
+          all_valid = false
+          @errors[:pecas] = [] if @errors[:pecas].nil?
+          @errors[:pecas] << { index: index, message: 'Quantidade de peças inválida!' }
+        end
+      end
     end
     
     #temp
-    flash[:notice] << all_valid
-    all_valid = false
+    #all_valid = false
 
     unless all_valid
       render :return_details and return
     else
+      #flash[:notice] << "all_valid: #{all_valid}"
+
       # salva tudo
       # render de confirmação
+      
+      # 
+      # @lote //
+      # @lote_tamanhos //
+      # @financial ///
+      # @financial_extra ///
+      # 
+
+      # GarmentStock
+      # *tipo_peca (FK) INT GarmentType
+      # *costurada BOOLEAN
+      # *estampada BOOLEAN
+      # *quantidade INT
+      # *tipo_movimento VARCHAR
+      # *data_hora DATETIME
+      # *saldo INT
+
+      garment_sizes = GarmentSize.all
+
+      @lote[:fabric_stock_exits].each_with_index do |fabric_stock_exit, index|
+        garment_type = GarmentType.where(nome: fabric_stock_exit[:tipo_peca]).first
+        #flash[:notice] << garment_type.inspect
+
+        garment_stock = GarmentStock.new
+        garment_stock.tipo_peca_id = garment_type.id
+        garment_stock.costurada = false
+        garment_stock.estampada = false
+        garment_stock.quantidade = fabric_stock_exit[:pecas].to_i
+        garment_stock.tipo_movimento = 'Entrada'
+        garment_stock.data_hora = @lote[:data_hora_volta]
+        garment_stock.valid?
+        #flash[:notice] << "Index: #{index} valid: #{garment_stock.valid?}"
+        @errors[:garment_stock] = [] if @errors[:garment_stock].nil?
+        @errors[:garment_stock] << { index: index, errors: garment_stock.errors }
+        #flash[:notice] << @errors.inspect
+        #flash[:notice] << garment_stock.tipo_peca_id.inspect
+        #flash[:notice] << fabric_stock_exit[:tipo_peca].inspect
+        #flash[:notice] << GarmentType.find(garment_stock.tipo_peca_id).inspect
+        
+        # ativar isso
+        garment_stock.save
+
+        fabric_cut_garment = FabricCutGarment.new
+        fabric_cut_garment.estoque_pecas = garment_stock
+        fabric_cut_garment.saida_tecido_estoque = FabricStockExit.find(fabric_stock_exit[:id])
+        fabric_cut_garment.valid?
+        # ativar isso
+        fabric_cut_garment.save
+
+        unless @lote_tamanhos[index].class == Hash
+          @lote_tamanhos[index].each do |key, value|
+            unless (value.to_i == 0)
+              fabric_cut_garment_size = FabricCutGarmentSize.new
+              fabric_cut_garment_size.tecido_corte_peca = fabric_cut_garment
+              fabric_cut_garment_size.tamanho = garment_sizes[key.to_i]
+              fabric_cut_garment_size.qtd_tamanho = value.to_i
+              fabric_cut_garment_size.valid?
+              # ativar isso
+              fabric_cut_garment_size.save
+            end
+          end
+        end
+      end
+
+      # ativar isso
+      fabric_cut.update(data_hora_volta: @lote[:data_hora_volta])
+      total_peca_retorno = @lote[:fabric_stock_exits].sum { |fabric_stock_exit| fabric_stock_exit[:pecas].to_i }
+      fabric_cut.update(total_peca_retorno: total_peca_retorno)
+
+      financial_record = FinancialRecord.new
+      financial_record.valor = @financial[:valor]
+      financial_record.observacao = @financial[:observacao]
+      #
+      observacao_original = financial_record.observacao
+      pre_msg = 'Corte Retorno - Custo'
+      pre_msg += ' - ' unless observacao_original.blank?
+      financial_record.observacao = pre_msg + financial_record.observacao
+      #
+      financial_record.tipo_movimento = 'Saída'
+      financial_record.data_hora = @lote[:data_hora_volta]
+      financial_record.valid?
+      # Ativar isso
+      financial_record.save
+      financial_fabric_cut = FinancialFabricCut.new
+      financial_fabric_cut.registro_financeiro = financial_record
+      financial_fabric_cut.tecido_corte = @lote[:tecido_corte]
+      financial_fabric_cut.retorno = true
+      financial_fabric_cut.valid?
+      # Ativar isso
+      financial_fabric_cut.save
+
+      @financial_extra.each do |financial_extra|
+        observacao_original = financial_extra[:observacao]
+        pre_msg = 'Corte Retorno - Custo Extra'
+        pre_msg += ' - ' unless observacao_original.blank?
+        financial_record = FinancialRecord.new
+        financial_record.valor = financial_extra[:valor]
+        financial_record.observacao = pre_msg + financial_extra[:observacao]
+        financial_record.tipo_movimento = 'Saída'
+        financial_record.data_hora = @lote[:data_hora_volta]
+        financial_record.valid?
+        # Ativar isso
+        financial_record.save
+        financial_fabric_cut = FinancialFabricCut.new
+        financial_fabric_cut.registro_financeiro = financial_record
+        financial_fabric_cut.tecido_corte = @lote[:tecido_corte]
+        financial_fabric_cut.retorno = true
+        financial_fabric_cut.valid?
+        # Ativar isso
+        financial_fabric_cut.save
+      end
+    
+      flash[:notice] << 'Retorno do corte criado com sucesso!'
+      redirect_to root_path and return
     end
   end
 

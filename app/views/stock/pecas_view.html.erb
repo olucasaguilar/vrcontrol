@@ -1,13 +1,3 @@
-<% @garment_stock_groups = [
-  # Grupo 1: Camisetas Cortadas e Estampadas
-  [["Camiseta", "Cortada", "Estampada"], { tipo_peca: { nome: "Camiseta" }, costurada: false, estampada: true, quantidade: 50, data_hora: "2023-09-25 10:00:00" }],
-  [["Camiseta", "Costurada", "Estampada"], { tipo_peca: { nome: "Camiseta" }, costurada: true, estampada: true, quantidade: 30, data_hora: "2023-09-25 11:00:00" }],
-  [["Camiseta", "Cortada"], { tipo_peca: { nome: "Camiseta" }, costurada: false, estampada: false, quantidade: 20, data_hora: "2023-09-25 12:00:00" }],
-  [["Calça", "Cortada"], { tipo_peca: { nome: "Calça" }, costurada: false, estampada: false, quantidade: 15, data_hora: "2023-09-25 13:00:00" }],
-  [["Camiseta", "Costurada"], { tipo_peca: { nome: "Camiseta" }, costurada: true, estampada: false, quantidade: 25, data_hora: "2023-09-25 14:00:00" }]
-] 
-%>
-
 <h1>Estoque de Peças</h1>
 
 <!-- Tabela para botões e campos de filtro -->
@@ -19,8 +9,8 @@
           <label for="tipo_peca">Tipo de Peça:</label>
           <select class="form-control" id="tipo_peca">
             <option value="">Todos</option>
-            <% @garment_stock_groups.map { |(_, garment_stock)| garment_stock[:tipo_peca][:nome] }.uniq.each do |tipo_peca| %>
-              <option value="<%= tipo_peca %>"><%= tipo_peca %></option>
+            <% @garment_stocks_groups.each do |(tipo, costurada, estampada), garment_stock| %>
+              <option value="<%= garment_stock.last.tipo_peca.nome %>"><%= garment_stock.last.tipo_peca.nome %></option>
             <% end %>
           </select>
         </div>
@@ -59,13 +49,13 @@
     </tr>
   </thead>
   <tbody>
-    <% @garment_stock_groups.each do |(tipo, costurada, estampada), garment_stock| %>
+    <% @garment_stocks_groups.each do |(tipo, costurada, estampada), garment_stock| %>
       <tr>
-        <td><%= garment_stock[:tipo_peca][:nome] %></td>
-        <td><%= garment_stock[:costurada] ? "Sim" : "Não" %></td>
-        <td><%= garment_stock[:estampada] ? "Sim" : "Não" %></td>
-        <td><%= garment_stock[:quantidade] %></td>
-        <td><%= garment_stock[:data_hora] %></td>
+        <td><%= garment_stock.last.tipo_peca.nome %></td>
+        <td><%= garment_stock.last.costurada ? "Sim" : "Não" %></td>
+        <td><%= garment_stock.last.estampada ? "Sim" : "Não" %></td>
+        <td><%= garment_stock.last.quantidade %></td>
+        <td><%= garment_stock.last.data_hora %></td>
       </tr>
     <% end %>
   </tbody>

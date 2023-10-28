@@ -35,4 +35,8 @@
       </a>
     </div>
   <% end %>
+
+  <% if @fabric_cuts.empty? %>
+    <p>Nenhum lote de tecido ao corte foi encontrado.</p>
+  <% end %>
 </div>

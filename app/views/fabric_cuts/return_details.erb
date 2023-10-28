@@ -76,6 +76,14 @@
     </tbody>
   </table>
 
+  <% erro_peca = {} %>
+  <% unless @errors[:pecas].nil? %>
+    <% @errors[:pecas].each do |error| %>
+      <% erro_peca[error[:index]] = true %>
+      <% flash[:alert] << error[:message] %>
+    <% end %>
+  <% end %>
+
   <br><h5>Tecidos Enviados</h5>
   <table class="table table-bordered">
     <thead>
@@ -96,7 +104,7 @@
           <td><%= fabric_stock_exit[:cor] %></td>
           <td><%= fabric_stock_exit[:quantidade] %></td>
           <td><%= fabric_stock_exit[:tipo_peca] %></td>
-          <td><input type="text" name="pecas[<%= index %>]" class="form-control" value="<%= fabric_stock_exit[:pecas] %>"></td>
+          <td><input type="text" name="pecas[<%= index %>]" value="<%= fabric_stock_exit[:pecas] %>"class="form-control <%= 'is-invalid' if erro_peca[index] %>"></td>
         </tr>
       <% end %>        
     </tbody>
