@@ -12,7 +12,7 @@ class FabricCutsController < ApplicationController
   end
 
   def create
-    @fabric_cut = FabricCut.new(fabric_cut_params)
+    @fabric_cut = FabricCut.new(data_hora_ida: params[:fabric_cut][:data_hora_ida], cortador_id: params[:fabric_cut][:entidade_id])
     @fabric_cut.finalizado = false
     @financial_records = []
     all_valid = true
@@ -612,7 +612,7 @@ class FabricCutsController < ApplicationController
     @cortadores = Entity.where(entity_type: entity_type_cortador)
   end
 
-  def fabric_cut_params
-    params.require(:fabric_cut).permit(:data_hora_ida, :cortador_id)
-  end
+  # def fabric_cut_params
+  #   params.require(:fabric_cut).permit(:data_hora_ida, :cortador_id)
+  # end
 end

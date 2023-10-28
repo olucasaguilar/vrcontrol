@@ -1,0 +1,125 @@
+<script>
+  $(document).ready(function() {
+    // Evento de clique no botão "Adicionar Campo"
+    $('#add-field-button').click(function(e) {
+      e.preventDefault();
+
+      // Encontre a tabela <table> <tbody id="table-body">
+      var table = $('#table-body');
+
+      // Crie uma nova linha
+      var newRow = $('<tr>');
+
+      // Adicione os campos "valor" e "observação" com classes do Bootstrap
+      newRow.append('<td><input type="text" name="valor[]" required class="form-control"></td>');
+      newRow.append('<td><input type="text" name="observacao[]" class="form-control"></td>');
+
+      // Adicione um botão para remover a linha com classe do Bootstrap
+      newRow.append('<td><button type="button" class="btn btn-danger remove-row-button">Remover</button></td>');
+
+      // Adicione a linha à tabela
+      table.append(newRow);
+
+      // Oculte o primeiro <tr> (índice 0) da tabela
+      $('#primeiraLinha').hide();
+    });
+
+    // Evento de clique no botão "Remover" na tabela
+    $('table').on('click', '.remove-row-button', function(e) {
+      e.preventDefault();
+
+      // Remova a linha pai do botão clicado
+      $(this).closest('tr').remove();
+
+      // Mostra no console quantos elementos restaram na tabela
+      //console.log($('table tbody tr').length);
+
+      // Se for 0, mostra a primeira linha
+      if ($('#table-body tr').length == 1) {
+        if ($('#primeiraLinha').is(':hidden')) {
+          $('#primeiraLinha').show();
+        }
+      }
+
+      // Verifica se primeira linha está com hide, se sim, exibe ela
+      //if ($('#primeiraLinha').is(':hidden')) {
+      //  $('#primeiraLinha').show();
+      //}
+    });
+  });
+</script>
+
+<style>
+  .input-erro {
+    border: 1px solid red; /* Define uma borda vermelha */
+    box-shadow: 0 0 3px red; /* Define uma sombra vermelha */
+  }
+</style>
+
+<h1><%= titulo %></h1>
+<h3>Abertura</h3>
+<% flash[:alert] = [] %>
+<% erro_entidade = false %>
+<%= form_with model: model, url: create_model_path, class: "mt-4" do |form| %>
+  <% if model.errors.any? %>
+    <% model.errors.full_messages.each do |message| %>
+      <% flash[:alert] << message %>
+      <% erro_entidade = true if message.include? "Cortador" %>
+    <% end %>
+  <% end %>
+
+  <% if @financial_records.any? %>
+    <% @financial_records.each do |financial_record| %>
+      <% if financial_record.errors.any? %>
+        <% financial_record.errors.full_messages.each do |message| %>
+          <% flash[:alert] << message %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th><%= entidade %><span class="required">*</span></th>
+        <th>Data e Hora</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= form.collection_select :entidade_id, entidades, :id, :nome, { prompt: "Selecione um #{entidade}" }, { class: "form-select #{erro_entidade ? 'input-erro' : ''}" } %></td>
+        <td><%= form.datetime_local_field :data_hora_ida, class: "form-control" %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="form-group">
+    <%= form.submit "Registrar #{submit_message}", class: 'btn btn-success' %>
+    <%= link_to 'Voltar', root_path, class: 'btn btn-secondary' %>
+    <button type="button" id="add-field-button" class="btn btn-primary float-end">Adicionar Valor Extra</button>
+  </div>
+  
+  <table class="table table-bordered mt-3">
+    <thead>
+      <tr>
+        <th>Valor Extra*</th>
+        <th>Observação</th>
+        <th>Ação</th>
+      </tr>      
+    </thead>
+    <tbody id="table-body">
+      <tr id="primeiraLinha" <% if @financial_records.any? %> style="display: none;" <% end %>>
+        <td><input type="text" name="valor[]" value="" readonly disabled class="form-control"></td>
+        <td><input type="text" name="observacao[]" value="" readonly disabled class="form-control"></td>
+        <td><button type="button" class="remove-row-button btn btn-secondary" disabled>Remover</button></td>
+      </tr>
+      <% @financial_records.each do |record| %>
+        <tr>
+          <td><input type="text" name="valor[]" value="<%= record.valor %>" required class="form-control <%= record.errors[:valor].any? ? 'is-invalid' : '' %>"></td>
+          <td><input type="text" name="observacao[]" value="<%= record.observacao %>" class="form-control"></td>
+          <td><button type="button" class="remove-row-button btn btn-danger">Remover</button></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
