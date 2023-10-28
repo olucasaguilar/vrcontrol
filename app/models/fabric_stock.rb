@@ -36,6 +36,8 @@ class FabricStock < ApplicationRecord
                                             ).last.saldo
     end
 
+    self.quantidade = 0 if self.quantidade.nil?
+    
     if last_record_saldo - self.quantidade < 0
       unless self.cor.nil?
         errors.add(:quantidade, " disponível para a cor #{self.cor.nome} é de #{last_record_saldo}")

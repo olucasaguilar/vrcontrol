@@ -1,16 +1,4 @@
 class TempViewsController < ApplicationController
-  def corte_envio
-  end
-
-  def corte_retorno
-  end
-
-  def serigrafia_envio
-  end
-
-  def serigrafia_retorno
-  end
-
   def costura_envio
   end
 

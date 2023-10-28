@@ -12,8 +12,10 @@ class GarmentStock < ApplicationRecord
 
   def calculate_and_set_saldo
     last_record_saldo = 0
-    if GarmentStock.any? && GarmentStock.where(tipo_peca_id: self.tipo_peca_id).any?
-      last_record_saldo = GarmentStock.where(tipo_peca_id: self.tipo_peca_id).last.saldo
+    if GarmentStock.any? && GarmentStock.where(tipo_peca_id: self.tipo_peca_id, costurada: self.costurada, estampada: self.estampada).any? 
+      last_record_saldo = GarmentStock.where(tipo_peca_id: self.tipo_peca_id, 
+                                             costurada: self.costurada,
+                                             estampada: self.estampada).last.saldo
     end
 
     if self.tipo_movimento == 'Entrada'
@@ -25,8 +27,10 @@ class GarmentStock < ApplicationRecord
 
   def saldo_nao_negativo
     last_record_saldo = 0
-    if GarmentStock.any? && GarmentStock.where(tipo_peca_id: self.tipo_peca_id).any?
-      last_record_saldo = GarmentStock.where(tipo_peca_id: self.tipo_peca_id).last.saldo
+    if GarmentStock.any? && GarmentStock.where(tipo_peca_id: self.tipo_peca_id, costurada: self.costurada, estampada: self.estampada).any? 
+      last_record_saldo = GarmentStock.where(tipo_peca_id: self.tipo_peca_id, 
+                                             costurada: self.costurada,
+                                             estampada: self.estampada).last.saldo
     end
 
     if self.tipo_movimento == 'Saída'

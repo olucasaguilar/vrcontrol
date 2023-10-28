@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_27_234756) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_28_234515) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -140,6 +140,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_27_234756) do
     t.index ["registro_financeiro_id"], name: "index_financial_fabric_entries_on_registro_financeiro_id"
   end
 
+  create_table "financial_garment_screens", force: :cascade do |t|
+    t.bigint "registro_financeiro_id", null: false
+    t.bigint "peca_serigrafia_id", null: false
+    t.boolean "retorno"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["peca_serigrafia_id"], name: "index_financial_garment_screens_on_peca_serigrafia_id"
+    t.index ["registro_financeiro_id"], name: "index_financial_garment_screens_on_registro_financeiro_id"
+  end
+
   create_table "financial_records", force: :cascade do |t|
     t.decimal "valor"
     t.decimal "saldo"
@@ -148,6 +158,46 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_27_234756) do
     t.datetime "data_hora"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "garment_screen_garment_sizes", force: :cascade do |t|
+    t.bigint "peca_serigrafia_peca_id", null: false
+    t.integer "qtd_tamanho"
+    t.bigint "tamanho_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["peca_serigrafia_peca_id"], name: "index_garment_screen_garment_sizes_on_peca_serigrafia_peca_id"
+    t.index ["tamanho_id"], name: "index_garment_screen_garment_sizes_on_tamanho_id"
+  end
+
+  create_table "garment_screen_garments", force: :cascade do |t|
+    t.bigint "estoque_pecas_id", null: false
+    t.bigint "saida_peca_serigrafia_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["estoque_pecas_id"], name: "index_garment_screen_garments_on_estoque_pecas_id"
+    t.index ["saida_peca_serigrafia_id"], name: "index_garment_screen_garments_on_saida_peca_serigrafia_id"
+  end
+
+  create_table "garment_screen_printing_stock_exits", force: :cascade do |t|
+    t.bigint "peca_serigrafia_id", null: false
+    t.bigint "estoque_peca_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["estoque_peca_id"], name: "index_garment_screen_printing_stock_exits_on_estoque_peca_id"
+    t.index ["peca_serigrafia_id"], name: "index_garment_screen_printing_stock_exits_on_peca_serigrafia_id"
+  end
+
+  create_table "garment_screen_printings", force: :cascade do |t|
+    t.bigint "serigrafia_id", null: false
+    t.datetime "data_hora_ida"
+    t.decimal "total_pecas_envio"
+    t.decimal "total_pecas_retorno"
+    t.boolean "finalizado"
+    t.datetime "data_hora_volta"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["serigrafia_id"], name: "index_garment_screen_printings_on_serigrafia_id"
   end
 
   create_table "garment_sizes", force: :cascade do |t|
@@ -193,5 +243,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_27_234756) do
   add_foreign_key "financial_fabric_cuts", "financial_records", column: "registro_financeiro_id"
   add_foreign_key "financial_fabric_entries", "fabric_entries", column: "entrada_tecido_id"
   add_foreign_key "financial_fabric_entries", "financial_records", column: "registro_financeiro_id"
+  add_foreign_key "financial_garment_screens", "financial_records", column: "registro_financeiro_id"
+  add_foreign_key "financial_garment_screens", "garment_screen_printings", column: "peca_serigrafia_id"
+  add_foreign_key "garment_screen_garment_sizes", "garment_screen_garments", column: "peca_serigrafia_peca_id"
+  add_foreign_key "garment_screen_garment_sizes", "garment_sizes", column: "tamanho_id"
+  add_foreign_key "garment_screen_garments", "garment_screen_printing_stock_exits", column: "saida_peca_serigrafia_id"
+  add_foreign_key "garment_screen_garments", "garment_stocks", column: "estoque_pecas_id"
+  add_foreign_key "garment_screen_printing_stock_exits", "garment_screen_printings", column: "peca_serigrafia_id"
+  add_foreign_key "garment_screen_printing_stock_exits", "garment_stocks", column: "estoque_peca_id"
+  add_foreign_key "garment_screen_printings", "entities", column: "serigrafia_id"
   add_foreign_key "garment_stocks", "garment_types", column: "tipo_peca_id"
 end

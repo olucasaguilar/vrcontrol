@@ -59,30 +59,26 @@
 <h1>Entrada de Tecido</h1>
 <h3>Abertura</h3>
 
+<% flash[:alert] = [] %>
+
 <%= form_with model: @fabric_entry, url: create_fabric_entry_path, class: "mt-4" do |form| %>
-  <% if @fabric_entry.errors.any? %>
-    <div class="alert alert-danger">
-      <ul>
-        <% @fabric_entry.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
+  <% if @financial_records.any? %>
+    <% @financial_records.each do |financial_record| %>
+      <% if financial_record.errors.any? %>
+        <% financial_record.errors.full_messages.each do |message| %>
+          <% flash[:alert] << message %>
         <% end %>
-      </ul>
-    </div>
+      <% end %>
+    <% end %>
   <% end %>
 
-  <% if @financial_records.any? %>
-    <div class="alert alert-danger">
-      <ul>
-        <% @financial_records.each do |financial_record| %>
-          <% if financial_record.errors.any? %>
-            <% financial_record.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          <% end %>
-        <% end %>
-      </ul>
-    </div>
+  <% if @fabric_entry.errors.any? %>
+    <% @fabric_entry.errors.full_messages.each do |message| %>
+      <% flash[:alert] << message %>
+    <% end %>
   <% end %>
+  
+  <% erro_entidade = @fabric_entry.errors[:entity].any? %>
 
   <table class="table table-bordered">
     <thead>
@@ -93,7 +89,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><%= form.collection_select :entity_id, @malharias, :id, :nome, { prompt: true }, { class: "form-select" } %></td>
+        <td><%= form.collection_select :entity_id, @malharias, :id, :nome, { prompt: true }, { class: "form-select #{erro_entidade ? 'input-erro' : ''}" } %></td>
         <td><%= form.datetime_local_field :data_hora, class: "form-control" %></td>
       </tr>
     </tbody>
@@ -121,7 +117,7 @@
       </tr>
       <% @financial_records.each do |record| %>
         <tr>
-          <td><input type="text" name="valor[]" value="<%= record.valor %>" required class="form-control <%= record.errors[:valor].any? ? 'is-invalid' : '' %>"></td>
+          <td><input type="text" name="valor[]" value="<%= record.valor %>" required class="form-control <%= record.errors[:valor].any? ? 'input-erro' : '' %>"></td>
           <td><input type="text" name="observacao[]" value="<%= record.observacao %>" class="form-control"></td>
           <td><button type="button" class="remove-row-button btn btn-danger">Remover</button></td>
         </tr>

@@ -45,7 +45,7 @@
       <th>Costurada <i class="fas fa-caret-up"></i></th>
       <th>Estampada <i class="fas fa-caret-up"></i></th>
       <th>Quantidade <i class="fas fa-caret-up"></i></th>
-      <th>Data de Entrada <i class="fas fa-caret-up"></i></th>
+      <th>Ultima Atualização <i class="fas fa-caret-up"></i></th>
     </tr>
   </thead>
   <tbody>
@@ -54,7 +54,7 @@
         <td><%= garment_stock.last.tipo_peca.nome %></td>
         <td><%= garment_stock.last.costurada ? "Sim" : "Não" %></td>
         <td><%= garment_stock.last.estampada ? "Sim" : "Não" %></td>
-        <td><%= garment_stock.last.quantidade %></td>
+        <td><%= garment_stock.last.saldo %></td>
         <td><%= garment_stock.last.data_hora %></td>
       </tr>
     <% end %>

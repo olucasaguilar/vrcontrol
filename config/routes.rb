@@ -11,19 +11,12 @@ Rails.application.routes.draw do
 
   # Rotas de Entidades
   get '/entidades', to: 'entities#index', as: 'entidades'
-  # Editar uma entidade
   get '/entities/:id/edit', to: 'entities#edit', as: 'edit_entity'
-  # Exibir detalhes de uma entidade
   get '/entities/:id', to: 'entities#show', as: 'entity'
-  # Atualizar uma entidade
   patch '/entities/:id', to: 'entities#update', as: 'update_entity'
-  # Excluir uma entidade
   delete '/entities/:id', to: 'entities#destroy', as: 'destroy_entity'
-  # Criar uma nova entidade
   get '/entity/new/:id', to: 'entities#new', as: 'new_entity'
-  # Listar todas as entidades
   get '/entities', to: 'entities#show', as: 'entities'
-  # Criar uma nova entidade
   post '/entities', to: 'entities#create', as: 'create_entity'
 
   # Rotas de Caixa
@@ -52,14 +45,15 @@ Rails.application.routes.draw do
   get '/corte/retorno/:id', to: 'fabric_cuts#return_details', as: 'return_fabric_cut_details'
   post '/corte/retorno', to: 'fabric_cuts#create_fabric_cut_return', as: 'create_fabric_cut_return'
 
-  # Rota para tela temporária corte envio
-  get '/temp_view/corte/envio', to: 'temp_views#corte_envio', as: 'temp_view_corte_envio'
-  # Rota para tela temporária corte retorno
-  get '/temp_view/corte/retorno', to: 'temp_views#corte_retorno', as: 'temp_view_corte_retorno'
-  # Rota para tela temporária serigrafia envio
-  get '/temp_view/serigrafia/envio', to: 'temp_views#serigrafia_envio', as: 'temp_view_serigrafia_envio'
-  # Rota para tela temporária serigrafia retorno
-  get '/temp_view/serigrafia/retorno', to: 'temp_views#serigrafia_retorno', as: 'temp_view_serigrafia_retorno'
+  # Rota para tela de serigrafia
+  get '/serigrafia/envio', to: 'screen_printing#new', as: 'new_screen_printing'
+  post '/serigrafia/envio', to: 'screen_printing#create', as: 'create_screen_printing'
+  get '/serigrafia/envio/detalhes', to: 'screen_printing#new_details', as: 'new_screen_printing_details'
+  post '/serigrafia/envio/detalhes', to: 'screen_printing#create_details', as: 'create_screen_printing_details'
+  get '/serigrafia/retorno', to: 'screen_printing#return', as: 'return_screen_printing'
+  get '/serigrafia/retorno/:id', to: 'screen_printing#return_details', as: 'return_screen_printing_details'
+  post '/serigrafia/retorno', to: 'screen_printing#create_screen_printing_return', as: 'create_screen_printing_return'
+  
   # Rota para tela temporária costura envio
   get '/temp_view/costura/envio', to: 'temp_views#costura_envio', as: 'temp_view_costura_envio'
   # Rota para tela temporária costura retorno
