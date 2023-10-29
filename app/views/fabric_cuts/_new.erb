@@ -64,7 +64,7 @@
   <% if model.errors.any? %>
     <% model.errors.full_messages.each do |message| %>
       <% flash[:alert] << message %>
-      <% erro_entidade = true if message.include? "Cortador" %>
+      <% erro_entidade = true if message.include? entidade %>
     <% end %>
   <% end %>
 
