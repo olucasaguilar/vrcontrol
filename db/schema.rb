@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_28_234515) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_29_040129) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -140,16 +140,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_28_234515) do
     t.index ["registro_financeiro_id"], name: "index_financial_fabric_entries_on_registro_financeiro_id"
   end
 
-  create_table "financial_garment_screens", force: :cascade do |t|
-    t.bigint "registro_financeiro_id", null: false
-    t.bigint "peca_serigrafia_id", null: false
-    t.boolean "retorno"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["peca_serigrafia_id"], name: "index_financial_garment_screens_on_peca_serigrafia_id"
-    t.index ["registro_financeiro_id"], name: "index_financial_garment_screens_on_registro_financeiro_id"
-  end
-
   create_table "financial_records", force: :cascade do |t|
     t.decimal "valor"
     t.decimal "saldo"
@@ -158,6 +148,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_28_234515) do
     t.datetime "data_hora"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "financial_screens_printings", force: :cascade do |t|
+    t.bigint "registro_financeiro_id", null: false
+    t.bigint "peca_serigrafia_id", null: false
+    t.boolean "retorno"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["peca_serigrafia_id"], name: "index_financial_screens_printings_on_peca_serigrafia_id"
+    t.index ["registro_financeiro_id"], name: "index_financial_screens_printings_on_registro_financeiro_id"
   end
 
   create_table "garment_screen_garment_sizes", force: :cascade do |t|
@@ -243,8 +243,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_28_234515) do
   add_foreign_key "financial_fabric_cuts", "financial_records", column: "registro_financeiro_id"
   add_foreign_key "financial_fabric_entries", "fabric_entries", column: "entrada_tecido_id"
   add_foreign_key "financial_fabric_entries", "financial_records", column: "registro_financeiro_id"
-  add_foreign_key "financial_garment_screens", "financial_records", column: "registro_financeiro_id"
-  add_foreign_key "financial_garment_screens", "garment_screen_printings", column: "peca_serigrafia_id"
+  add_foreign_key "financial_screens_printings", "financial_records", column: "registro_financeiro_id"
+  add_foreign_key "financial_screens_printings", "garment_screen_printings", column: "peca_serigrafia_id"
   add_foreign_key "garment_screen_garment_sizes", "garment_screen_garments", column: "peca_serigrafia_peca_id"
   add_foreign_key "garment_screen_garment_sizes", "garment_sizes", column: "tamanho_id"
   add_foreign_key "garment_screen_garments", "garment_screen_printing_stock_exits", column: "saida_peca_serigrafia_id"

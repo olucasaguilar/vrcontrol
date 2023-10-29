@@ -1,14 +1,11 @@
-class ScreenPrintingController < ApplicationController
+class ScreenPrintingController < SharedController
   def new
-    if (GarmentScreenPrinting.any? && (GarmentScreenPrinting.last.finalizado == false))
-      redirect_to new_screen_printing_details_path
-    else
-      data_hora = Time.now - 3.hour
-      busca_entidades
-      @garment_screen_printing = GarmentScreenPrinting.new
-      @garment_screen_printing.data_hora_ida = data_hora   
-      @financial_records = []
-    end
+    variables = {
+      model: GarmentScreenPrinting,
+      model_name: "garment_screen_printing",
+      redirect_path: new_screen_printing_details_path
+    }
+    generic_new(variables)
   end
 
   def create
@@ -43,7 +40,7 @@ class ScreenPrintingController < ApplicationController
         financial_record.observacao = pre_msg + financial_record.observacao
         financial_record.save
 
-        financial_garment_screens = FinancialGarmentScreens.new(
+        financial_garment_screens = FinancialScreensPrinting.new(
           registro_financeiro: financial_record,
           peca_serigrafia: @garment_screen_printing,
           retorno: false
