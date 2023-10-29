@@ -611,8 +611,4 @@ class FabricCutsController < ApplicationController
     entity_type_cortador = EntityType.find_by(nome: 'Cortador')
     @cortadores = Entity.where(entity_type: entity_type_cortador)
   end
-
-  # def fabric_cut_params
-  #   params.require(:fabric_cut).permit(:data_hora_ida, :cortador_id)
-  # end
 end

@@ -1,0 +1,185 @@
+<script>
+  $(document).ready(function() {
+    var $checkBox = $("input[name='peca[costurada]']");
+
+    function realizarRequisicaoAjax(garmentTypeId, valor) {
+      var garmentTypeId = garmentTypeId;
+      
+      $.ajax({
+        url: '/get_total_quantity_costurada',
+        method: 'GET',
+        data: {
+          garment_type_id: garmentTypeId,
+          costurada: valor
+        },
+        dataType: 'json',
+        success: function(data) {
+          var totalQuantity = parseFloat(data.total_quantity);
+          var quantidadeField = $('#quantidade_field');
+          quantidadeField.attr('placeholder', totalQuantity);
+          quantidadeField.change(); // Se necessário, acione o evento de mudança
+        }
+      });
+    }
+
+    $('#garment_type_select').change(function() {
+      var garmentTypeId = $(this).val();
+
+      if (garmentTypeId > 0) {
+        $checkBox.prop("disabled", false);
+        realizarRequisicaoAjax(garmentTypeId, $checkBox.is(":checked"));
+      } else {
+        $checkBox.prop("disabled", true);
+      }
+    });
+
+    $checkBox.on("change", function() {
+      var garmentTypeId = $('#garment_type_select').val();
+      
+      if (garmentTypeId > 0) {
+        realizarRequisicaoAjax(garmentTypeId, $(this).is(":checked"));
+      }
+    });
+
+    //////////////////////////
+    // Seletor para o campo de entrada de texto
+    var inputField = $("input#quantidade_field");
+
+    inputField.keypress(function(e) {
+      var key = e.which;
+
+      // Código ASCII para números (48-57) e vírgula (44)
+      if ((key < 48 || key > 57) && key !== 44) {
+        e.preventDefault();
+      }
+    });
+
+    inputField.on('input', function() {
+      var currentValue = inputField.val();
+
+      // Substitua todas as vírgulas por pontos
+      currentValue = currentValue.replace(/,/g, '.');
+
+      // Atualize o valor do campo de entrada
+      inputField.val(currentValue);
+    });
+
+
+    //////////////////////////
+
+    // Seleciona a tabela pelo ID (substitua 'myTable' pelo ID da sua tabela)
+    $("#myTable").on("keydown", function(event) {
+      // Verifica se a tecla pressionada é a tecla "Enter" (código 13)
+      if (event.which === 13) {
+        // Impede o comportamento padrão do "Enter" (enviar o formulário)
+        event.preventDefault();
+
+        // Encontra o botão "Adicionar" e aciona seu evento de clique
+        $("input[value='Adicionar']").click();
+      }
+    });
+  });
+</script>
+
+<h1>Peça para a Serigrafia - Envio</h1>
+<h3>Seleção de Peças</h3><br>
+
+<%= form_tag create_screen_printing_details_path do %>
+
+  <%  
+    flash[:alert] = [] 
+  %>
+
+  <%  
+    erro_tipo_peca = false 
+    erro_quantidade = false 
+  %>
+
+  <% unless @garment_stock_errors.nil? %>
+    <% if @garment_stock_errors.any? %>
+      <% @garment_stock_errors.each do |message| %>
+        <% flash[:alert] << message.full_message %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% unless @garment_screen_printing_stock_exit_errors.nil? %>
+    <% if @garment_screen_printing_stock_exit_errors.any? %>
+      <% @garment_screen_printing_stock_exit_errors.each do |message| %>
+        <% flash[:alert] << message.full_message %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% 
+    unless @garment_stock_errors.nil?
+      erro_tipo_peca = true if @garment_stock_errors[:tipo_peca].any?
+      erro_quantidade = true if @garment_stock_errors[:quantidade].any?
+    end
+  %>
+
+  <div class="form-group">
+    <%= submit_tag 'Finalizar', class: "btn btn-success" %>
+  </div><br>
+
+  <div class="input-group mb-3" style="width: 50%;">
+    <span class="input-group-text">Total (peças)</span>
+    <% quantidade = @pecas.sum { |peca| peca[:quantidade] } %>
+    <input type="text" id="valor-total-qtd" class="form-control" value="<%= quantidade %>" readonly>
+    <span class="input-group-text"></span>
+  </div>
+
+  <table class="mb-4 table table-bordered" id="myTable">
+    <thead>
+      <tr>
+        <th>Nº</th>
+        <th>Tipo de Peça*</th>
+        <th>Costurada</th>
+        <th>Quantidade (peças)*</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>0</td>
+        <td>
+          <%= select_tag "peca[garment_type_id]", options_from_collection_for_select(@garment_types, :id, :nome, selected: @peca[:garment_type_id]), class: "form-select #{'is-invalid' if erro_tipo_peca}", include_blank: "Selecione um tipo...", id: "garment_type_select" %>
+        </td>
+        <td>
+          <%= check_box_tag "peca[costurada]", @peca[:costurada], @peca[:costurada], class: "form-check-input" %>
+        </td>
+        <td>
+          <%= text_field_tag "peca[quantidade]", @peca[:quantidade], class: "form-control #{'is-invalid' if erro_quantidade}", id: "quantidade_field" %>
+        </td>
+        <td>
+          <%= submit_tag 'Adicionar', class: "btn btn-primary" %>
+        </td>
+      </tr>
+      <% @pecas.each_with_index do |peca, index| %>
+        <tr>
+          <td>
+            <%= (index + 1).to_s %>
+          </td>
+          <td>
+            <%= select_tag "pecas[#{index}][garment_type_id]", options_from_collection_for_select(@garment_types, :id, :nome, selected: peca[:garment_type_id]), class: "form-select", include_blank: "Selecione um tipo...", disabled: true %>
+          </td>
+          <td>
+            <%= check_box_tag "pecas[#{index}][costurada]", peca[:costurada], peca[:costurada], class: "form-check-input", disabled: true %>
+          </td>
+          <td>
+            <%= text_field_tag "pecas[#{index}][quantidade]", peca[:quantidade], class: "form-control", disabled: true %>
+          </td>
+          <%# <td>
+            <%= submit_tag 'Remover', class: "btn btn-danger remove-row-button"
+          </td> %>
+          <td>
+            <%= form_tag create_screen_printing_details_path do %>
+              <%= hidden_field_tag "peca_index", index %>
+              <%= submit_tag 'Remover', class: "btn btn-danger remove-row-button" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

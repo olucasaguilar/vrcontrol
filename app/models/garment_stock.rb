@@ -28,14 +28,20 @@ class GarmentStock < ApplicationRecord
   def saldo_nao_negativo
     last_record_saldo = 0
     if GarmentStock.any? && GarmentStock.where(tipo_peca_id: self.tipo_peca_id, costurada: self.costurada, estampada: self.estampada).any? 
-      last_record_saldo = GarmentStock.where(tipo_peca_id: self.tipo_peca_id, 
+      last_record_saldo = GarmentStock.where(tipo_peca_id: self.tipo_peca_id,
                                              costurada: self.costurada,
                                              estampada: self.estampada).last.saldo
     end
 
+    last_record_saldo = 0 if last_record_saldo < 0
+
     if self.tipo_movimento == 'Saída'
       if last_record_saldo - self.quantidade < 0
-        errors.add(:quantidade, " disponível para o tipo de peça #{self.tipo_peca_id.nome} é de #{last_record_saldo}")
+
+        costurada_msg = self.costurada ? 'Costurada' : 'Não Costurada'
+        estampada_msg = self.estampada ? 'Estampada' : 'Não Estampada'
+
+        errors.add(:quantidade, " para #{self.tipo_peca.nome} #{costurada_msg} e #{estampada_msg} excedeu #{self.quantidade - last_record_saldo}")
       end
     end
   end

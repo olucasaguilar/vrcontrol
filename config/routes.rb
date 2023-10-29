@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   post '/serigrafia/envio', to: 'screen_printing#create', as: 'create_screen_printing'
   get '/serigrafia/envio/detalhes', to: 'screen_printing#new_details', as: 'new_screen_printing_details'
   post '/serigrafia/envio/detalhes', to: 'screen_printing#create_details', as: 'create_screen_printing_details'
+  get 'get_total_quantity_costurada', to: 'screen_printing#get_total_quantity_costurada'
   get '/serigrafia/retorno', to: 'screen_printing#return', as: 'return_screen_printing'
   get '/serigrafia/retorno/:id', to: 'screen_printing#return_details', as: 'return_screen_printing_details'
   post '/serigrafia/retorno', to: 'screen_printing#create_screen_printing_return', as: 'create_screen_printing_return'
