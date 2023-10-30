@@ -45,7 +45,7 @@ Rails.application.routes.draw do
   get '/corte/retorno/:id', to: 'fabric_cuts#return_details', as: 'return_fabric_cut_details'
   post '/corte/retorno', to: 'fabric_cuts#create_fabric_cut_return', as: 'create_fabric_cut_return'
 
-  # Rota para tela de serigrafia
+  # Rota para tela de serigrafia 
   get '/serigrafia/envio', to: 'screen_printing#new', as: 'new_screen_printing'
   post '/serigrafia/envio', to: 'screen_printing#create', as: 'create_screen_printing'
   get '/serigrafia/envio/detalhes', to: 'screen_printing#new_details', as: 'new_screen_printing_details'

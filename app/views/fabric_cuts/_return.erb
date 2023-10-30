@@ -1,0 +1,42 @@
+<style>
+  .card {
+    text-decoration: none;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+  }
+
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .container_ {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+</style>
+
+<h1><%= titulo %> - Retorno</h1>
+<h5>Seleção de Lote</h5>
+<div class="container_">
+  <% lotes.each_with_index do |lote, index| %>
+    <div class="col-md-4">
+      <a href="retorno/<%= lote.id %>" class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Lote <%= lote.id %></h5>
+          <p class="card-text"><%= entidade %>: <%= lote.instance_eval(atributo_entidade) %></p>
+          <p class="card-text"><%= tipo_produto %>: <%= lote.instance_eval(atributo_lote) %></p>
+          <p class="card-text">Data de Envio: <%= lote.data_hora_ida.strftime("%d/%m/%Y %H:%M") %></p>
+        </div>
+      </a>
+    </div>
+  <% end %>
+
+  <% if lotes.empty? %>
+    <p>Nenhum lote de <%= titulo %> foi encontrado.</p>
+  <% end %>
+</div>

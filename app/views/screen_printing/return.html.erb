@@ -1,53 +1,8 @@
-<style>
-  .card {
-    text-decoration: none;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    transition: 0.3s;
-    border-radius: 5px;
-    margin: 10px;
-    padding: 10px;
-    background-color: #f8f9fa;
-  }
-
-  .card:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  }
-
-  .container_ {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-</style>
-
-<h1>Peça para a Serigrafia - Retorno</h1>
-<h5>Seleção de Lote</h5>
-<div class="container_">
-  <div class="col-md-4">
-    <a href="#" class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title">1º Lote</h5>
-        <p class="card-text">Serigrafia: Serigrafia 1</p>
-        <p class="card-text">Data de Envio: 2023-09-27</p>
-      </div>
-    </a>
-  </div>
-  <div class="col-md-4">
-    <a href="#" class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title">2º Lote</h5>
-        <p class="card-text">Serigrafia: Serigrafia 2</p>
-        <p class="card-text">Data de Envio: 2023-09-28</p>
-      </div>
-    </a>
-  </div>
-  <div class="col-md-4">
-    <a href="#" class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title">3º Lote</h5>
-        <p class="card-text">Serigrafia: Serigrafia 3</p>
-        <p class="card-text">Data de Envio: 2023-09-29</p>
-      </div>
-    </a>
-  </div>
-</div>
+<%= render partial: 'fabric_cuts/return', locals: { 
+                                    titulo: 'Peça para a Serigrafia',
+                                    lotes: @garment_screen_printings,
+                                    entidade: 'Serigrafia',
+                                    atributo_entidade: 'serigrafia.nome',
+                                    atributo_lote: 'total_pecas_envio',
+                                    tipo_produto: 'Peças (quantidade)',
+                                    } %>

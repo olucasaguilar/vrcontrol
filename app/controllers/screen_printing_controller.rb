@@ -295,18 +295,282 @@ class ScreenPrintingController < SharedController
   end
 
   def return
-    #
+    @garment_screen_printings = GarmentScreenPrinting.where(data_hora_volta: nil, finalizado: true)
   end
 
   def return_details
-    #
+    flash[:notice] = []
+    
+    unless GarmentScreenPrinting.find(params[:id]).data_hora_volta.nil?
+      flash[:notice] << 'Serigrafia já finalizada!'
+      redirect_to root_path and return
+    end
+    
+    @garment_sizes = GarmentSize.all
+    @lote_tamanhos = []
+    @financial = {
+      valor: nil,
+      observacao: ''
+    }
+
+    @financial_extra = []
+    @errors = {}
+
+    garment_screen_printing = GarmentScreenPrinting.find(params[:id])
+    data_hora_volta = Time.now #- 3.hour
+    garment_stock_exits = GarmentScreenPrintingStockExit.where(peca_serigrafia: garment_screen_printing)
+
+    @lote = {
+      peca_serigrafia: garment_screen_printing,
+      data_hora_volta: data_hora_volta,
+      garment_stock_exits: []
+    }
+
+    garment_stock_exits.each_with_index do |garment_stock_exit, index|
+      @lote_tamanhos << {}
+      @lote[:garment_stock_exits] << {
+        tipo_peca: garment_stock_exit.estoque_peca.tipo_peca.nome,
+        costurada: garment_stock_exit.estoque_peca.costurada,
+        quantidade: garment_stock_exit.estoque_peca.quantidade,
+        pecas: 0,
+        tamanhos: false,
+      }
+    end
   end
 
   def create_screen_printing_return
-    #
+    @errors = {}
+    #@errors[:teste] = ['teste1', 'teste2']
+
+    all_valid = false
+    flash[:notice] = []
+    button = params[:commit]
+    button = 'Remover' unless params[:remove_button].nil?
+    #flash[:notice] << button
+
+    @garment_sizes = GarmentSize.all
+    @lote_tamanhos = []
+    unless params['financial'].nil?
+      @financial = {
+        valor: params['financial']['valor'],
+        observacao: params['financial']['obs']
+      }
+    else
+      @financial = {
+        valor: nil,
+        observacao: ''
+      }
+    end
+
+    # params['financial_extra'] => "financial_extra"=>{"0"=>{"valor"=>"", "obs"=>"aaaaa"}}
+    @financial_extra = []
+    unless params['financial_extra'].nil?
+      params['financial_extra'].each do |key, value|
+        @financial_extra << {
+          valor: value['valor'],
+          observacao: value['obs']
+        }
+      end
+    end
+
+    garment_screen_printing = GarmentScreenPrinting.find(params[:garment_screen_printing_id])
+    data_hora_volta = params[:data_hora_volta].to_datetime
+    garment_stock_exits = GarmentScreenPrintingStockExit.where(peca_serigrafia: garment_screen_printing)
+
+    @lote = {
+      peca_serigrafia: garment_screen_printing,
+      data_hora_volta: data_hora_volta,
+      garment_stock_exits: []
+    }
+
+    garment_stock_exits.each_with_index do |garment_stock_exit, index|
+      unless params[:tam].nil?
+        unless params[:tam]["#{index}"].nil?
+          #flash[:notice] << params[:tam]["#{index}"]
+          tamanhos = params[:tam]["#{index}"]
+          @lote_tamanhos << tamanhos
+        else
+          @lote_tamanhos << {}
+        end
+      else
+        @lote_tamanhos << {}
+      end      
+
+      tamanho = false
+
+      unless params[:tamanhos].nil?
+        tamanho = true if params[:tamanhos]["#{index}"] == 'true'
+      end
+      
+      @lote[:garment_stock_exits] << {
+        id: garment_stock_exit.id,
+        tipo_peca: garment_stock_exit.estoque_peca.tipo_peca.nome,
+        costurada: garment_stock_exit.estoque_peca.costurada,
+        quantidade: garment_stock_exit.estoque_peca.quantidade,
+        pecas: params[:pecas]["#{index}"].to_i,
+        tamanho: tamanho,
+      }
+      #flash[:notice] << params[:pecas]["#{index}"].to_i
+    end
+
+    if button == 'Remover'
+      financial_extra_index = params[:remove_button].keys.first.to_i
+      @financial_extra.delete_at(financial_extra_index)
+    elsif button == 'Adicionar Valor Extra'
+      if financial_validate(@financial, @lote[:data_hora_volta])
+        @financial_extra << @financial.clone
+        @financial = {
+          valor: nil,
+          observacao: ''
+        }
+      end
+    else
+      all_valid = true
+      all_valid = false unless financial_validate(@financial, @lote[:data_hora_volta])
+      @lote[:garment_stock_exits].each_with_index do |garment_stock_exit, index|
+        if garment_stock_exit[:pecas] <= 0
+          all_valid = false
+          @errors[:pecas] = [] if @errors[:pecas].nil?
+          @errors[:pecas] << { index: index, message: 'Quantidade de peças inválida!' }
+        end
+      end
+    end
+    
+    #temp
+    #all_valid = false
+
+    unless all_valid
+      render :return_details and return
+    else
+      #flash[:notice] << "all_valid: #{all_valid}"
+
+      # salva tudo
+      # render de confirmação
+      
+      # 
+      # @lote //
+      # @lote_tamanhos //
+      # @financial ///
+      # @financial_extra ///
+      # 
+
+      garment_sizes = GarmentSize.all
+
+      @lote[:garment_stock_exits].each_with_index do |garment_stock_exit, index|
+        garment_type = GarmentType.where(nome: garment_stock_exit[:tipo_peca]).first
+        #flash[:notice] << garment_type.inspect
+
+        garment_stock = GarmentStock.new
+        garment_stock.tipo_peca_id = garment_type.id
+        garment_stock.costurada = garment_stock_exit[:costurada]
+        garment_stock.estampada = true
+        garment_stock.quantidade = garment_stock_exit[:pecas].to_i
+        garment_stock.tipo_movimento = 'Entrada'
+        garment_stock.data_hora = @lote[:data_hora_volta]
+        garment_stock.valid?
+        #flash[:notice] << "Index: #{index} valid: #{garment_stock.valid?}"
+        @errors[:garment_stock] = [] if @errors[:garment_stock].nil?
+        @errors[:garment_stock] << { index: index, errors: garment_stock.errors }
+        #flash[:notice] << @errors.inspect
+        #flash[:notice] << garment_stock.tipo_peca_id.inspect
+        #flash[:notice] << fabric_stock_exit[:tipo_peca].inspect
+        #flash[:notice] << GarmentType.find(garment_stock.tipo_peca_id).inspect
+        
+        # ativar isso
+        #flash[:notice] << garment_stock.valid?
+        garment_stock.save
+
+        garment_screen_garment = GarmentScreenGarment.new
+        garment_screen_garment.estoque_pecas = garment_stock
+        garment_screen_garment.saida_peca_serigrafia = GarmentScreenPrintingStockExit.find(garment_stock_exit[:id])
+        garment_screen_garment.valid?
+        # ativar isso
+        #flash[:notice] << garment_screen_garment.valid?
+        garment_screen_garment.save
+
+        unless @lote_tamanhos[index].class == Hash
+          @lote_tamanhos[index].each do |key, value|
+            unless (value.to_i == 0)
+              garment_screen_garment_size = GarmentScreenGarmentSize.new
+              garment_screen_garment_size.peca_serigrafia_peca = garment_screen_garment
+              garment_screen_garment_size.tamanho = garment_sizes[key.to_i]
+              garment_screen_garment_size.qtd_tamanho = value.to_i
+              garment_screen_garment_size.valid?
+              # ativar isso
+              #flash[:notice] << garment_screen_garment_size.valid?
+              garment_screen_garment_size.save
+            end
+          end
+        end
+      end
+
+      # ativar isso
+      garment_screen_printing.update(data_hora_volta: @lote[:data_hora_volta])
+      total_pecas_retorno = @lote[:garment_stock_exits].sum { |garment_stock_exit| garment_stock_exit[:pecas].to_i }
+      garment_screen_printing.update(total_pecas_retorno: total_pecas_retorno)
+
+      financial_record = FinancialRecord.new
+      financial_record.valor = @financial[:valor]
+      financial_record.observacao = @financial[:observacao]
+      #
+      observacao_original = financial_record.observacao
+      pre_msg = 'Serigrafia Retorno - Custo'
+      pre_msg += ' - ' unless observacao_original.blank?
+      financial_record.observacao = pre_msg + financial_record.observacao
+      #
+      financial_record.tipo_movimento = 'Saída'
+      financial_record.data_hora = @lote[:data_hora_volta]
+      financial_record.valid?
+      # Ativar isso
+      #flash[:notice] << financial_record.valid?
+      financial_record.save
+      financial_screens_printing = FinancialScreensPrinting.new
+      financial_screens_printing.registro_financeiro = financial_record
+      financial_screens_printing.peca_serigrafia = @lote[:peca_serigrafia]
+      financial_screens_printing.retorno = true
+      financial_screens_printing.valid?
+      # Ativar isso
+      #flash[:notice] << financial_screens_printing.valid?
+      financial_screens_printing.save
+
+      @financial_extra.each do |financial_extra|
+        observacao_original = financial_extra[:observacao]
+        pre_msg = 'Serigrafia Retorno - Custo Extra'
+        pre_msg += ' - ' unless observacao_original.blank?
+        financial_record = FinancialRecord.new
+        financial_record.valor = financial_extra[:valor]
+        financial_record.observacao = pre_msg + financial_extra[:observacao]
+        financial_record.tipo_movimento = 'Saída'
+        financial_record.data_hora = @lote[:data_hora_volta]
+        #financial_record.valid?
+        # Ativar isso
+        #flash[:notice] << financial_record.valid?
+        financial_record.save
+        financial_screens_printing = FinancialScreensPrinting.new
+        financial_screens_printing.registro_financeiro = financial_record
+        financial_screens_printing.peca_serigrafia = @lote[:peca_serigrafia]
+        financial_screens_printing.retorno = true
+        financial_screens_printing.valid?
+        # Ativar isso
+        #flash[:notice] << financial_screens_printing.valid?
+        financial_screens_printing.save
+      end
+    
+      flash[:notice] << 'Retorno da Serigrafia criado com sucesso!'
+      #render :return_details and return
+      redirect_to root_path and return
+    end
   end
 
   private
+
+  def financial_validate(financial, data_hora)
+    financial_record = FinancialRecord.new(valor: financial[:valor], tipo_movimento: 'Entrada', observacao: financial[:observacao], data_hora: data_hora)
+    financial_record.valid?
+    #@financial_errors = financial_record.errors
+    @financial_errors = financial_record.errors
+    financial_record.valid?
+  end
 
   def busca_entidades
     entity_type = EntityType.find_by(nome: 'Serigrafia')

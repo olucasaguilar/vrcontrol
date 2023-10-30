@@ -597,6 +597,8 @@ class FabricCutsController < ApplicationController
     end
   end
 
+  private
+
   def financial_validate(financial, data_hora)
     financial_record = FinancialRecord.new(valor: financial[:valor], tipo_movimento: 'Entrada', observacao: financial[:observacao], data_hora: data_hora)
     financial_record.valid?
@@ -604,8 +606,6 @@ class FabricCutsController < ApplicationController
     @financial_errors = financial_record.errors
     financial_record.valid?
   end
-
-  private
 
   def busca_cortadores
     entity_type_cortador = EntityType.find_by(nome: 'Cortador')

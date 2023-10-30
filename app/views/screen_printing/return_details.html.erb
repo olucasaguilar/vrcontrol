@@ -1,130 +1,186 @@
+<script>
+  $(document).ready(function() {
+    $('.fabric-checkbox').each(function() {
+      if ($(this).prop('checked')) {
+        // Se o checkbox estiver marcado, remova o atributo "disabled" dos campos de entrada de texto correspondentes
+        $(this)
+          .closest('tr')
+          .find('.garment-input')
+          .prop('disabled', false);
+      }
+
+      $(this).change(function() {
+        // Quando o estado do checkbox mudar, ajuste o atributo "disabled" dos campos de entrada de texto correspondentes
+        $(this)
+          .closest('tr')
+          .find('.garment-input')
+          .prop('disabled', !$(this).prop('checked'));
+      });
+    });
+  });
+</script>
+
 <h1>Peça para a Serigrafia - Retorno</h1>
 <h5>Informações do Envio</h5>
 
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>Serigrafia</th>
-      <th>Data de Envio</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Serigrafia do João</td>
-      <td>2021-10-10 10:00</td>
-    </tr>
-  </tbody>
-</table>
+<% flash[:alert] = [] %>
 
-<div class="form-group">
-  <input type="submit" value="Registrar Retorno da Serigrafia" class="btn btn-success">
-  <a href="#" class="btn btn-secondary">Voltar</a>
-</div><br>
-
-
-<table class="table table-bordered" style="width: 50%;">
-  <thead>
-    <tr>
-      <th>Data de Retorno</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><input type="datetime-local" name="data_hora" class="form-control"></td>
-    </tr>
-  </tbody>
-</table>
-
-<br><h5>Peças Enviadas</h5>
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>Nº</th>
-      <th>Tipo de Peça</th>
-      <th>Costurada</th>
-      <th>Quantidade Enviada (peças)</th>
-      <th>Quantidade Retorno</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td>Camiseta</td>
-      <td><center><input type="checkbox" class="form-check-input" checked disabled></center></td>
-      <td>100</td>
-      <td><input type="text" class="form-control"></td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>Camiseta</td>
-      <td><center><input type="checkbox" class="form-check-input" disabled></center></td>
-      <td>150</td>
-      <td><input type="text" class="form-control"></td>
-  </tbody>
-</table>
-
-<% @garment_sizes = ['P', 'M', 'G', 'GG', 'XG', 'XXG'] %>
-<br><h5>Especificar Tamanhos</h5>
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th></th>
-      <th>Nº</th>
-      <% @garment_sizes.each do |garment_size| %>
-        <th><%= garment_size %></th>
+<%= form_tag create_screen_printing_return_path do %>
+  <% unless @financial_errors.nil? %>
+    <% if @financial_errors.any? %>
+      <% @financial_errors.each do |message| %>
+        <% flash[:alert] << message.full_message %>
       <% end %>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><input type="checkbox" class="form-check-input" checked></td>
-      <td>1</td>
-      <% @garment_sizes.each do |garment_size| %>
-        <td><input type="text" class="form-control"></td>
+    <% end %>
+  <% end %>
+
+  <% erro_financial = false
+  
+  unless @financial_errors.nil?
+    erro_financial = true if @financial_errors[:valor].any?
+  end %>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Lote</th>
+        <th>Serigrafia</th>
+        <th>Data de Envio</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= @lote[:peca_serigrafia].id %></td>
+        <td><%= @lote[:peca_serigrafia].serigrafia.nome %></td>
+        <td><%= @lote[:peca_serigrafia].data_hora_ida.strftime("%d/%m/%Y %H:%M") %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <%= hidden_field_tag :garment_screen_printing_id, @lote[:peca_serigrafia].id %>
+
+  <div>
+    <%= submit_tag 'Finalizar', class: "btn btn-success" %>
+    <a href="<%= return_screen_printing_path %>" class="btn btn-secondary">Voltar</a>
+  </div><br>
+
+  <table class="table table-bordered" style="width: 50%;">
+    <thead>
+      <tr>
+        <th>Data de Retorno</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="datetime-local" name="data_hora_volta" class="form-control" value="<%=@lote[:data_hora_volta].strftime("%Y-%m-%dT%H:%M:%S") %>"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <% erro_peca = {} %>
+  <% unless @errors[:pecas].nil? %>
+    <% @errors[:pecas].each do |error| %>
+      <% erro_peca[error[:index]] = true %>
+      <% flash[:alert] << error[:message] %>
+    <% end %>
+  <% end %>
+
+  <br><h5>Peças Enviadas</h5>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Nº</th>
+        <th>Tipo de Peca</th>
+        <th>Costurada</th>
+        <th>Quantidade Enviada (peças)</th>
+        <th>Quantidade Retorno</th>      
+      </tr>
+    </thead>
+    <tbody>
+      <% @lote[:garment_stock_exits].each_with_index do |garment_stock_exit, index| %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td><%= garment_stock_exit[:tipo_peca] %></td>
+          <td><%= garment_stock_exit[:costurada] ? "Sim" : "Não" %></td>
+          <td><%= garment_stock_exit[:quantidade] %></td>
+          <td><input type="text" name="pecas[<%= index %>]" value="<%= garment_stock_exit[:pecas] %>"class="form-control <%= 'is-invalid' if erro_peca[index] %>"></td>
+        </tr>
+      <% end %>        
+    </tbody>
+  </table>
+
+  <br><h5>Especificar Tamanhos</h5>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Nº</th>
+        <% @garment_sizes.each do |garment_size| %>
+          <th><%= garment_size.nome %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% @lote[:garment_stock_exits].each_with_index do |garment_stock_exit, index| %>        
+        <tr>
+          <td><input type="checkbox" class="form-check-input fabric-checkbox" <%= 'checked' if garment_stock_exit[:tamanho] %> name="tamanhos[<%= index %>]" value="true"></td>
+          <td><%= index + 1 %></td>
+          <% @garment_sizes.each_with_index do |garment_size, index_t| %>
+            <td>
+              <input type="text" class="form-control garment-input" <%= 'disabled' unless garment_stock_exit[:tamanho] %> name="tam[<%= index %>][<%= index_t %>]" value="<%= @lote_tamanhos[index][index_t.to_s] %>">
+            </td>
+            <% if @lote_tamanhos[index][garment_size.to_s] == nil? %>
+            <% end %>
+          <% end %>
+        </tr>
       <% end %>
-    </tr>
-    <tr>
-      <td><input type="checkbox" class="form-check-input"></td>
-      <td>2</td>
-      <% @garment_sizes.each do |garment_size| %>
-        <td><input type="text" class="form-control" disabled></td>
+    </tbody>
+  </table>
+
+  <div class="form-group">
+    <%= submit_tag 'Adicionar Valor Extra', class: "btn btn-primary float-end" %>
+  </div><br>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Valor da Serigrafia*</th>
+        <th>Observação</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="text" name="financial[valor]" value="<%=@financial[:valor] %>" class="form-control <%= 'is-invalid' if erro_financial %>"></td>
+        <td><input type="text" name="financial[obs]" value="<%=@financial[:observacao] %>" class="form-control"></td>
+        <td><button type="button" class="remove-row-button btn btn-secondary" readonly disabled>Remover</button></td>
+      </tr>
+    </tbody>
+    <thead>
+      <% if @financial_extra.length > 0  %>
+        <tr>
+          <th colspan="3">Extra</th>
+        </tr>
       <% end %>
-    </tr>
-  </tbody>
-</table>
-
-<table class="table table-bordered">
-  <br><thead>
-    <tr>
-      <th>Valor da Serigrafia</th>
-      <th>Observação</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><input type="text" class="form-control"></td>
-      <td><input type="text" class="form-control"></td>
-    </tr>
-  </tbody>
-</table>
-
-<div class="form-group">
-  <button type="button" id="add-field-button" class="btn btn-primary float-end">Adicionar Valor Extra</button>
-</div><br>
-
-<table class="table table-bordered mt-3">
-  <thead>
-    <tr>
-      <th>Valor Extra*</th>
-      <th>Observação</th>
-      <th>Ação</th>
-    </tr>      
-  </thead>
-  <tbody id="table-body">
-    <tr id="primeiraLinha">
-      <td><input type="text" name="valor[]" value="" readonly disabled class="form-control"></td>
-      <td><input type="text" name="observacao[]" value="" readonly disabled class="form-control"></td>
-      <td><button type="button" class="remove-row-button btn btn-secondary" disabled>Remover</button></td>
-    </tr>
-  </tbody>
-</table>
+    </thead>
+    <%= form_tag create_screen_printing_return_path do %>
+      <tbody>
+        <% @financial_extra.each_with_index do |financial, index| %>
+          <tr>
+            <td>
+              <input type="text" name="financial_extra[<%= index %>][valor]" value="<%= financial[:valor] %>" class="form-control" disabled readonly>
+            </td>
+            <td>
+              <input type="text" name="financial_extra[<%= index %>][obs]" value="<%= financial[:observacao] %>" class="form-control" disabled readonly>
+            </td>
+            <td>
+              <%= submit_tag 'Remover', name: "remove_button[#{index}]", class: "btn btn-danger remove-row-button" %>
+            </td>
+          </tr>
+          <%= hidden_field_tag "financial_extra[#{index}][valor]", financial[:valor] %>
+          <%= hidden_field_tag "financial_extra[#{index}][obs]", financial[:observacao] %>
+        <% end %>
+      </tbody>
+    <% end %>
+  </table>
+<% end %>
