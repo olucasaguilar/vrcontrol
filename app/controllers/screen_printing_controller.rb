@@ -68,6 +68,8 @@ class ScreenPrintingController < SharedController
   end
 
   def new_details
+    flash[:alert] = []
+    
     unless (GarmentScreenPrinting.any? && (GarmentScreenPrinting.last.finalizado == false))
       redirect_to new_screen_printing_path
     else
