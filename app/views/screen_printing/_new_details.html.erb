@@ -1,16 +1,16 @@
 <script>
   $(document).ready(function() {
-    var $checkBox = $("input[name='peca[costurada]']");
+    var $checkBox = $("input[name='peca[<%=estado_peca%>]']");
 
     function realizarRequisicaoAjax(garmentTypeId, valor) {
       var garmentTypeId = garmentTypeId;
       
       $.ajax({
-        url: '/get_total_quantity_costurada',
+        url: '/get_total_quantity_<%=estado_peca%>',
         method: 'GET',
         data: {
           garment_type_id: garmentTypeId,
-          costurada: valor
+          <%=estado_peca%>: valor
         },
         dataType: 'json',
         success: function(data) {
@@ -58,7 +58,7 @@
       var currentValue = inputField.val();
 
       // Substitua todas as vírgulas por pontos
-      currentValue = currentValue.replace(/,/g, '.');
+      currentValue = currentValue.replace(/,/g, '');
 
       // Atualize o valor do campo de entrada
       inputField.val(currentValue);
@@ -81,14 +81,10 @@
   });
 </script>
 
-<h1>Peça para a Serigrafia - Envio</h1>
+<h1><%= titulo %> - Envio</h1>
 <h3>Seleção de Peças</h3><br>
 
-<%= form_tag create_screen_printing_details_path do %>
-
-  <%  
-    flash[:alert] = [] 
-  %>
+<%= form_tag create_path do %>
 
   <%  
     erro_tipo_peca = false 
@@ -103,9 +99,9 @@
     <% end %>
   <% end %>
 
-  <% unless @garment_screen_printing_stock_exit_errors.nil? %>
-    <% if @garment_screen_printing_stock_exit_errors.any? %>
-      <% @garment_screen_printing_stock_exit_errors.each do |message| %>
+  <% unless stock_exit_errors.nil? %>
+    <% if stock_exit_errors.any? %>
+      <% stock_exit_errors.each do |message| %>
         <% flash[:alert] << message.full_message %>
       <% end %>
     <% end %>
@@ -134,7 +130,7 @@
       <tr>
         <th>Nº</th>
         <th>Tipo de Peça*</th>
-        <th>Costurada</th>
+        <th><%= estado_peca.capitalize %></th>
         <th>Quantidade (peças)*</th>
         <th>Ação</th>
       </tr>
@@ -146,7 +142,7 @@
           <%= select_tag "peca[garment_type_id]", options_from_collection_for_select(@garment_types, :id, :nome, selected: @peca[:garment_type_id]), class: "form-select #{'is-invalid' if erro_tipo_peca}", include_blank: "Selecione um tipo...", id: "garment_type_select" %>
         </td>
         <td>
-          <%= check_box_tag "peca[costurada]", @peca[:costurada], @peca[:costurada], class: "form-check-input" %>
+          <%= check_box_tag "peca[#{estado_peca}]", @peca[:"#{estado_peca}"], @peca[:"#{estado_peca}"], class: "form-check-input" %>
         </td>
         <td>
           <%= text_field_tag "peca[quantidade]", @peca[:quantidade], class: "form-control #{'is-invalid' if erro_quantidade}", id: "quantidade_field" %>
@@ -164,7 +160,7 @@
             <%= select_tag "pecas[#{index}][garment_type_id]", options_from_collection_for_select(@garment_types, :id, :nome, selected: peca[:garment_type_id]), class: "form-select", include_blank: "Selecione um tipo...", disabled: true %>
           </td>
           <td>
-            <%= check_box_tag "pecas[#{index}][costurada]", peca[:costurada], peca[:costurada], class: "form-check-input", disabled: true %>
+            <%= check_box_tag "pecas[#{index}][#{estado_peca}]", peca[:"#{estado_peca}"], peca[:"#{estado_peca}"], class: "form-check-input", disabled: true %>
           </td>
           <td>
             <%= text_field_tag "pecas[#{index}][quantidade]", peca[:quantidade], class: "form-control", disabled: true %>

@@ -1,1 +1,6 @@
-<%= render partial: 'new_details', locals: { teste: 'teste' } %>
+<%= render partial: 'new_details', locals: { 
+                                            estado_peca: 'costurada',
+                                            titulo: 'Peça para a Serigrafia',
+                                            create_path: create_screen_printing_details_path,
+                                            stock_exit_errors: @garment_screen_printing_stock_exit_errors,
+                                           } %>
