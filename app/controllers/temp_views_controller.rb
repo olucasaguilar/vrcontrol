@@ -1,10 +1,4 @@
 class TempViewsController < ApplicationController
-  def costura_envio
-  end
-
-  def costura_retorno
-  end
-
   def acabamento_envio
   end
 

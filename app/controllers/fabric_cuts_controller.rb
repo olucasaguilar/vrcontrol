@@ -554,7 +554,7 @@ class FabricCutsController < ApplicationController
       financial_record.observacao = @financial[:observacao]
       #
       observacao_original = financial_record.observacao
-      pre_msg = 'Corte Retorno - Custo'
+      pre_msg = 'Corte - Retorno - Custo'
       pre_msg += ' - ' unless observacao_original.blank?
       financial_record.observacao = pre_msg + financial_record.observacao
       #
@@ -573,7 +573,7 @@ class FabricCutsController < ApplicationController
 
       @financial_extra.each do |financial_extra|
         observacao_original = financial_extra[:observacao]
-        pre_msg = 'Corte Retorno - Custo Extra'
+        pre_msg = 'Corte - Retorno - Custo Extra'
         pre_msg += ' - ' unless observacao_original.blank?
         financial_record = FinancialRecord.new
         financial_record.valor = financial_extra[:valor]

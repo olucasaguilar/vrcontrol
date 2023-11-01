@@ -54,11 +54,17 @@ Rails.application.routes.draw do
   get '/serigrafia/retorno', to: 'screen_printing#return', as: 'return_screen_printing'
   get '/serigrafia/retorno/:id', to: 'screen_printing#return_details', as: 'return_screen_printing_details'
   post '/serigrafia/retorno', to: 'screen_printing#create_screen_printing_return', as: 'create_screen_printing_return'
+
+  # Rota para tela de costura 
+  get '/costura/envio', to: 'sewing#new', as: 'new_sewing'
+  post '/costura/envio', to: 'sewing#create', as: 'create_sewing'
+  get '/costura/envio/detalhes', to: 'sewing#new_details', as: 'new_sewing_details'
+  post '/costura/envio/detalhes', to: 'sewing#create_details', as: 'create_sewing_details'
+  get 'get_total_quantity_estampada', to: 'sewing#get_total_quantity_estampada'
+  get '/costura/retorno', to: 'sewing#return', as: 'return_sewing'
+  get '/costura/retorno/:id', to: 'sewing#return_details', as: 'return_sewing_details'
+  post '/costura/retorno', to: 'sewing#create_sewing_return', as: 'create_sewing_return'
   
-  # Rota para tela temporária costura envio
-  get '/temp_view/costura/envio', to: 'temp_views#costura_envio', as: 'temp_view_costura_envio'
-  # Rota para tela temporária costura retorno
-  get '/temp_view/costura/retorno', to: 'temp_views#costura_retorno', as: 'temp_view_costura_retorno'
   # Rota para tela temporária acabamento envio
   get '/temp_view/acabamento/envio', to: 'temp_views#acabamento_envio', as: 'temp_view_acabamento_envio'
   # Rota para tela temporária acabamento retorno

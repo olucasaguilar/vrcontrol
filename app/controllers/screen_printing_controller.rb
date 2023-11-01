@@ -242,7 +242,7 @@ class ScreenPrintingController < SharedController
   def get_total_quantity_costurada
     garment_type_id = params[:garment_type_id]
     costurada = params[:costurada]
-    total_quantity = GarmentStock.where(tipo_peca_id: garment_type_id, costurada: costurada).last
+    total_quantity = GarmentStock.where(tipo_peca_id: garment_type_id, costurada: costurada, estampada: false).last
     
     unless total_quantity.nil?
       total_quantity = total_quantity[:saldo]
@@ -516,7 +516,7 @@ class ScreenPrintingController < SharedController
       financial_record.observacao = @financial[:observacao]
       #
       observacao_original = financial_record.observacao
-      pre_msg = 'Serigrafia Retorno - Custo'
+      pre_msg = 'Serigrafia - Retorno - Custo'
       pre_msg += ' - ' unless observacao_original.blank?
       financial_record.observacao = pre_msg + financial_record.observacao
       #
@@ -537,7 +537,7 @@ class ScreenPrintingController < SharedController
 
       @financial_extra.each do |financial_extra|
         observacao_original = financial_extra[:observacao]
-        pre_msg = 'Serigrafia Retorno - Custo Extra'
+        pre_msg = 'Serigrafia - Retorno - Custo Extra'
         pre_msg += ' - ' unless observacao_original.blank?
         financial_record = FinancialRecord.new
         financial_record.valor = financial_extra[:valor]
