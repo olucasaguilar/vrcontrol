@@ -12,7 +12,4 @@ class TempViewsController < ApplicationController
   def venda_retorno
     @venda_retorno = 'venda_retorno'
   end
-
-  def login
-  end
 end

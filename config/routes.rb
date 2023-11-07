@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   root "home#index"
 
   # Rotas dentro de Cadastros Extras
@@ -54,7 +55,7 @@ Rails.application.routes.draw do
   get '/serigrafia/retorno', to: 'screen_printing#return', as: 'return_screen_printing'
   get '/serigrafia/retorno/:id', to: 'screen_printing#return_details', as: 'return_screen_printing_details'
   post '/serigrafia/retorno', to: 'screen_printing#create_screen_printing_return', as: 'create_screen_printing_return'
-
+  
   # Rota para tela de costura 
   get '/costura/envio', to: 'sewing#new', as: 'new_sewing'
   post '/costura/envio', to: 'sewing#create', as: 'create_sewing'
@@ -73,6 +74,4 @@ Rails.application.routes.draw do
   get '/temp_view/venda/saida', to: 'temp_views#venda_saida', as: 'temp_view_venda_saida'
   # Rota para tela temporária venda retorno
   get '/temp_view/venda/retorno', to: 'temp_views#venda_retorno', as: 'temp_view_venda_retorno'
-  # Rota para tela temporária login
-  get '/temp_view/login', to: 'temp_views#login', as: 'temp_view_login'
 end

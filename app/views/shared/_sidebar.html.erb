@@ -124,6 +124,10 @@
     color: #a2ecff;
   }
 
+  .logout-button {
+    margin-left: auto;
+  }
+
   .wrapper .section .container{
     background: #fff;
     padding: 50px;
@@ -194,12 +198,15 @@
           <i class="fas fa-bars"></i>
         </a>
       </div>
+      <div class="logout-button">
+        <%= button_to 'Sair', destroy_user_session_path, method: :delete, class: 'btn btn-secondary' %>
+      </div>
     </div>   
     <%#= render "shared/navbar" %>
     <div class="container">
 
-      <%= render "shared/messages" %>  
-      <%= yield %>      
+      <%= render "shared/messages" %>
+      <%= yield %> 
 
     </div>
   </div>
@@ -364,7 +371,7 @@
         </div>
       </li>
       <li>
-        <a href="<%= temp_view_login_path %>" class="nav-link <%= 'active' if current_page?(temp_view_login_path) %>">
+        <a href="<%= root_path %>" class="nav-link">
           <span class="icon"><i class="fas fa-file-alt"></i></span>
           <span class="item">Relatórios</span>
         </a>
