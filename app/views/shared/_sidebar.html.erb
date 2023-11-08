@@ -1,5 +1,29 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
 
+<script>
+  $(document).ready(function() {  
+    var hamburger = document.querySelector(".hamburger");
+
+    //document.querySelector("body").classList.add("active");
+    if (localStorage.getItem("menu") == "fechado") {
+      document.querySelector("body").classList.add("active");
+    } else {
+      document.querySelector("body").classList.remove("active");
+    }
+    
+    hamburger.addEventListener("click", function(){
+      document.querySelector("body").classList.toggle("active");
+
+      // abaixo, salva o estado do menu aberto ou fechado no localStorage
+      if (document.querySelector("body").classList.contains("active")) {
+        localStorage.setItem("menu", "fechado");
+      } else {
+        localStorage.setItem("menu", "aberto");
+      }
+    })
+  });
+</script>
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
@@ -29,12 +53,12 @@
     position: fixed;
     top: 50px;
     left: 0;
-    width: 225px;
+    width: 250px; /* 0 para começar fechado */
     height: 100%;
     max-height: 100%; /* Altura máxima do sidebar */
     padding: 20px 0;
     transition: all 0.5s ease;
-    overflow-y: auto; /* Adicione esta linha para a barra de rolagem vertical */
+    overflow-y: auto; /* barra de rolagem vertical */
   }
 
   .wrapper .sidebar .profile{
@@ -96,8 +120,8 @@
   }
 
   .wrapper .section{
-    width: calc(100% - 225px);
-    margin-left: 225px;
+    width: calc(100% - 250px); /* 0 para começar fechado */
+    margin-left: 250px; /* 0 para começar fechado */
     transition: all 0.5s ease;
   }
 
@@ -142,7 +166,7 @@
   }
   
   body.active .wrapper .sidebar{
-    left: -225px;
+    left: -250px;
   }
 
 
@@ -166,30 +190,6 @@
   }
 </style>
 
-<script>
-  $(document).ready(function() {  
-    var hamburger = document.querySelector(".hamburger");
-
-    //document.querySelector("body").classList.add("active");
-    if (localStorage.getItem("menu") == "fechado") {
-      document.querySelector("body").classList.add("active");
-    } else {
-      document.querySelector("body").classList.remove("active");
-    }
-    
-    hamburger.addEventListener("click", function(){
-      document.querySelector("body").classList.toggle("active");
-
-      // abaixo, salva o estado do menu aberto ou fechado no localStorage
-      if (document.querySelector("body").classList.contains("active")) {
-        localStorage.setItem("menu", "fechado");
-      } else {
-        localStorage.setItem("menu", "aberto");
-      }
-    })
-  });
-</script>
-
 <div class="wrapper">
   <div class="section">
     <div class="top_navbar">
@@ -199,14 +199,14 @@
         </a>
       </div>
       <div class="logout-button">
-        <%= button_to 'Sair', destroy_user_session_path, method: :delete, class: 'btn btn-secondary' %>
+        <%= link_to current_user.name, cadastro_usuario_path, class: 'btn btn-primary' %>
       </div>
     </div>   
     <%#= render "shared/navbar" %>
     <div class="container">
 
       <%= render "shared/messages" %>
-      <%= yield %> 
+      <%= yield %>
 
     </div>
   </div>
@@ -220,12 +220,14 @@
 
     </div>
     <ul>
-      <li>
-        <a href="<%= entidades_path %>" class="nav-link <%= 'active' if current_page?(entidades_path) %>">
-          <span class="icon"><i class="fas fa-home"></i></span>
-          <span class="item">Entidades</span>
-        </a>
-      </li>
+      <% if current_user.user_permission.entities || current_user.user_permission.admin %>
+        <li>
+          <a href="<%= entidades_path %>" class="nav-link <%= 'active' if current_page?(entidades_path) %>">
+            <span class="icon"><i class="fas fa-home"></i></span>
+            <span class="item">Entidades</span>
+          </a>
+        </li>
+      <% end %>
       <li>
         <a href="<%= financial_records_path %>" class="nav-link <%= 'active' if current_page?('/caixa') %>">
           <span class="icon"><i class="fas fa-desktop"></i></span>

@@ -66,6 +66,17 @@ Rails.application.routes.draw do
   get '/costura/retorno/:id', to: 'sewing#return_details', as: 'return_sewing_details'
   post '/costura/retorno', to: 'sewing#create_sewing_return', as: 'create_sewing_return'
   
+  # Rotas para cadastro de usuário
+  get   '/cadastro_usuario',                   to: 'users#index',            as: 'cadastro_usuario'
+  get   '/deslogar',                           to: 'users#destroy_session',  as: 'destroy_session'
+  get   '/cadastro_usuario/perfil',            to: 'users#profile',          as: 'my_profile'
+  post  '/cadastro_usuario/perfil',            to: 'users#update',           as: 'update_profile'
+  get   '/cadastro_usuario/admin/novo',        to: 'users#new',              as: 'new_user'
+  post  '/cadastro_usuario/admin/novo',        to: 'users#create',           as: 'create_user'
+  get   '/cadastro_usuario/admin/todos',       to: 'users#all',              as: 'all_users'
+  get   '/cadastro_usuario/admin/:id/edit/',   to: 'users#edit',             as: 'admin_edit'
+  post  '/cadastro_usuario/admin/:id/edit/',   to: 'users#admin_update',           as: 'admin_update'
+
   # Rota para tela temporária acabamento envio
   get '/temp_view/acabamento/envio', to: 'temp_views#acabamento_envio', as: 'temp_view_acabamento_envio'
   # Rota para tela temporária acabamento retorno

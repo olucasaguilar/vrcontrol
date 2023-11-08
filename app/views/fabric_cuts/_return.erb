@@ -15,14 +15,14 @@
 
   .container_ {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     flex-wrap: wrap;
   }
 </style>
 
 <h1><%= titulo %> - Retorno</h1>
 <h5>Seleção de Lote</h5>
-<div class="container_">
+<div class="container_">  
   <% lotes.each_with_index do |lote, index| %>
     <div class="col-md-4">
       <a href="retorno/<%= lote.id %>" class="card mb-3">

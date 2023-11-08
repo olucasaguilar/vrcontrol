@@ -1,0 +1,6 @@
+<%= render partial: 'menu' %>
+
+<%# para cada usuario, cria um botão que leva ao nome dele %>
+<% @users.each do |user| %>
+  <%= link_to user.name, admin_edit_path(user), class: "btn btn-primary btn-lg" %><br ><br >
+<% end %>

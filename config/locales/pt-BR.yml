@@ -1,2 +1,9 @@
 pt-BR:
-  hello: "Olá mundo"
+  activerecord:
+    models:
+      user: "Usuário"
+    attributes:
+      user:
+        email: "E-mail"
+        password: "Senha"
+        name: "Nome"

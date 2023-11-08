@@ -5,20 +5,14 @@ class FinancialRecordsController < ApplicationController
     @financial_records = FinancialRecord.order(id: :desc).all
     @saldo = FinancialRecord.last.saldo if @financial_records.any?
 
-    @quant_items = [4, 6, 8, 10, 16, 20]
-    quant = params[:quant]
-    quant = 6 if quant == nil || quant == "" || quant.to_i <= 0
-    quant = 20 if quant.to_i > 20
     page = params[:page]
     if page == nil || page == "" || page.to_i <= 0
       page = 1
     else
       page = page.to_i
     end
-    if page > (@financial_records.count / quant.to_f).ceil
-      page = (@financial_records.count / quant.to_f).ceil      
-    end
-    @pagy, @financial_records = pagy(@financial_records, items: quant, page: page)
+    
+    @pagy, @financial_records = pagy(@financial_records, items: 6, page: page)
   end
 
   def new

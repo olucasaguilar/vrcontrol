@@ -28,6 +28,8 @@ class FabricStock < ApplicationRecord
   end
 
   def saldo_nao_negativo
+    return if self.tipo_movimento == 'Entrada'
+    
     last_record_saldo = 0
     if FabricStock.any? && FabricStock.where(tipo_tecido_id: self.tipo_tecido_id, cor_id: self.cor_id).any?
       last_record_saldo = FabricStock.where(

@@ -135,11 +135,6 @@
           </tr>    
         <% end %>
       <% end %> 
-      <tr> 
-        <td colspan="6">
-          <a href="<%= new_entity_path(1) %>" type="button" class="btn btn-success" style="float: left;">+ Nova Entidade</a>
-        </td>
-      </tr>
     </tbody>
   </table>  
 </div>
@@ -188,11 +183,14 @@
       </li>
     <% end %>
   </ul>
-  
-  <div style="display: flex; align-items: center;">
-    <label style="margin-right: 10px;">Itens por página: </label>
-    <%= select_tag :quant, options_for_select(@quant_items, @pagy.items), class: "form-control", onchange: "changePerPage(this)", style: "width: 40px;" %>
-  </div>
 </nav>
+
+<% if current_user.user_permission.entities_create || current_user.user_permission.admin %>
+  <tr> 
+    <td colspan="6">
+      <a href="<%= new_entity_path(1) %>" type="button" class="btn btn-success" style="float: left;">+ Nova Entidade</a>
+    </td>
+  </tr>
+<% end %>
 
 <%# <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="arrowIcon"><path d="M4 8L8 12L12 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg> %>

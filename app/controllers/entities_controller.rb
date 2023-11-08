@@ -1,7 +1,8 @@
 class EntitiesController < ApplicationController
   include Pagy::Backend
-
   before_action :set_entity, only: [:edit, :show, :update, :destroy]
+  before_action :verify_entities_create, only: [:edit, :new]
+  before_action :verify_entities, only: [:index]
 
   def index
     @entity_types = EntityType.all
@@ -32,24 +33,14 @@ class EntitiesController < ApplicationController
       end
     end
 
-    @quant_items = [4, 6, 8, 10, 16, 20]    
-    quant = params[:quant]
-    quant = 6 if quant == nil || quant == "" || quant.to_i <= 0
-    quant = 20 if quant.to_i > 20
     page = params[:page]
     if page == nil || page == "" || page.to_i <= 0
       page = 1
     else
       page = page.to_i
     end
-    if page > (@entities.count / quant.to_f).ceil
-      page = (@entities.count / quant.to_f).ceil      
-    end
 
-    @pagy, @entities = pagy(@entities, items: quant, page: page)
-
-    #flash[:notice] = []
-    #flash[:notice] << params.inspect
+    @pagy, @entities = pagy(@entities, page: page, items: 5)
   end
 
   def show    
@@ -95,6 +86,20 @@ class EntitiesController < ApplicationController
   end
 
   private
+
+  def verify_entities_create    
+    unless current_user.user_permission.entities_create || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
+
+  def verify_entities
+    unless current_user.user_permission.entities || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
 
   def set_entity
     @entity = Entity.find(params[:id])

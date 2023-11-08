@@ -9,7 +9,7 @@
           </div>
           <div class="col-md-6 col-lg-7 d-flex align-items-center">
             <div class="card-body p-4 p-lg-5 text-black">
-
+              
               <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
                 <div class="d-flex align-items-center mb-3 pb-1">
                   <i class="fas fa-cubes fa-2x me-3" style="color: rgb(7, 105, 185);"></i>
@@ -19,8 +19,8 @@
                 <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Faça login com suas credenciais</h5>
 
                 <div class="form-outline mb-4">
-                  <%= f.label :email, class: "form-label" %>
-                  <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control form-control-lg" %>
+                  <%= f.label :name, class: "form-label" %>
+                  <%= f.text_field :name, autofocus: true, autocomplete: "name", class: "form-control form-control-lg" %>
                 </div>
 
                 <div class="form-outline mb-4">
@@ -33,12 +33,11 @@
                     <%= f.check_box :remember_me, class: "form-label" %>
                     <%= f.label :remember_me %>
                   </div>
-                <% end %>                   
+                <% end %>
 
-                <div class="pt-1 mb-4">
+                <div class="pt-1 mb-0">
                   <%= f.submit "Login", class: "btn btn-dark btn-lg btn-block" %>
                 </div>
-
               <% end %>
 
               <%#= render "devise/shared/links" %>
