@@ -1,1 +1,20 @@
 <%= render partial: 'menu' %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nome do Usuário</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+        <td>
+          <%= link_to "Ver Perfil", admin_edit_path(user), class: "btn btn-primary" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

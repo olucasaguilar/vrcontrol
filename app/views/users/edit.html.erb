@@ -1,31 +1,31 @@
 <%= render partial: 'menu' %>
 
-<%= form_tag admin_update_path, method: :post do %>
-  <div class="form-group">
-    <%= label_tag :name, "Nome", class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= text_field_tag :name, @user.name, class: "form-control" %>
-    </div>
-  </div><br >
-  
-  <div class="form-group">
-    <%= label_tag :entities, "Entidades", class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
+<div class="user-profile-form">
+  <%= form_tag admin_update_path, method: :post do %>
+
+    <%# @user.errors[:name].any? %>
+    <div class="form-group">
+      <%= label_tag :name, "Nome *", class: "col-md-4 control-label" %>
+      <div class="col-md-4 inputGroupContainer">
+        <%= text_field_tag :name, @user.name, class: "form-control #{'is-invalid' if @user.errors[:name].any?}" %>
+      </div>
+    </div><br >
+    
+    <div class="form-group">
+      <%= label_tag :entities, "Entidades", class: "control-label" %>
       <%= check_box_tag :entities, "1", @user.user_permission.entities %>
     </div>
-  </div>
 
-  <div class="form-group">
-    <%= label_tag :entities_create, "Gerenciar Entidade", class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
+    <div class="form-group">
+      <%= label_tag :entities_create, "Gerenciar Entidade", class: "control-label" %>
       <%= check_box_tag :entities_create, "1", @user.user_permission.entities_create %>
+    </div><br >
+
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-10">
+        <%= submit_tag "Salvar", class: "btn btn-primary" %>
+        <%= submit_tag "Resetar Senha", class: "btn btn-danger", data: { confirm: 'Tem certeza que deseja resetar a senha do usuário?' } %>
+      </div>
     </div>
-  </div><br >
-
-  <%= submit_tag "Salvar", class: "btn btn-primary" %>
-<% end %><br >
-
-<%= form_tag admin_update_path, method: :post do %>
-  <%= submit_tag "Resetar Senha", class: "btn btn-danger", data: { confirm: 'Tem certeza que deseja resetar a senha do usuário?' } %>
-<% end %>
-
+  <% end %>
+</div>
