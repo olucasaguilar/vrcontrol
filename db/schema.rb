@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_08_050231) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_08_174659) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -282,6 +282,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_050231) do
     t.boolean "entities_create", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "financial", default: false
+    t.boolean "financial_create", default: false
     t.index ["user_id"], name: "index_user_permissions_on_user_id"
   end
 

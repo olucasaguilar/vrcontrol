@@ -16,7 +16,9 @@
       <td colspan="6">
         <strong>Saldo: </strong>
         <%= number_to_currency(@saldo, unit: 'R$', separator: ',', delimiter: '.') %>
-        <%= link_to 'Novo Registro', new_financial_record_path, class: 'btn btn-primary', style: 'float: right; margin-right: 10px;' %>
+        <% if current_user.user_permission.financial_create || current_user.user_permission.admin %>
+          <%= link_to 'Novo Registro', new_financial_record_path, class: 'btn btn-primary', style: 'float: right; margin-right: 10px;' %>
+        <% end %>
       </td>
     </tr>
     <tr>

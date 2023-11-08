@@ -1,7 +1,7 @@
 class EntitiesController < ApplicationController
   include Pagy::Backend
   before_action :set_entity, only: [:edit, :show, :update, :destroy]
-  before_action :verify_entities_create, only: [:edit, :new]
+  before_action :verify_entities_create, only: [:edit, :new, :update, :create]
   before_action :verify_entities, only: [:index]
 
   def index

@@ -1,5 +1,7 @@
 class FinancialRecordsController < ApplicationController
   include Pagy::Backend
+  before_action :verify_financial_create, only: [:new, :create]
+  before_action :verify_financial, only: [:index]
 
   def index
     @financial_records = FinancialRecord.order(id: :desc).all
@@ -40,5 +42,19 @@ class FinancialRecordsController < ApplicationController
 
   def financial_record_params
     params.require(:financial_record).permit(:valor, :tipo_movimento, :observacao, :data_hora)
+  end
+
+  def verify_financial_create    
+    unless current_user.user_permission.financial_create || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
+
+  def verify_financial
+    unless current_user.user_permission.financial || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
   end
 end

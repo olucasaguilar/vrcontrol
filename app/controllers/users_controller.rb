@@ -94,7 +94,9 @@ class UsersController < ApplicationController
 
     @user.user_permission.update(
                                   entities: params[:entities],
-                                  entities_create: params[:entities_create]
+                                  entities_create: params[:entities_create],
+                                  financial: params[:financial],
+                                  financial_create: params[:financial_create],
                                 )
     if @user.update(name: params[:name])
       flash[:notice] = "Usuário atualizado com sucesso!"
