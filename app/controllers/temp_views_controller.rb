@@ -1,11 +1,4 @@
 class TempViewsController < ApplicationController
-  def acabamento_envio
-  end
-
-  def acabamento_retorno
-    @acabamento_retorno = 'acabamento_retorno teste'
-  end
-
   def venda_saida
   end
 

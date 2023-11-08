@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  acabamento: one
+  data_hora_ida: 2023-11-08 16:09:32
+  total_pecas_envio: 9.99
+  total_pecas_retorno: 9.99
+  finalizado: false
+  data_hora_volta: 2023-11-08 16:09:32
+
+two:
+  acabamento: two
+  data_hora_ida: 2023-11-08 16:09:32
+  total_pecas_envio: 9.99
+  total_pecas_retorno: 9.99
+  finalizado: false
+  data_hora_volta: 2023-11-08 16:09:32

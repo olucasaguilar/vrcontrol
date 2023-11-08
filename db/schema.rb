@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_08_174659) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_08_192138) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -140,6 +140,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_174659) do
     t.index ["registro_financeiro_id"], name: "index_financial_fabric_entries_on_registro_financeiro_id"
   end
 
+  create_table "financial_garment_finishings", force: :cascade do |t|
+    t.bigint "registro_financeiro_id", null: false
+    t.bigint "peca_acabamento_id", null: false
+    t.boolean "retorno"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["peca_acabamento_id"], name: "index_financial_garment_finishings_on_peca_acabamento_id"
+    t.index ["registro_financeiro_id"], name: "index_financial_garment_finishings_on_registro_financeiro_id"
+  end
+
   create_table "financial_garment_sewings", force: :cascade do |t|
     t.bigint "registro_financeiro_id", null: false
     t.bigint "peca_costura_id", null: false
@@ -168,6 +178,57 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_174659) do
     t.datetime "updated_at", null: false
     t.index ["peca_serigrafia_id"], name: "index_financial_screens_printings_on_peca_serigrafia_id"
     t.index ["registro_financeiro_id"], name: "index_financial_screens_printings_on_registro_financeiro_id"
+  end
+
+  create_table "garment_finished_stocks", force: :cascade do |t|
+    t.bigint "tipo_peca_id", null: false
+    t.integer "quantidade"
+    t.string "tipo_movimento"
+    t.datetime "data_hora"
+    t.integer "saldo"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tipo_peca_id"], name: "index_garment_finished_stocks_on_tipo_peca_id"
+  end
+
+  create_table "garment_finishing_garments", force: :cascade do |t|
+    t.bigint "estoque_pecas_acabada_id", null: false
+    t.bigint "saida_peca_estoque_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["estoque_pecas_acabada_id"], name: "index_garment_finishing_garments_on_estoque_pecas_acabada_id"
+    t.index ["saida_peca_estoque_id"], name: "index_garment_finishing_garments_on_saida_peca_estoque_id"
+  end
+
+  create_table "garment_finishing_sizes", force: :cascade do |t|
+    t.bigint "peca_acabamento_peca_id", null: false
+    t.integer "qtd_tamanho"
+    t.bigint "tamanho_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["peca_acabamento_peca_id"], name: "index_garment_finishing_sizes_on_peca_acabamento_peca_id"
+    t.index ["tamanho_id"], name: "index_garment_finishing_sizes_on_tamanho_id"
+  end
+
+  create_table "garment_finishing_stock_exits", force: :cascade do |t|
+    t.bigint "peca_acabamento_id", null: false
+    t.bigint "estoque_peca_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["estoque_peca_id"], name: "index_garment_finishing_stock_exits_on_estoque_peca_id"
+    t.index ["peca_acabamento_id"], name: "index_garment_finishing_stock_exits_on_peca_acabamento_id"
+  end
+
+  create_table "garment_finishings", force: :cascade do |t|
+    t.bigint "acabamento_id", null: false
+    t.datetime "data_hora_ida"
+    t.decimal "total_pecas_envio"
+    t.decimal "total_pecas_retorno"
+    t.boolean "finalizado"
+    t.datetime "data_hora_volta"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["acabamento_id"], name: "index_garment_finishings_on_acabamento_id"
   end
 
   create_table "garment_screen_garment_sizes", force: :cascade do |t|
@@ -317,10 +378,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_174659) do
   add_foreign_key "financial_fabric_cuts", "financial_records", column: "registro_financeiro_id"
   add_foreign_key "financial_fabric_entries", "fabric_entries", column: "entrada_tecido_id"
   add_foreign_key "financial_fabric_entries", "financial_records", column: "registro_financeiro_id"
+  add_foreign_key "financial_garment_finishings", "financial_records", column: "registro_financeiro_id"
+  add_foreign_key "financial_garment_finishings", "garment_finishings", column: "peca_acabamento_id"
   add_foreign_key "financial_garment_sewings", "financial_records", column: "registro_financeiro_id"
   add_foreign_key "financial_garment_sewings", "garment_sewings", column: "peca_costura_id"
   add_foreign_key "financial_screens_printings", "financial_records", column: "registro_financeiro_id"
   add_foreign_key "financial_screens_printings", "garment_screen_printings", column: "peca_serigrafia_id"
+  add_foreign_key "garment_finished_stocks", "garment_types", column: "tipo_peca_id"
+  add_foreign_key "garment_finishing_garments", "garment_finished_stocks", column: "estoque_pecas_acabada_id"
+  add_foreign_key "garment_finishing_garments", "garment_finishing_stock_exits", column: "saida_peca_estoque_id"
+  add_foreign_key "garment_finishing_sizes", "garment_finishing_garments", column: "peca_acabamento_peca_id"
+  add_foreign_key "garment_finishing_sizes", "garment_sizes", column: "tamanho_id"
+  add_foreign_key "garment_finishing_stock_exits", "garment_finishings", column: "peca_acabamento_id"
+  add_foreign_key "garment_finishing_stock_exits", "garment_stocks", column: "estoque_peca_id"
+  add_foreign_key "garment_finishings", "entities", column: "acabamento_id"
   add_foreign_key "garment_screen_garment_sizes", "garment_screen_garments", column: "peca_serigrafia_peca_id"
   add_foreign_key "garment_screen_garment_sizes", "garment_sizes", column: "tamanho_id"
   add_foreign_key "garment_screen_garments", "garment_screen_printing_stock_exits", column: "saida_peca_serigrafia_id"

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  tipo_peca: one
+  quantidade: 1
+  tipo_movimento: MyString
+  data_hora: 2023-11-08 16:03:45
+  saldo: 1
+
+two:
+  tipo_peca: two
+  quantidade: 1
+  tipo_movimento: MyString
+  data_hora: 2023-11-08 16:03:45
+  saldo: 1
