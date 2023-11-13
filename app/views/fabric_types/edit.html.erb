@@ -1,20 +1,20 @@
 <legend>Editar Tipo de Tecido</legend>
 
+<% flash[:alert] = [] %>
+
 <%= form_with(model: @fabric_type) do |f| %>
 
   <% if @fabric_type.errors.any? %>
-    <div class="alert alert-danger">
-      <% @fabric_type.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </div>
+    <% @fabric_type.errors.full_messages.each do |message| %>
+      <% flash[:alert] << message %>
+    <% end %>
   <% end %>
 
   <div class="form-group">
-    <%= f.label 'Descrição', { class: "col-md-4 control-label"} %>
+    <%= f.label 'Descrição*', { class: "col-md-4 control-label"} %>
     <div class="col-md-4 inputGroupContainer">
       <div class="input-group">
-        <%= f.text_field :nome, class: "form-control #{f.object.errors[:nome].any? ? 'is-invalid' : ''}", placeholder: "Tipo de Tecido" %>
+        <%= f.text_field :nome, class: "form-control #{f.object.errors[:nome].any? ? 'is-invalid' : ''}", placeholder: "Tipo de Tecido", required: true %>
       </div>
     </div>
   </div>

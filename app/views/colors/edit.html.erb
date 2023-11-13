@@ -1,19 +1,20 @@
 <legend>Editar Cor</legend>
 
+<% flash[:alert] = [] %>
+
 <%= form_with(model: @color) do |f| %>
 
   <% if @color.errors.any? %>
     <% @color.errors.full_messages.each do |message| %>
-      <%# <li><%= message </li> %>
       <% flash[:alert] << message %>
     <% end %>
   <% end %>
 
   <div class="form-group">
-    <%= f.label 'Descrição', { class: "col-md-4 control-label"} %>
+    <%= f.label 'Descrição*', { class: "col-md-4 control-label"} %>
     <div class="col-md-4 inputGroupContainer">
       <div class="input-group">
-        <%= f.text_field :nome, class: "form-control #{f.object.errors[:nome].any? ? 'is-invalid' : ''}", placeholder: "Cor" %>
+        <%= f.text_field :nome, class: "form-control #{f.object.errors[:nome].any? ? 'is-invalid' : ''}", placeholder: "Cor", required: true %>
       </div>
     </div>
   </div>

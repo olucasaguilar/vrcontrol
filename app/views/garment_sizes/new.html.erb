@@ -1,20 +1,20 @@
 <legend>Novo Tamanho de Roupa</legend>
 
+<% flash[:alert] = [] %>
+
 <%= form_with(model: @garment_size) do |f| %>
 
   <% if @garment_size.errors.any? %>
-    <div class="alert alert-danger">
-      <% @garment_size.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </div>
+    <% @garment_size.errors.full_messages.each do |message| %>
+      <li><% flash[:alert] << message %></li>
+    <% end %>
   <% end %>
 
   <div class="form-group">
-    <%= f.label 'Descrição', { class: "col-md-4 control-label"} %>
+    <%= f.label 'Descrição*', { class: "col-md-4 control-label"} %>
     <div class="col-md-4 inputGroupContainer">
       <div class="input-group">
-        <%= f.text_field :nome, class: "form-control #{f.object.errors[:nome].any? ? 'is-invalid' : ''}", placeholder: "Tamanho de Roupa" %>
+        <%= f.text_field :nome, class: "form-control #{f.object.errors[:nome].any? ? 'is-invalid' : ''}", placeholder: "Tamanho de Roupa", required: true %>
       </div>
     </div>
   </div>
