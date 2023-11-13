@@ -1,0 +1,82 @@
+<script>
+  $(document).ready(function() {
+    // pega a mudança do checkbox e submete o form
+    $(":checkbox").change(function() {
+      $('#garmentForm').submit();
+    });
+
+    // pega a mudança do select e submete o form
+    $("select").change(function() {
+      $('#garmentForm').submit();
+    });
+  });
+</script>
+
+<style>
+  /* td.sim {
+    background-color: #F5FFF8;
+  }
+
+  td.nao {
+    background-color: #FFF5F5;
+  } */
+
+  .table-wrapper {
+    max-width: 500px;
+  }
+</style>
+
+<h1>Estoque de Peças</h1>
+
+<%= form_with(url: pecas_acabadas_view_stock_path, method: :get, html: { id: "garmentForm" }) do |f| %>
+  <%= f.submit "Buscar", id: "submitButton", style: "display: none;" %>
+
+  <div class="table-wrapper">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Tipo de Peça</span></th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <%= f.select :tipo_peca_id, @garment_types.collect { |garment_type| [garment_type.nome, garment_type.id] }, { include_blank: "Todos", selected: params[:tipo_peca_id] }, { class: "form-select" } %>
+          </td>
+          <td>
+            <%= link_to "Limpar", pecas_acabadas_view_stock_path, class: "btn btn-secondary" %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-container">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Tipo de Peça</th>
+          <th>Quantidade</th>
+          <th>Ultima Atualização</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @garment_stocks_finished_groups.group_by { |(tipo), garment_stock| garment_stock.last.tipo_peca.nome }.each do |tipo_peca, grupos| %>
+          <% grupos.each do |(tipo), garment_stock| %>
+            <tr>
+              <td><%= garment_stock.last.tipo_peca.nome %></td>
+              <td><%= garment_stock.last.saldo %></td>
+              <td><%= garment_stock.last.data_hora.strftime("%d/%m/%Y %H:%M") %></td>
+            </tr>
+          <% end %>
+        <% end %>
+        <% if @garment_stocks_finished_groups.empty? %>
+          <tr>
+            <td colspan="5">Nenhum registro encontrado</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

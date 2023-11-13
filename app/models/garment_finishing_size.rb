@@ -1,4 +1,4 @@
-class GarmentFinishingGarmentSize < ApplicationRecord
+class GarmentFinishingSize < ApplicationRecord
   belongs_to :peca_acabamento_peca, class_name: 'GarmentFinishingGarment'
   belongs_to :tamanho, class_name: 'GarmentSize'
 

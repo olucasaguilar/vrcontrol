@@ -32,8 +32,9 @@ Rails.application.routes.draw do
   post '/tecidos/entrada/detalhes', to: 'fabric_entries#create_details', as: 'create_fabric_entry_details'
 
   # Rota para tela de estoque
-  get '/estoque/tecidos', to: 'stock#tecidos_view', as: 'tecidos_view_stock'
-  get '/estoque/pecas', to: 'stock#pecas_view', as: 'pecas_view_stock'
+  get '/estoque/tecidos',         to: 'stock#tecidos_view', as: 'tecidos_view_stock'
+  get '/estoque/pecas',           to: 'stock#pecas_view', as: 'pecas_view_stock'
+  get '/estoque/pecas_acabadas',  to: 'stock#pecas_acabadas_view', as: 'pecas_acabadas_view_stock'
 
   # Rota para tela de Corte
   get '/corte/envio', to: 'fabric_cuts#new', as: 'new_fabric_cut'

@@ -73,4 +73,32 @@ class StockController < ApplicationController
     
     @garment_stocks_groups = @garment_stocks_groups.sort_by { |garment_stock_group| garment_stock_group[1].last.data_hora }.reverse    
   end
+
+  def pecas_acabadas_view
+    flash[:notice] = []
+
+    @garment_stocks_finished_groups = GarmentFinishedStock.all.group_by { |garment_finished_stock| [garment_finished_stock.tipo_peca.nome] }
+
+    @garment_stocks_finished_groups.each do |garment_finished_stock_group|
+      last = garment_finished_stock_group[1].last
+
+      if last.saldo <= 0
+        @garment_stocks_finished_groups.delete(garment_finished_stock_group[0])
+      end
+    end
+
+    @garment_types = @garment_stocks_finished_groups.map { |garment_finished_stock_group| garment_finished_stock_group[1].last.tipo_peca }.uniq
+
+    @garment_stocks_finished_groups.each do |garment_finished_stock_group|
+      last = garment_finished_stock_group[1].last
+
+      if params[:tipo_peca_id].present?
+        if last.tipo_peca_id != params[:tipo_peca_id].to_i
+          @garment_stocks_finished_groups.delete(garment_finished_stock_group[0])
+        end
+      end
+    end
+
+    @garment_stocks_finished_groups = @garment_stocks_finished_groups.sort_by { |garment_finished_stock_group| garment_finished_stock_group[1].last.data_hora }.reverse
+  end
 end

@@ -41,7 +41,9 @@ class GarmentStock < ApplicationRecord
         costurada_msg = self.costurada ? 'Costurada' : 'Não Costurada'
         estampada_msg = self.estampada ? 'Estampada' : 'Não Estampada'
 
-        errors.add(:quantidade, " para #{self.tipo_peca.nome} #{costurada_msg} e #{estampada_msg} excedeu #{self.quantidade - last_record_saldo}")
+        self.tipo_peca.nil? ? tipo_peca_nome = 'peça' : tipo_peca_nome = self.tipo_peca.nome
+
+        errors.add(:quantidade, " para #{tipo_peca_nome} #{costurada_msg} e #{estampada_msg} excedeu #{self.quantidade - last_record_saldo}")
       end
     end
   end

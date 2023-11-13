@@ -215,6 +215,7 @@
       <%# <img src="https://1.bp.blogspot.com/-vhmWFWO2r8U/YLjr2A57toI/AAAAAAAACO4/0GBonlEZPmAiQW4uvkCTm5LvlJVd_-l_wCNcBGAsYHQ/s16000/team-1-2.jpg" alt="profile_picture"> %>
       <a href="<%= root_path %>" class="link-sem-efeito">
         <h3>VRControl</h3>
+        <p><%= controller.controller_name %></p>
         <p>Gerente</p>
       </a>
 
@@ -222,7 +223,7 @@
     <ul>
       <% if current_user.user_permission.entities || current_user.user_permission.admin %>
         <li>
-          <a href="<%= entidades_path %>" class="nav-link <%= 'active' if current_page?(entidades_path) %>">
+          <a href="<%= entidades_path %>" class="nav-link <%= 'active' if controller.controller_name=='entities' %>">
             <span class="icon"><i class="fas fa-home"></i></span>
             <span class="item">Entidades</span>
           </a>
@@ -231,7 +232,7 @@
 
       <% if current_user.user_permission.financial || current_user.user_permission.admin %>
         <li>
-          <a href="<%= financial_records_path %>" class="nav-link <%= 'active' if current_page?('/caixa') %>">
+          <a href="<%= financial_records_path %>" class="nav-link <%= 'active' if controller.controller_name=='financial_records' %>">
             <span class="icon"><i class="fas fa-desktop"></i></span>
             <span class="item">Transações</span>
           </a>
@@ -239,7 +240,7 @@
       <% end %>
 
       <li>
-        <a class="nav-link dropdown-toggle" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='stock' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="icon"><i class="fas fa-chart-line"></i></span>
           <span class="item">Estoque</span>
         </a>
@@ -257,17 +258,23 @@
                 <span class="item">Peças</span>
               </a>
             </li>
+            <li>
+              <a class="dropdown-item" href="<%= pecas_acabadas_view_stock_path %>">
+                <span class="icon"><i class="fas fa-chart-line"></i></span>
+                <span class="item">Peças Acabadas</span>
+              </a>
+            </li>
           </ul>
         </div>
       </li>
       <li>
-        <a href="<%= new_fabric_entry_path %>" class="nav-link <%= 'active' if current_page?(new_fabric_entry_path) || current_page?(new_fabric_entry_details_path) %>">
+        <a href="<%= new_fabric_entry_path %>" class="nav-link <%= 'active' if controller.controller_name=='fabric_entries' %>">
           <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
           <span class="item">Entrada Tecido</span>
         </a>
       </li>
       <li>
-        <a class="nav-link dropdown-toggle" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='fabric_cuts' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="icon"><i class="fas fa-cut"></i></span>
           <span class="item">Corte</span>
         </a>
@@ -289,7 +296,7 @@
         </div>
       </li>
       <li>
-        <a class="nav-link dropdown-toggle" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='screen_printing' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="icon"><i class="fas fa-paint-roller"></i></span>
           <span class="item">Serigrafia</span>
         </a>
@@ -311,7 +318,7 @@
         </div>
       </li>
       <li>
-        <a class="nav-link dropdown-toggle" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='sewing' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="icon"><i class="fas fa-cut"></i></span>
           <span class="item">Costura</span>
         </a>
@@ -333,7 +340,7 @@
         </div>
       </li>
       <li>
-        <a class="nav-link dropdown-toggle" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='finishing' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="icon"><i class="fas fa-tools"></i></span>
           <span class="item">Acabamento</span>
         </a>
