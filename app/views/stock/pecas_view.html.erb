@@ -22,7 +22,7 @@
   } */
 
   .table-wrapper {
-    max-width: 350px;
+    max-width: 500px;
   }
 </style>
 
@@ -36,12 +36,24 @@
       <thead>
         <tr>
           <th>Tipo de Peça</span></th>
+          <th>Costurada</th>
+          <th>Estampada</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>
             <%= f.select :tipo_peca_id, @garment_types.collect { |garment_type| [garment_type.nome, garment_type.id] }, { include_blank: "Todos", selected: params[:tipo_peca_id] }, { class: "form-select" } %>
+          </td>
+          <td>
+            <%= f.select :costurada, options_for_select([["Sim", "1"], ["Não", "0"]], selected: params[:costurada]), { include_blank: "Todos" }, { class: "form-select" } %>
+          </td>
+          <td>
+            <%= f.select :estampada, options_for_select([["Sim", "1"], ["Não", "0"]], selected: params[:estampada]), { include_blank: "Todos" }, { class: "form-select" } %>
+          </td>
+          <td>
+            <%= link_to "Limpar", pecas_view_stock_path, class: "btn btn-secondary" %>
           </td>
         </tr>
       </tbody>
@@ -53,14 +65,8 @@
       <thead>
         <tr>
           <th>Tipo de Peça</th>
-          <th>
-            <%= f.check_box :costurada, {checked: params[:costurada] == '1'}, "1", "0" %> 
-            <%= f.label :costurada, "Costurada" %>
-          </th>
-          <th>
-            <%= f.check_box :estampada, {checked: params[:estampada] == '1'}, "1", "0" %> 
-            <%= f.label :estampada, "Estampada" %>
-          </th>
+          <th>Costurada</th>
+          <th>Estampada</th>
           <th>Quantidade</th>
           <th>Ultima Atualização</th>
         </tr>
@@ -76,6 +82,11 @@
               <td><%= garment_stock.last.data_hora.strftime("%d/%m/%Y %H:%M") %></td>
             </tr>
           <% end %>
+        <% end %>
+        <% if @garment_stocks_groups.empty? %>
+          <tr>
+            <td colspan="5">Nenhum registro encontrado</td>
+          </tr>
         <% end %>
       </tbody>
     </table>

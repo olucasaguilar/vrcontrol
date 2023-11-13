@@ -1,20 +1,4 @@
-<%#= javascript_include_tag "campos_dinheiro" %>
-
-<script>
-  handleMoney = (event) => {
-    let input = event.target;
-    input.value = moneyMask(input.value);
-  };
-  moneyMask = (value) => {
-    if (!value) return '';
-    value = value.replace(/\D/g, '');
-    value = (value / 100).toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    });
-    return value;
-  };
-</script>
+<%= javascript_include_tag "campos_dinheiro" %>
 
 <legend>Novo Registro Financeiro</legend>
 
@@ -44,7 +28,7 @@
   <div class="form-group">
     <%= f.label :observacao, class: "col-md-4 control-label" %>
     <div class="col-md-4 inputGroupContainer">
-      <%= f.text_field :observacao, class: "form-control" %>
+      <%= f.text_field :observacao, class: "form-control", placeholder: "Observação" %>
     </div>
   </div>
 

@@ -19,7 +19,9 @@ class ScreenPrintingController < SharedController
         tipo_movimento = 'Saída'
         observacao = params[:observacao][index]
         data_hora = @garment_screen_printing.data_hora_ida
-        @financial_records << FinancialRecord.new(valor: valor, tipo_movimento: tipo_movimento, observacao: observacao, data_hora: data_hora)
+        financial_record = FinancialRecord.new(valor: valor, tipo_movimento: tipo_movimento, observacao: observacao, data_hora: data_hora)
+        financial_record.valor = valor.delete("^0-9,").tr(',', '.').to_f
+        @financial_records << financial_record
       end
       
       @financial_records.each do |financial_record|
@@ -132,7 +134,6 @@ class ScreenPrintingController < SharedController
           costurada: params[:peca][:costurada],
           quantidade: params[:peca][:quantidade].to_i
         }
-
         
         #flash[:notice] << params[:peca].inspect
         #flash[:notice] << peca_validar.inspect
@@ -164,6 +165,7 @@ class ScreenPrintingController < SharedController
           end
         else
           @peca = peca_validar
+          @peca[:quantidade] = nil
         end
       elsif button == 'Remover'
         index_peca = params[:peca_index].to_i
@@ -334,7 +336,7 @@ class ScreenPrintingController < SharedController
         tipo_peca: garment_stock_exit.estoque_peca.tipo_peca.nome,
         costurada: garment_stock_exit.estoque_peca.costurada,
         quantidade: garment_stock_exit.estoque_peca.quantidade,
-        pecas: 0,
+        pecas: nil,
         tamanhos: false,
       }
     end
@@ -353,8 +355,10 @@ class ScreenPrintingController < SharedController
     @garment_sizes = GarmentSize.all
     @lote_tamanhos = []
     unless params['financial'].nil?
+      valor = params['financial']['valor']
+      valor = valor.delete("^0-9,").tr(',', '.').to_f
       @financial = {
-        valor: params['financial']['valor'],
+        valor: valor,
         observacao: params['financial']['obs']
       }
     else
@@ -432,6 +436,7 @@ class ScreenPrintingController < SharedController
       @lote[:garment_stock_exits].each_with_index do |garment_stock_exit, index|
         if garment_stock_exit[:pecas] <= 0
           all_valid = false
+          garment_stock_exit[:pecas] = nil
           @errors[:pecas] = [] if @errors[:pecas].nil?
           @errors[:pecas] << { index: index, message: 'Quantidade de peças inválida!' }
         end
@@ -579,14 +584,3 @@ class ScreenPrintingController < SharedController
     @entidades = Entity.where(entity_type: entity_type)
   end
 end
-
-# get '/serigrafia/envio', to: 'screen_printing#new', as: 'new_screen_printing'
-# post '/serigrafia/envio', to: 'screen_printing#create', as: 'create_screen_printing'
-
-# get '/serigrafia/envio/detalhes', to: 'screen_printing#new_details', as: 'new_screen_printing_details'
-# post '/serigrafia/envio/detalhes', to: 'screen_printing#create_details', as: 'create_screen_printing_details'
-
-# get '/serigrafia/retorno', to: 'screen_printing#return', as: 'return_screen_printing'
-
-# get '/serigrafia/retorno/:id', to: 'screen_printing#return_details', as: 'return_screen_printing_details'
-# post '/serigrafia/retorno', to: 'screen_printing#create_screen_printing_return', as: 'create_screen_printing_return'

@@ -17,13 +17,15 @@ class FabricEntriesController < ApplicationController
     @fabric_entry = FabricEntry.new(fabric_entry_params)
     @financial_records = []
     all_valid = true
-
+    
     unless params[:valor].nil?
       params[:valor].each_with_index do |valor, index|
         tipo_movimento = 'Saída'
         observacao = params[:observacao][index]
         data_hora = @fabric_entry.data_hora
-        @financial_records << FinancialRecord.new(valor: valor, tipo_movimento: tipo_movimento, observacao: observacao, data_hora: data_hora)
+        financial_record = FinancialRecord.new(valor: valor, tipo_movimento: tipo_movimento, observacao: observacao, data_hora: data_hora)
+        financial_record.valor = valor.delete("^0-9,").tr(',', '.').to_f
+        @financial_records << financial_record
       end
       
       @financial_records.each do |financial_record|
@@ -92,21 +94,24 @@ class FabricEntriesController < ApplicationController
     all_valid = true
 
     params[:fabric_stock].each do |parametro|
-      fabric_stock = FabricStock.new(fabric_stock_params(parametro[1]))
+      before_instance = fabric_stock_params(parametro[1])
+      before_instance[:quantidade] = before_instance[:quantidade].delete("^0-9,").tr(',', '.').to_f
+      fabric_stock = FabricStock.new(before_instance)
       fabric_stock.tipo_movimento = 'Entrada'
       fabric_stock.data_hora = FabricEntry.last.data_hora
       all_valid = false unless fabric_stock.valid?
       @fabric_stocks << fabric_stock
     end
-
+    
     @valores_tecido = []
     index = 0
     @valor_erro_index = []
     params[:valor_tecido].each do |parametro|
       # parametro[1] == valor do tecido
       # @fabric_stocks[parametro[0].to_i] == tecido
-      @valores_tecido << parametro[1].to_f
-      unless parametro[1].to_f > 0
+      valor = parametro[1].delete("^0-9,").tr(',', '.').to_f
+      @valores_tecido << valor
+      unless valor > 0
         all_valid = false
         @valor_erro_index << index
       end
@@ -120,9 +125,8 @@ class FabricEntriesController < ApplicationController
     @financial_record.tipo_movimento = 'Saída'
     @financial_record.data_hora = FabricEntry.last.data_hora
     all_valid = false unless @financial_record.valid?
-
     total_peso = @fabric_stocks.each.map { |fabric_stock| fabric_stock.quantidade }
-    total_peso = total_peso.sum
+    total_peso = total_peso.each_with_index { |peso, index| total_peso[index] = peso.to_f }
 
     unless all_valid
       render :new_details and return

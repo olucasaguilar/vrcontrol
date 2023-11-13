@@ -54,9 +54,13 @@ class StockController < ApplicationController
 
       if params[:costurada] == "1" && last.costurada == false
         @garment_stocks_groups.delete(garment_stock_group[0])
+      elsif params[:costurada] == "0" && last.costurada == true
+        @garment_stocks_groups.delete(garment_stock_group[0])
       end
 
       if params[:estampada] == "1" && last.estampada == false
+        @garment_stocks_groups.delete(garment_stock_group[0])
+      elsif params[:estampada] == "0" && last.estampada == true
         @garment_stocks_groups.delete(garment_stock_group[0])
       end
 

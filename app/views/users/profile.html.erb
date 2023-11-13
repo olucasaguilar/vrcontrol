@@ -4,7 +4,7 @@
   <div class="form-group">
     <%= label_tag :name, "Nome *", class: "col-md-4 control-label" %>
     <div class="col-md-4 inputGroupContainer">
-      <%= text_field_tag :name, @user.name, class: "form-control #{'is-invalid' if @user.errors[:name].any? }", placeholder: "Nome" %>
+      <%= text_field_tag :name, @user.name, class: "form-control #{'is-invalid' if @user.errors[:name].any? }", placeholder: "Nome", required: true %>
     </div>
   </div>
 

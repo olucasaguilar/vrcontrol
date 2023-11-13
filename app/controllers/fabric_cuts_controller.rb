@@ -22,7 +22,9 @@ class FabricCutsController < ApplicationController
         tipo_movimento = 'Saída'
         observacao = params[:observacao][index]
         data_hora = @fabric_cut.data_hora_ida
-        @financial_records << FinancialRecord.new(valor: valor, tipo_movimento: tipo_movimento, observacao: observacao, data_hora: data_hora)
+        financial_record = FinancialRecord.new(valor: valor, tipo_movimento: tipo_movimento, observacao: observacao, data_hora: data_hora)
+        financial_record.valor = valor.delete("^0-9,").tr(',', '.').to_f
+        @financial_records << financial_record
       end
       
       @financial_records.each do |financial_record|
@@ -77,7 +79,7 @@ class FabricCutsController < ApplicationController
       @tecido = {
         fabric_type_id: 0,
         color_id: 0,
-        quantidade: 0,
+        quantidade: nil,
         garment_type_id: 0,
         multiplicador_x: 4.6,
         rendimento: 0
@@ -140,7 +142,7 @@ class FabricCutsController < ApplicationController
           quantidade: tecido_session["quantidade"],
           garment_type_id: tecido_session["garment_type_id"],
           multiplicador_x: tecido_session["multiplicador_x"],
-          rendimento: tecido_session["rendimento"]
+          rendimento: tecido_session["multiplicador_x"].to_f * tecido_session["quantidade"].to_f
         }      
         @tecidos << tecido
       end
@@ -152,7 +154,7 @@ class FabricCutsController < ApplicationController
           quantidade: params[:tecido][:quantidade],
           garment_type_id: params[:tecido][:garment_type_id],
           multiplicador_x: params[:tecido][:multiplicador_x],
-          rendimento: params[:tecido][:rendimento]
+          rendimento: params[:tecido][:multiplicador_x].to_f * params[:tecido][:quantidade].to_f
         }
 
         tecido_validar[:quantidade] = quantity_to_float(tecido_validar[:quantidade])
@@ -366,7 +368,7 @@ class FabricCutsController < ApplicationController
         cor: fabric_stock_exit.estoque_tecido.cor.nome,
         quantidade: fabric_stock_exit.estoque_tecido.quantidade,
         tipo_peca: fabric_stock_exit.tipo_peca.nome,
-        pecas: 0,
+        pecas: nil,
         tamanhos: false,
       }
     end
@@ -384,8 +386,10 @@ class FabricCutsController < ApplicationController
     @garment_sizes = GarmentSize.all
     @lote_tamanhos = []
     unless params['financial'].nil?
+      valor = params['financial']['valor']
+      valor = valor.delete("^0-9,").tr(',', '.').to_f
       @financial = {
-        valor: params['financial']['valor'],
+        valor: valor,
         observacao: params['financial']['obs']
       }
     else

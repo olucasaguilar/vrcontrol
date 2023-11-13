@@ -68,6 +68,11 @@
             </tr>
           <% end %>
         <% end %>
+        <% if @fabric_stock_groups.count == 0 %>
+          <tr>
+            <td colspan="4">Nenhum registro encontrado</td>
+          </tr>
+        <% end %>
       </tbody>
     </table>
   </div>

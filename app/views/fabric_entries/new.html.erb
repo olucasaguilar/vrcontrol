@@ -1,3 +1,5 @@
+<%= javascript_include_tag "campos_dinheiro" %>
+
 <script>
   $(document).ready(function() {
     // Evento de clique no botão "Adicionar Campo"
@@ -11,8 +13,8 @@
       var newRow = $('<tr>');
 
       // Adicione os campos "valor" e "observação" com classes do Bootstrap
-      newRow.append('<td><input type="text" name="valor[]" required class="form-control"></td>');
-      newRow.append('<td><input type="text" name="observacao[]" class="form-control"></td>');
+      newRow.append('<td><input type="text" name="valor[]" required class="form-control", onkeyup="handleMoney(event)" placeholder="R$ 0,00"></td>');
+      newRow.append('<td><input type="text" name="observacao[]" class="form-control", placeholder="Observação"></td>');
 
       // Adicione um botão para remover a linha com classe do Bootstrap
       newRow.append('<td><button type="button" class="btn btn-danger remove-row-button">Remover</button></td>');
@@ -40,11 +42,6 @@
           $('#primeiraLinha').show();
         }
       }
-
-      // Verifica se primeira linha está com hide, se sim, exibe ela
-      //if ($('#primeiraLinha').is(':hidden')) {
-      //  $('#primeiraLinha').show();
-      //}
     });
   });
 </script>
@@ -89,8 +86,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><%= form.collection_select :entity_id, @malharias, :id, :nome, { prompt: true }, { class: "form-select #{erro_entidade ? 'input-erro' : ''}" } %></td>
-        <td><%= form.datetime_local_field :data_hora, class: "form-control" %></td>
+        <td><%= form.collection_select :entity_id, @malharias, :id, :nome, { prompt: true }, { class: "form-select", required: true } %></td>
+        <td><%= form.datetime_local_field :data_hora, class: "form-control", required: true %></td>
       </tr>
     </tbody>
   </table>
@@ -111,14 +108,14 @@
     </thead>
     <tbody id="table-body">
       <tr id="primeiraLinha" <% if @financial_records.any? %> style="display: none;" <% end %>>
-        <td><input type="text" name="valor[]" value="" readonly disabled class="form-control"></td>
-        <td><input type="text" name="observacao[]" value="" readonly disabled class="form-control"></td>
+        <td><input type="text" name="valor[]" value="" readonly disabled class="form-control" onkeyup="handleMoney(event)" placeholder="R$ 0,00"></td>
+        <td><input type="text" name="observacao[]" value="" readonly disabled class="form-control", placeholder="Observação"></td>
         <td><button type="button" class="remove-row-button btn btn-secondary" disabled>Remover</button></td>
       </tr>
       <% @financial_records.each do |record| %>
         <tr>
-          <td><input type="text" name="valor[]" value="<%= record.valor %>" required class="form-control <%= record.errors[:valor].any? ? 'input-erro' : '' %>"></td>
-          <td><input type="text" name="observacao[]" value="<%= record.observacao %>" class="form-control"></td>
+          <td><input type="text" name="valor[]" value="<%= number_to_currency(record.valor, unit: 'R$', separator: ',', delimiter: '.') %>" required class="form-control <%= record.errors[:valor].any? ? 'input-erro' : '' %>" onkeyup="handleMoney(event)" placeholder="R$ 0,00"></td>
+          <td><input type="text" name="observacao[]" value="<%= record.observacao %>" class="form-control", placeholder="Observação"></td>
           <td><button type="button" class="remove-row-button btn btn-danger">Remover</button></td>
         </tr>
       <% end %>

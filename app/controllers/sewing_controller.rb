@@ -21,7 +21,9 @@ class SewingController < SharedController
         tipo_movimento = 'Saída'
         observacao = params[:observacao][index]
         data_hora = @garment_sewing.data_hora_ida
-        @financial_records << FinancialRecord.new(valor: valor, tipo_movimento: tipo_movimento, observacao: observacao, data_hora: data_hora)
+        financial_record = FinancialRecord.new(valor: valor, tipo_movimento: tipo_movimento, observacao: observacao, data_hora: data_hora)
+        financial_record.valor = valor.delete("^0-9,").tr(',', '.').to_f
+        @financial_records << financial_record
       end
       
       @financial_records.each do |financial_record|
@@ -166,6 +168,7 @@ class SewingController < SharedController
           end
         else
           @peca = peca_validar
+          @peca[:quantidade] = nil
         end
       elsif button == 'Remover'
         index_peca = params[:peca_index].to_i
@@ -336,7 +339,7 @@ class SewingController < SharedController
         tipo_peca: garment_stock_exit.estoque_peca.tipo_peca.nome,
         estampada: garment_stock_exit.estoque_peca.estampada,
         quantidade: garment_stock_exit.estoque_peca.quantidade,
-        pecas: 0,
+        pecas: nil,
         tamanhos: false,
       }
     end
@@ -345,6 +348,11 @@ class SewingController < SharedController
   def create_sewing_return
     @errors = {}
     #@errors[:teste] = ['teste1', 'teste2']
+
+    if params[:garment_sewing_id].present? && GarmentSewing.find(params[:garment_sewing_id]).data_hora_volta.present?
+      flash[:notice] << 'Costura já finalizada!'
+      redirect_to root_path and return
+    end
 
     all_valid = false
     flash[:notice] = []
@@ -355,8 +363,10 @@ class SewingController < SharedController
     @garment_sizes = GarmentSize.all
     @lote_tamanhos = []
     unless params['financial'].nil?
+      valor = params['financial']['valor']
+      valor = valor.delete("^0-9,").tr(',', '.').to_f
       @financial = {
-        valor: params['financial']['valor'],
+        valor: valor,
         observacao: params['financial']['obs']
       }
     else
@@ -434,6 +444,7 @@ class SewingController < SharedController
       @lote[:garment_stock_exits].each_with_index do |garment_stock_exit, index|
         if garment_stock_exit[:pecas] <= 0
           all_valid = false
+          garment_stock_exit[:pecas] = nil
           @errors[:pecas] = [] if @errors[:pecas].nil?
           @errors[:pecas] << { index: index, message: 'Quantidade de peças inválida!' }
         end
@@ -442,7 +453,6 @@ class SewingController < SharedController
     
     #temp
     #all_valid = false
-
     unless all_valid
       render :return_details and return
     else

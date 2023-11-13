@@ -1,7 +1,7 @@
 <script>
   $(document).ready(function() {
     var $checkBox = $("input[name='peca[<%=estado_peca%>]']");
-
+    
     function realizarRequisicaoAjax(garmentTypeId, valor) {
       var garmentTypeId = garmentTypeId;
       
@@ -78,6 +78,7 @@
         $("input[value='Adicionar']").click();
       }
     });
+    realizarRequisicaoAjax($('#garment_type_select').val(), $checkBox.is(":checked"));
   });
 </script>
 

@@ -1,3 +1,6 @@
+<%= javascript_include_tag "campos_dinheiro" %>
+<%= javascript_include_tag "campos_peso" %>
+
 <script>
   $(document).ready(function() {
     updateValorTotal();
@@ -30,8 +33,8 @@
       }
       cols += '</select></td>';
 
-      cols += '<td><input type="text" name="fabric_stock[' + index + '][quantidade]" class="form-control"></td>';
-      cols += '<td><input type="text" name="valor_tecido[' + index + ']" class="form-control"></td>';
+      cols += '<td><input type="text" name="fabric_stock[' + index + '][quantidade]" class="form-control" onkeyup="handleWeight(event)" placeholder="0.00 kg"></td>';
+      cols += '<td><input type="text" name="valor_tecido[' + index + ']" class="form-control" onkeyup="handleMoney(event)" placeholder="R$ 0,00"></td>';
       cols += '<td><button type="button" class="btn btn-danger remove-row-button">Remover</button></td>';
       newRow.append(cols);
 
@@ -50,36 +53,45 @@
     // Função para calcular e atualizar o valor total
     function updateValorTotal() {
       var valorTotal = 0;
-      $('input[name^="valor_tecido"]').each(function() {
-        var valorTecido = parseFloat($(this).val());
-        if (!isNaN(valorTecido)) {
-          valorTotal += valorTecido;
-        }
-      });
-      $('#valor-total').val(valorTotal.toFixed(2)); // Define o valor total com 2 casas decimais
+
+      function recalculateTotal() {
+        valorTotal = 0; // Zera o valor total antes de recalcular
+        $('input[name^="valor_tecido"]').each(function() {
+          var valorTecidoString = $(this).val();
+          var valorTecido = parseFloat(valorTecidoString.replace('.', '').replace(',', '.').replace('R$', ''))
+          if (!isNaN(valorTecido)) {
+            valorTotal += valorTecido;
+          }
+        });
+        $('#valor-total').val('R$ ' + valorTotal.toFixed(2));
+      }
+
+      $('input[name^="valor_tecido"]').on('blur', recalculateTotal); // Adiciona o evento blur
+
+      // Chama a função para calcular o valor total inicial
+      recalculateTotal();
     }
 
-    // Evento de mudança nos campos de valor de tecido
-    $(document).on('input', 'input[name^="valor_tecido"]', function() {
-      updateValorTotal();
-    });
-
-    // Função para calcular e atualizar o valor total
     function updateValorTotalPeso() {
       var valorTotal = 0;
-      $('input[name^="fabric_stock"]').each(function() {
-        var valorPeso = parseFloat($(this).val());
-        if (!isNaN(valorPeso)) {
-          valorTotal += valorPeso;
-        }
-      });
-      $('#valor-total-peso').val(valorTotal.toFixed(2)); // Define o valor total com 2 casas decimais
-    }
 
-    // Evento de mudança nos campos de valor de peso
-    $(document).on('input', 'input[name^="fabric_stock"]', function() {
-      updateValorTotalPeso();
-    });
+      function recalculateTotal() {
+        valorTotal = 0; // Zera o valor total antes de recalcular
+        $('input[name^="fabric_stock"]').each(function() {
+          var valorPesoString = $(this).val();
+          var valorPeso = parseFloat(valorPesoString.replace('.', '').replace(',', '.').replace('kg', ''))
+          if (!isNaN(valorPeso)) {
+            valorTotal += valorPeso;
+          }
+        });
+        $('#valor-total-peso').val(valorTotal.toFixed(2) + " kg"); // Define o valor total com 2 casas decimais
+      }
+
+      $('input[name^="fabric_stock"]').on('blur', recalculateTotal); // Adiciona o evento blur
+
+      // Chama a função para calcular o valor total inicial
+      recalculateTotal();
+    }
 
     // Evento de clique no botão "Remover"
     $('table').on('click', '.remove-row-button', function() {
@@ -94,30 +106,24 @@
 <h3>Seleção de Tecidos</h3>
 <br>
 
+<% flash[:alert] = [] %>
+
 <%= form_for @fabric_stocks.first, url: create_fabric_entry_details_path do |f| %>
   <% if @fabric_stocks.any? %>
     <% @fabric_stocks.each_with_index do |fabric_stock, index| %>
       <% if fabric_stock.errors.any? %>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <a>Tecido <%= (index + 1).to_s %></a>
-          <% fabric_stock.errors.full_messages.each do |message| %>
-            <p class="mb-0"><%= message %> </p>
-          <% end %>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>        
+        <% fabric_stock.errors.full_messages.each do |message| %>
+          <% flash[:alert] << "#{index + 1}º tecido: #{message}" %>
+        <% end %>  
       <% end %>      
     <% end %>
   <% end %>
 
   <% unless @financial_record.nil? %>
     <% if @financial_record.errors.any? %>
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <a>Registro Financeiro</a>
-        <% @financial_record.errors.full_messages.each do |message| %>
-          <p class="mb-0"><%= message %></p>
-        <% end %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
+      <% @financial_record.errors.full_messages.each do |message| %>
+        <% flash[:alert] << message %>
+      <% end %>
     <% end %>
   <% end %>
 
@@ -132,8 +138,8 @@
       <span class="input-group-text">Valor Total</span>
       <%= fe.text_field :valor_, id: "valor-total", readonly: true, value: "#{sprintf('%.2f', @financial_record.valor)}", class: "form-control" %>
     
-      <span class="input-group-text">Observação (R$)</span>
-      <%= fe.text_area :observacao, class: "form-control" %>
+      <span class="input-group-text">Observação</span>
+      <%= fe.text_area :observacao, class: "form-control", placeholder: "Observação" %>
     </div>
   <% end %>
   
@@ -149,7 +155,7 @@
         <th>Tipo de Tecido*</th>
         <th>Cor*</th>
         <th>Quantidade (kg)*</th>
-        <th>Valor (R$)</th>
+        <th>Valor (R$)*</th>
         <th>Ação</th>
       </tr>
     </thead>
@@ -161,16 +167,17 @@
               <%= (index + 1).to_s %>
             </td>
             <td>
-              <%= fs.collection_select :tipo_tecido_id, @fabric_types, :id, :nome, { include_blank: 'Selecione um tipo...' }, class: "form-select #{'is-invalid' if fabric_stock.errors.has_key?(:tipo_tecido)}" %>
+              <%= fs.collection_select :tipo_tecido_id, @fabric_types, :id, :nome, { include_blank: 'Selecione um tipo...' }, class: "form-select #{'is-invalid' if fabric_stock.errors.has_key?(:tipo_tecido)}", required: true %>
             </td>
             <td>
-              <%= fs.collection_select :cor_id, @colors, :id, :nome, { include_blank: 'Selecione uma cor...' }, class: "form-select #{'is-invalid' if fabric_stock.errors.has_key?(:cor)}" %>
+              <%= fs.collection_select :cor_id, @colors, :id, :nome, { include_blank: 'Selecione uma cor...' }, class: "form-select #{'is-invalid' if fabric_stock.errors.has_key?(:cor)}", required: true %>
             </td>            
             <td>
-              <%= fs.text_field :quantidade, class: "form-control #{'is-invalid' if fabric_stock.errors.has_key?(:quantidade)}" %>
+              <% fabric_stock.quantidade = "#{fabric_stock.quantidade.to_s.gsub('.', ',')}" if !fabric_stock.quantidade.nil? %>
+              <%= fs.text_field :quantidade, class: "form-control #{'is-invalid' if fabric_stock.errors.has_key?(:quantidade)}", onkeyup: "handleWeight(event)", placeholder: '0.00 kg', required: true %>
             </td>
             <td>
-              <input type="text" name="valor_tecido[<%= index %>]" value="<%= @valores_tecido[index] %>" class="form-control <%= 'is-invalid' if @valor_erro_index.include?(index) %>">
+              <input type="text" name="valor_tecido[<%= index %>]" value="<%= number_to_currency(@valores_tecido[index], unit: 'R$', separator: ',', delimiter: '.') %>" class="form-control <%= 'is-invalid' if @valor_erro_index.include?(index) %>" onkeyup="handleMoney(event)" placeholder="R$ 0,00" required>
             <td>
               <button type="button" class="btn btn-danger remove-row-button" <% if index == 0 %> disabled <% end %>>Remover</button>
             </td>

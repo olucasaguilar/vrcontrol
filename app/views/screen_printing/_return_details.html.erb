@@ -1,3 +1,5 @@
+<%= javascript_include_tag "campos_dinheiro" %>
+
 <script>
   $(document).ready(function() {
     $('.fabric-checkbox').each(function() {
@@ -103,7 +105,7 @@
           <td><%= garment_stock_exit[:tipo_peca] %></td>
           <td><%= garment_stock_exit[:"#{estado_peca.downcase}"] ? "Sim" : "Não" %></td>
           <td><%= garment_stock_exit[:quantidade] %></td>
-          <td><input type="text" name="pecas[<%= index %>]" value="<%= garment_stock_exit[:pecas] %>"class="form-control <%= 'is-invalid' if erro_peca[index] %>"></td>
+          <td><input type="text" name="pecas[<%= index %>]" value="<%= garment_stock_exit[:pecas] %>"class="form-control <%= 'is-invalid' if erro_peca[index] %>" required placeholder = "Quantidade"></td>
         </tr>
       <% end %>        
     </tbody>
@@ -151,8 +153,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><input type="text" name="financial[valor]" value="<%=@financial[:valor] %>" class="form-control <%= 'is-invalid' if erro_financial %>"></td>
-        <td><input type="text" name="financial[obs]" value="<%=@financial[:observacao] %>" class="form-control"></td>
+        <% @financial[:valor] = number_to_currency(@financial[:valor], unit: 'R$', separator: ',', delimiter: '.') %>
+        <td><input type="text" name="financial[valor]" value="<%=@financial[:valor] %>" class="form-control <%= 'is-invalid' if erro_financial %>" onkeyup="handleMoney(event)" placeholder="R$ 0,00" required></td>
+        <td><input type="text" name="financial[obs]" value="<%=@financial[:observacao] %>" class="form-control" placeholder="Observação"></td>
         <td><button type="button" class="remove-row-button btn btn-secondary" readonly disabled>Remover</button></td>
       </tr>
     </tbody>
@@ -168,7 +171,7 @@
         <% @financial_extra.each_with_index do |financial, index| %>
           <tr>
             <td>
-              <input type="text" name="financial_extra[<%= index %>][valor]" value="<%= financial[:valor] %>" class="form-control" disabled readonly>
+              <input type="text" name="financial_extra[<%= index %>][valor]" value="<%= number_to_currency(financial[:valor], unit: 'R$', separator: ',', delimiter: '.') %>" class="form-control" disabled readonly>
             </td>
             <td>
               <input type="text" name="financial_extra[<%= index %>][obs]" value="<%= financial[:observacao] %>" class="form-control" disabled readonly>

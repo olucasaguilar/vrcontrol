@@ -1,3 +1,5 @@
+<%= javascript_include_tag "campos_peso" %>
+
 <script>
   $(document).ready(function() {
     function carregarCoresParaTipoTecido(fabricTypeId) {
@@ -63,7 +65,8 @@
           //alert('Quantidade total disponível: ' + totalQuantity);
           // <%= text_field_tag "tecido[quantidade]", @tecido[:quantidade], class: "form-control", id: "quantidade_field" %>
           // defini o quantidade com o valr total
-          quantidadeField.val(totalQuantity.toFixed(2));
+          quantidadeField.attr('placeholder', totalQuantity.toFixed(2) + ' kg');
+          quantidadeField.val('');
           inputField.change();
         }
       });
@@ -114,8 +117,12 @@
     // <%= text_field_tag "tecido[rendimento]", @tecido[:rendimento], class: "form-control" %>
     // ao detectar mudança no quantidade, multiplica o valor pelo multiplicador_x e atualiza o rendimento
     inputField.change(function() {
-      var quantidade = parseFloat($(this).val());
-      var multiplicadorX = parseFloat($("input#tecido_multiplicador_x").val());
+      var quantidade = $(this).val(); //45,05
+      quantidade = quantidade.toString().replace(/,/g, '.'); //45.05
+      quantidade = parseFloat(quantidade); //45.05
+      var multiplicadorX = $("input#tecido_multiplicador_x").val();
+      multiplicadorX = multiplicadorX.toString().replace(/,/g, '.');
+      multiplicadorX = parseFloat(multiplicadorX);
       var rendimento = quantidade * multiplicadorX;
       $("input#tecido_rendimento").val(rendimento.toFixed(2));
     });
@@ -124,6 +131,8 @@
     $("input#tecido_multiplicador_x").change(function() {
       inputField.change();
     });
+
+    inputField.change();
   });
 </script>
 
@@ -168,7 +177,7 @@
   <div class="input-group mb-3" style="width: 50%;">
     <span class="input-group-text">Total (kg)</span>
     <% quantidade = @tecidos.sum { |tecido| tecido[:quantidade].to_f } %>
-    <input type="text" id="valor-total-peso" class="form-control" value="<%= sprintf('%.2f', quantidade) %>" readonly>
+    <input type="text" id="valor-total-peso" class="form-control" value="<%= sprintf('%.2f', quantidade) %> kg" readonly>
     <span class="input-group-text"></span>
   </div>
 
@@ -195,7 +204,8 @@
           <%= select_tag "tecido[color_id]", options_for_select([]), class: "form-select #{'is-invalid' if erro_cor}", include_blank: "Selecione uma cor...", id: "color_select" %>
         </td>
         <td>
-          <%= text_field_tag "tecido[quantidade]", @tecido[:quantidade], class: "form-control #{'is-invalid' if erro_quantidade}", id: "quantidade_field" %>
+          <% @tecido[:quantidade] = "#{@tecido[:quantidade].to_s.gsub('.', ',')}" if !@tecido[:quantidade].nil? %>
+          <%= text_field_tag "tecido[quantidade]", @tecido[:quantidade], class: "form-control #{'is-invalid' if erro_quantidade}", id: "quantidade_field", required: true, onkeyup: "handleWeight(event)", placeholder: '0.00 kg' %>
         </td>
         <td>
           <%= select_tag "tecido[garment_type_id]", options_from_collection_for_select(@garment_types, :id, :nome, selected: @tecido[:garment_type_id]), class: "form-select #{'is-invalid' if erro_tipo_peca}", include_blank: "Selecione um tipo..." %>
@@ -204,8 +214,7 @@
           <%= text_field_tag "tecido[multiplicador_x]", @tecido[:multiplicador_x], class: "form-control" %>
         </td>
         <td>
-          <%= text_field_tag "tecido[rendimento]", @tecido[:rendimento], class: "form-control" %>
-        </td>
+          <%= text_field_tag "tecido[rendimento]", @tecido[:rendimento], class: "form-control", readonly: true, disabled: true %>
         <td>
           <%= submit_tag 'Adicionar', class: "btn btn-primary" %>
         </td>
