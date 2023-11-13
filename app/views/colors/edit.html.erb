@@ -3,11 +3,10 @@
 <%= form_with(model: @color) do |f| %>
 
   <% if @color.errors.any? %>
-    <div class="alert alert-danger">
-      <% @color.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </div>
+    <% @color.errors.full_messages.each do |message| %>
+      <%# <li><%= message </li> %>
+      <% flash[:alert] << message %>
+    <% end %>
   <% end %>
 
   <div class="form-group">

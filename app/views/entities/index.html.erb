@@ -13,6 +13,11 @@
     color: inherit; /* Mantém a cor do texto padrão */
     /* Outros estilos personalizados, se necessário */
   }
+
+  .table-wrapper {
+    max-width: 350px;
+    /* margin-left: auto; */
+  }
 </style>
 
 <h1>Entidades</h1>
@@ -29,18 +34,27 @@
 
 <button class="btn btn-outline-secondary" disabled style="visibility: hidden;">Filtrar</button>
 
-<%# <table class="table table-bordered">
-  <thead>
-    <tr>
-      <td>
-        <div class="form-group">
-          <label for="valor">Filtrar por Nome:</label>
-          <input type="text" class="form-control" id="valor">
-        </div>
-      </td>
-    </tr>
-  </thead>
-</table> %>
+<%= form_with url: entidades_path, method: :get do |f| %>
+  <div class="table-wrapper">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <td>
+            <div class="form-group">
+              <%= f.label :search, "Procurar" %>
+              <%= f.text_field :search, class: "form-control", placeholder: "Pesquisar", value: params[:search] %>
+            </div>
+          </td>
+          <td>
+            <div class="form-group">
+              <%= f.submit "Procurar", class: "btn btn-primary", style: "margin-top: 32px;" %>
+            </div>
+          </td>
+        </tr>
+      </thead>
+    </table>
+  </div>
+<% end %>
 
 <div class="table-responsive">
   <table class="table table-striped table-bordered">
@@ -129,9 +143,8 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td>
-              <a href="" class="btn btn-info" disabled style="visibility: hidden;">a</a>
-            </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
           </tr>    
         <% end %>
       <% end %> 

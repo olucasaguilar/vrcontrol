@@ -10,103 +10,103 @@ class FinishingController < SharedController
     generic_new(variables)
   end
 
-  # def create
-  #   @garment_sewing = GarmentSewing.new(data_hora_ida: params[:garment_sewing][:data_hora_ida], costureira_id: params[:garment_sewing][:entidade_id])
-  #   @garment_sewing.finalizado = false
-  #   @financial_records = []
-  #   all_valid = true
+  def create
+    @garment_finishing = GarmentFinishing.new(data_hora_ida: params[:garment_finishing][:data_hora_ida], acabamento_id: params[:garment_finishing][:entidade_id])
+    @garment_finishing.finalizado = false
+    @financial_records = []
+    all_valid = true
 
-  #   unless params[:valor].nil?
-  #     params[:valor].each_with_index do |valor, index|
-  #       tipo_movimento = 'Saída'
-  #       observacao = params[:observacao][index]
-  #       data_hora = @garment_sewing.data_hora_ida
-  #       @financial_records << FinancialRecord.new(valor: valor, tipo_movimento: tipo_movimento, observacao: observacao, data_hora: data_hora)
-  #     end
+    unless params[:valor].nil?
+      params[:valor].each_with_index do |valor, index|
+        tipo_movimento = 'Saída'
+        observacao = params[:observacao][index]
+        data_hora = @garment_finishing.data_hora_ida
+        @financial_records << FinancialRecord.new(valor: valor, tipo_movimento: tipo_movimento, observacao: observacao, data_hora: data_hora)
+      end
       
-  #     @financial_records.each do |financial_record|
-  #       unless financial_record.valid?
-  #         all_valid = false
-  #       end      
-  #     end
-  #   end
+      @financial_records.each do |financial_record|
+        unless financial_record.valid?
+          all_valid = false
+        end      
+      end
+    end
 
-  #   if @garment_sewing.valid? && all_valid
-  #     flash[:notice] = []
-  #     @garment_sewing.save
+    if @garment_finishing.valid? && all_valid
+      flash[:notice] = []
+      @garment_finishing.save
+  
+      @financial_records.each do |financial_record|
+        observacao_original = financial_record.observacao
+        pre_msg = 'Acabamento - Envio'
+        pre_msg += ' - ' unless observacao_original.blank?
+        financial_record.observacao = pre_msg + financial_record.observacao
+        financial_record.save
+
+        financial_garment_finishing = FinancialGarmentFinishing.new(
+          registro_financeiro: financial_record,
+          peca_acabamento: @garment_finishing,
+          retorno: false
+        )
+
+        if financial_garment_finishing.valid?
+          financial_garment_finishing.save
+          # Temp
+          flash[:notice] << 'Vinculo entre movimentação de caixa e peca ao acabamento criado com sucesso!'
+        else
+          flash[:notice] << 'Erro ao criar o vinculo entre movimentação de caixa e peca ao acabamento!'
+        end
+      end
+      # Temp
+      if @financial_records.any?
+        flash[:notice] << 'Movimentação de caixa criada com sucesso!'
+      end
+
+      flash[:notice] << 'Envio ao Acabamento criado com sucesso!'
+      redirect_to new_finishing_details_path
+    else
+      busca_entidades
+      render :new
+    end
+  end
+
+  def new_details
+    flash[:alert] = []
     
-  #     @financial_records.each do |financial_record|
-  #       observacao_original = financial_record.observacao
-  #       pre_msg = 'Costureira - Envio'
-  #       pre_msg += ' - ' unless observacao_original.blank?
-  #       financial_record.observacao = pre_msg + financial_record.observacao
-  #       financial_record.save
+    unless (GarmentFinishing.any? && (GarmentFinishing.last.finalizado == false))
+      redirect_to new_sewing_path
+    else
+      @peca = {
+        garment_type_id: 0,
+        estampada: false,
+        quantidade: nil
+      }
 
-  #       financial_garment_sewing = FinancialGarmentSewing.new(
-  #         registro_financeiro: financial_record,
-  #         peca_costura: @garment_sewing,
-  #         retorno: false
-  #       )
-
-  #       if financial_garment_sewing.valid?
-  #         financial_garment_sewing.save
-  #         # Temp
-  #         flash[:notice] << 'Vinculo entre movimentação de caixa e peca à costureira criado com sucesso!'
-  #       else
-  #         flash[:notice] << 'Erro ao criar o vinculo entre movimentação de caixa e peca à costureira!'
-  #       end
-  #     end
-  #     # Temp
-  #     if @financial_records.any?
-  #       flash[:notice] << 'Movimentação de caixa criada com sucesso!'
-  #     end
-
-  #     flash[:notice] << 'Envio à Serigrafia criado com sucesso!'
-  #     redirect_to new_sewing_details_path
-  #   else
-  #     busca_entidades
-  #     render :new
-  #   end
-  # end
-
-  # def new_details
-  #   flash[:alert] = []
-    
-  #   unless (GarmentSewing.any? && (GarmentSewing.last.finalizado == false))
-  #     redirect_to new_sewing_path
-  #   else
-  #     @peca = {
-  #       garment_type_id: 0,
-  #       estampada: false,
-  #       quantidade: nil
-  #     }
-
-  #     @pecas = []
-  #     session.delete(:pecas)
-  #     session[:pecas] ||= []
+      @pecas = []
+      session.delete(:pecas)
+      session[:pecas] ||= []
       
-  #     @garment_stocks_groups = GarmentStock.all.group_by { |garment_stock| [garment_stock.tipo_peca.nome, garment_stock.costurada, garment_stock.estampada] }
-  #     @garment_stocks_groups.each do |garment_stock_group|
-  #       last_saldo = garment_stock_group[1].last.saldo
-  #       if last_saldo <= 0
-  #         @garment_stocks_groups.delete(garment_stock_group[0])
-  #       end
-  #     end
+      @garment_stocks_groups = GarmentStock.all.group_by { |garment_stock| [garment_stock.tipo_peca.nome, garment_stock.costurada, garment_stock.estampada] }
+      @garment_stocks_groups.each do |garment_stock_group|
+        last = garment_stock_group[1].last
+        if last.saldo <= 0 || last.costurada == false
+          @garment_stocks_groups.delete(garment_stock_group[0])
+        end
+      end
 
-  #     garment_types_estoque = @garment_stocks_groups.map { |garment_stock_group| garment_stock_group[0][0] }.uniq
+      garment_types_estoque = @garment_stocks_groups.map { |garment_stock_group| garment_stock_group[0][0] }.uniq
 
-  #     @garment_types = GarmentType.where(nome: garment_types_estoque)
-  #   end
-  # end
+      @garment_types = GarmentType.where(nome: garment_types_estoque)
+    end
+  end
 
-  # def create_details
-  #   @garment_stocks_groups = GarmentStock.all.group_by { |garment_stock| [garment_stock.tipo_peca.nome, garment_stock.costurada, garment_stock.estampada] }
-  #   @garment_stocks_groups.each do |garment_stock_group|
-  #     last_saldo = garment_stock_group[1].last.saldo
-  #     if last_saldo <= 0
-  #       @garment_stocks_groups.delete(garment_stock_group[0])
-  #     end
-  #   end
+  def create_details
+    @garment_stocks_groups = GarmentStock.all.group_by { |garment_stock| [garment_stock.tipo_peca.nome, garment_stock.costurada, garment_stock.estampada] }
+    @garment_stocks_groups.each do |garment_stock_group|
+      last = garment_stock_group[1].last
+      if last.saldo <= 0 || last.costurada == false
+        @garment_stocks_groups.delete(garment_stock_group[0])
+      end
+    end
 
   #   garment_types_estoque = @garment_stocks_groups.map { |garment_stock_group| garment_stock_group[0][0] }.uniq
 
@@ -195,7 +195,7 @@ class FinishingController < SharedController
   #   end
 
   #   render :new_details
-  # end
+  end
 
   # def validate_peca(peca)
   #   #flash[:notice] = []
@@ -241,33 +241,33 @@ class FinishingController < SharedController
   #   validation
   # end
 
-  # def get_total_quantity_estampada
-  #   garment_type_id = params[:garment_type_id]
-  #   estampada = params[:estampada]
-  #   total_quantity = GarmentStock.where(tipo_peca_id: garment_type_id, estampada: estampada, costurada: false).last
+  def get_total_quantity_estampada
+    garment_type_id = params[:garment_type_id]
+    estampada = params[:estampada]
+    total_quantity = GarmentStock.where(tipo_peca_id: garment_type_id, estampada: estampada, costurada: true).last
     
-  #   unless total_quantity.nil?
-  #     total_quantity = total_quantity[:saldo]
-  #   else
-  #     total_quantity = 0
-  #   end
+    unless total_quantity.nil?
+      total_quantity = total_quantity[:saldo]
+    else
+      total_quantity = 0
+    end
     
-  #   if estampada == 'true'
-  #     estampada = true
-  #   else
-  #     estampada = false
-  #   end
+    if estampada == 'true'
+      estampada = true
+    else
+      estampada = false
+    end
 
-  #   session[:pecas].each do |peca|
-  #     if (peca["garment_type_id"] == garment_type_id) && (peca["estampada"] == estampada)
-  #       total_quantity = total_quantity - peca["quantidade"].to_i
-  #     end
-  #   end
+    session[:pecas].each do |peca|
+      if (peca["garment_type_id"] == garment_type_id) && (peca["estampada"] == estampada)
+        total_quantity = total_quantity - peca["quantidade"].to_i
+      end
+    end
 
-  #   total_quantity = 0 if total_quantity < 0
+    total_quantity = 0 if total_quantity < 0
 
-  #   render json: { total_quantity: total_quantity }
-  # end
+    render json: { total_quantity: total_quantity }
+  end
 
   # def save_pecas(pecas)
   #   flash[:notice] = []

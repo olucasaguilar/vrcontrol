@@ -6,7 +6,7 @@
       var garmentTypeId = garmentTypeId;
       
       $.ajax({
-        url: '/get_total_quantity_<%=estado_peca%>',
+        url: '/get_total_quantity_<%= path_quant %>',
         method: 'GET',
         data: {
           garment_type_id: garmentTypeId,
@@ -143,6 +143,7 @@
         </td>
         <td>
           <%= check_box_tag "peca[#{estado_peca}]", @peca[:"#{estado_peca}"], @peca[:"#{estado_peca}"], class: "form-check-input" %>
+          <%= label_tag "peca[#{estado_peca}]", "Sim" %>
         </td>
         <td>
           <%= text_field_tag "peca[quantidade]", @peca[:quantidade], class: "form-control #{'is-invalid' if erro_quantidade}", id: "quantidade_field" %>
@@ -161,6 +162,7 @@
           </td>
           <td>
             <%= check_box_tag "pecas[#{index}][#{estado_peca}]", peca[:"#{estado_peca}"], peca[:"#{estado_peca}"], class: "form-check-input", disabled: true %>
+            <%= label_tag "pecas[#{index}][#{estado_peca}]", "Sim" %>
           </td>
           <td>
             <%= text_field_tag "pecas[#{index}][quantidade]", peca[:quantidade], class: "form-control", disabled: true %>

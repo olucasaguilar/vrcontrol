@@ -1,63 +1,11 @@
+<%= javascript_include_tag 'campos_entidade' %>
+
 <h1>Nova Entidade</h1>
 
+<% flash[:alert] = [] %>
 <%= form_for(@entity) do |f| %>
 
-  <% if @entity.errors.any? %>
-    <div class="alert alert-danger">
-      <% @entity.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </div>
-  <% end %>
-
-  <div class="form-group">
-    <%= f.label :nome, "Nome*", class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= f.text_field :nome, class: "form-control #{f.object.errors[:nome].any? ? 'is-invalid' : ''}" %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :num_contato, class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= f.text_field :num_contato, class: "form-control" %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :cidade, class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= f.text_field :cidade, class: "form-control" %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :estado, class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= f.text_field :estado, class: "form-control" %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :cnpj, "CNPJ", class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= f.text_field :cnpj, class: "form-control" %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :ie, "Inscrição Estadual", class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= f.text_field :ie, class: "form-control" %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :entity_types_id, class: "col-md-4 control-label" %>
-    <div class="col-md-4 inputGroupContainer">
-      <%= f.collection_select :entity_types_id, @entity_types, :id, :nome, { prompt: true }, class: "form-control" %>
-    </div>
-  </div><br>
+  <%= render 'form', f: f %>
 
   <div class="form-group">
     <div class="col-md-offset-4 col-md-4">

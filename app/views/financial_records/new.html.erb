@@ -1,5 +1,20 @@
-<%= javascript_include_tag "campo_dinheiro" %>
-<%#= javascript_tag do %>
+<%#= javascript_include_tag "campos_dinheiro" %>
+
+<script>
+  handleMoney = (event) => {
+    let input = event.target;
+    input.value = moneyMask(input.value);
+  };
+  moneyMask = (value) => {
+    if (!value) return '';
+    value = value.replace(/\D/g, '');
+    value = (value / 100).toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+    return value;
+  };
+</script>
 
 <legend>Novo Registro Financeiro</legend>
 
@@ -15,7 +30,7 @@
   <div class="form-group">
     <%= f.label :valor, class: "col-md-4 control-label" %>
     <div class="col-md-4 inputGroupContainer">
-      <%= f.text_field :valor, class: "form-control #{f.object.errors[:valor].any? ? 'is-invalid' : ''}", id: "valor-input" %>
+      <%= f.text_field :valor, class: "form-control #{f.object.errors[:valor].any? ? 'is-invalid' : ''}", id: "valor-input", onkeyup: "handleMoney(event)", placeholder: "R$ 0,00" %>
     </div>
   </div>
 

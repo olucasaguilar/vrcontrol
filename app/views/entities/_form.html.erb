@@ -1,0 +1,54 @@
+<% if @entity.errors.any? %>
+  <% @entity.errors.full_messages.each do |message| %>
+    <% flash[:alert] << message %></li>
+  <% end %>
+<% end %>
+
+<div class="form-group">
+  <%= f.label :nome, "Nome*", class: "col-md-4 control-label" %>
+  <div class="col-md-4 inputGroupContainer">
+    <%= f.text_field :nome, required: true, class: "form-control #{f.object.errors[:nome].any? ? 'is-invalid' : ''}", placeholder: "Nome da entidade" %>
+  </div>
+</div>
+
+<div class="form-group">
+  <%= f.label :num_contato, class: "col-md-4 control-label" %>
+  <div class="col-md-4 inputGroupContainer">
+    <%= f.text_field :num_contato, class: "form-control", maxlength: 15, onkeyup: "handlePhone(event)", placeholder: "(00) 00000-0000" %>
+  </div>
+</div>
+
+<div class="form-group">
+  <%= f.label :cidade, class: "col-md-4 control-label" %>
+  <div class="col-md-4 inputGroupContainer">
+    <%= f.text_field :cidade, class: "form-control", placeholder: "Cidade" %>
+  </div>
+</div>
+
+<div class="form-group">
+  <%= f.label :estado, class: "col-md-4 control-label" %>
+  <div class="col-md-4 inputGroupContainer">
+    <%= f.text_field :estado, class: "form-control", maxlength: 2, onkeyup: "handleUF(event)", placeholder: "UF" %>
+  </div>
+</div>
+
+<div class="form-group">
+  <%= f.label :cnpj, "CNPJ", class: "col-md-4 control-label" %>
+  <div class="col-md-4 inputGroupContainer">
+    <%= f.text_field :cnpj, class: "form-control", maxlength: 18, onkeyup: "handleCNPJ(event)", placeholder: "00.000.000/0000-00" %>
+  </div>
+</div>
+
+<div class="form-group">
+  <%= f.label :ie, "Inscrição Estadual", class: "col-md-4 control-label" %>
+  <div class="col-md-4 inputGroupContainer">
+    <%= f.text_field :ie, class: "form-control", maxlength: 12, onkeyup: "handleInscEstadual(event)", placeholder: "000.000.0000" %>
+  </div>
+</div>
+
+<div class="form-group">
+  <%= f.label :entity_types_id, class: "col-md-4 control-label" %>
+  <div class="col-md-4 inputGroupContainer">
+    <%= f.collection_select :entity_types_id, @entity_types, :id, :nome, { prompt: true }, class: "form-control" %>
+  </div>
+</div><br>

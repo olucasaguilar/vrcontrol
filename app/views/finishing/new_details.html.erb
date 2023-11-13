@@ -1,6 +1,7 @@
 <%= render partial: 'screen_printing/new_details', locals: { 
+                                            path_quant: 'estampada_acab',
                                             estado_peca: 'estampada',
-                                            titulo: 'Peça para a Costureira',
-                                            create_path: create_sewing_details_path,
-                                            stock_exit_errors: @garment_sewing_stock_exit_errors,
+                                            titulo: 'Peça para o Acabamento',
+                                            create_path: create_finishing_details_path,
+                                            stock_exit_errors: @garment_finishing_stock_exit_errors,
                                            } %>

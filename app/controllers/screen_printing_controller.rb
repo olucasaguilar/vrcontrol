@@ -85,8 +85,8 @@ class ScreenPrintingController < SharedController
       
       @garment_stocks_groups = GarmentStock.all.group_by { |garment_stock| [garment_stock.tipo_peca.nome, garment_stock.costurada, garment_stock.estampada] }
       @garment_stocks_groups.each do |garment_stock_group|
-        last_saldo = garment_stock_group[1].last.saldo
-        if last_saldo <= 0
+        last = garment_stock_group[1].last
+        if last.saldo <= 0 || last.estampada?
           @garment_stocks_groups.delete(garment_stock_group[0])
         end
       end
@@ -100,8 +100,8 @@ class ScreenPrintingController < SharedController
   def create_details
     @garment_stocks_groups = GarmentStock.all.group_by { |garment_stock| [garment_stock.tipo_peca.nome, garment_stock.costurada, garment_stock.estampada] }
     @garment_stocks_groups.each do |garment_stock_group|
-      last_saldo = garment_stock_group[1].last.saldo
-      if last_saldo <= 0
+      last = garment_stock_group[1].last
+      if last.saldo <= 0 || last.estampada?
         @garment_stocks_groups.delete(garment_stock_group[0])
       end
     end

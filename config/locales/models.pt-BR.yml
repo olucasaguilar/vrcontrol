@@ -1,0 +1,20 @@
+pt-BR:
+  activerecord:
+    models:
+      user: "Usuário"
+      entity:
+        one: "Entidade"
+        other: "Entidades"
+    attributes:
+      user:
+        email: "E-mail"
+        password: "Senha"
+        name: "Nome"
+      entity:
+        nome: "Nome"
+        num_contato: "Número de contato"
+        cidade: "Cidade"
+        estado: "Estado"
+        entity_types_id: "Tipo de entidade"
+        cnpj: "CNPJ"
+        ie: "IE"

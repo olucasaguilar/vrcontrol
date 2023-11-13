@@ -5,7 +5,10 @@ class EntitiesController < ApplicationController
   before_action :verify_entities, only: [:index]
 
   def index
+    flash[:notice] = []
+
     @entity_types = EntityType.all
+
     if params[:filter] != "" && params[:filter] != nil
       entity_type = EntityType.where(id: params[:filter]).first
       if entity_type != nil
@@ -15,6 +18,11 @@ class EntitiesController < ApplicationController
       end
     else
       @entities = Entity.all
+    end
+
+    if params[:search].present?
+      @entities = Entity.where("nome ILIKE ? OR cidade ILIKE ? OR estado ILIKE ?",
+                                "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
     end
 
     if params[:sort] != "" && params[:sort] != nil
@@ -43,8 +51,7 @@ class EntitiesController < ApplicationController
     @pagy, @entities = pagy(@entities, page: page, items: 5)
   end
 
-  def show    
-  end
+  def show; end
 
   def edit
     @entity_types = EntityType.all    

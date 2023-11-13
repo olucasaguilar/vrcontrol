@@ -23,8 +23,11 @@ class FinancialRecordsController < ApplicationController
   end
 
   def create
+    flash[:notice] = []
     @financial_record = FinancialRecord.new(financial_record_params)
+    @financial_record.valor = params[:financial_record][:valor].delete("^0-9,").tr(',', '.').to_f
 
+    
     observacao_original = @financial_record.observacao
     pre_msg = 'Mov. manual'
     pre_msg += ' - ' unless observacao_original.blank?

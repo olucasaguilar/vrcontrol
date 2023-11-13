@@ -67,14 +67,14 @@ Rails.application.routes.draw do
   post '/costura/retorno', to: 'sewing#create_sewing_return', as: 'create_sewing_return'
   
   # Rota para tela de acabamento 
-  get '/acabamento/envio',              to: 'finishing#new',                      as: 'new_finishing'
-  post '/acabamento/envio',             to: 'finishing#create',                   as: 'create_finishing'
-  get '/acabamento/envio/detalhes',     to: 'finishing#new_details',              as: 'new_finishing_details'
-  post '/acabamento/envio/detalhes',    to: 'finishing#create_details',           as: 'create_finishing_details'
-  get 'get_total_acabamento_estampada', to: 'finishing#get_total_quantity_estampada'
-  get '/acabamento/retorno',            to: 'finishing#return',                   as: 'return_finishing'
-  get '/acabamento/retorno/:id',        to: 'finishing#return_details',           as: 'return_finishing_details'
-  post '/acabamento/retorno',           to: 'finishing#create_finishing_return',  as: 'create_finishing_return'
+  get '/acabamento/envio',                  to: 'finishing#new',                      as: 'new_finishing'
+  post '/acabamento/envio',                 to: 'finishing#create',                   as: 'create_finishing'
+  get '/acabamento/envio/detalhes',         to: 'finishing#new_details',              as: 'new_finishing_details'
+  post '/acabamento/envio/detalhes',        to: 'finishing#create_details',           as: 'create_finishing_details'
+  get 'get_total_quantity_estampada_acab',  to: 'finishing#get_total_quantity_estampada'
+  get '/acabamento/retorno',                to: 'finishing#return',                   as: 'return_finishing'
+  get '/acabamento/retorno/:id',            to: 'finishing#return_details',           as: 'return_finishing_details'
+  post '/acabamento/retorno',               to: 'finishing#create_finishing_return',  as: 'create_finishing_return'
   
   # Rotas para cadastro de usuário
   get   '/cadastro_usuario',                   to: 'users#home',             as: 'cadastro_usuario'
