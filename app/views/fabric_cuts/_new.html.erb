@@ -89,7 +89,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><%= form.collection_select :entidade_id, entidades, :id, :nome, { prompt: "Selecione um #{entidade}" }, { class: "form-select #{erro_entidade ? 'input-erro' : ''}", required: true } %></td>
+        <td><%= form.collection_select :entidade_id, @entidades, :id, :nome, { prompt: "Selecione um #{entidade}" }, { class: "form-select #{erro_entidade ? 'input-erro' : ''}", required: true } %></td>
         <td><%= form.datetime_local_field :data_hora_ida, class: "form-control", required: true %></td>
       </tr>
     </tbody>

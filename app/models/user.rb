@@ -5,7 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   validates :name, presence: true
   validates :name, uniqueness: true
-  has_one :user_permission
+  has_one :user_permission, dependent: :destroy
 
   def email_required?
     false

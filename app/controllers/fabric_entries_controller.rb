@@ -5,7 +5,7 @@ class FabricEntriesController < ApplicationController
       redirect_to new_fabric_entry_details_path
     else
       data_hora = Time.now - 3.hour
-      busca_malharias()
+      buscar_entidades('Malharia')
       @fabric_entry = FabricEntry.new
       @fabric_entry.data_hora = data_hora
       
@@ -67,7 +67,7 @@ class FabricEntriesController < ApplicationController
       flash[:notice] << 'Entrada de tecido criada com sucesso!'
       redirect_to new_fabric_entry_details_path
     else
-      busca_malharias()
+      buscar_entidades('Malharia')
       render :new
     end
   end
@@ -168,11 +168,6 @@ class FabricEntriesController < ApplicationController
   end
 
   private
-
-  def busca_malharias
-    entity_type_malharia = EntityType.find_by(nome: 'Malharia')
-    @malharias = Entity.where(entity_type: entity_type_malharia)
-  end
 
   def fabric_entry_params
     params.require(:fabric_entry).permit(:data_hora, :entity_id)

@@ -31,10 +31,12 @@ class GarmentSizesController < ApplicationController
   end
 
   def destroy
-    if @garment_size.destroy
-      redirect_to garment_sizes_path, notice: 'Tamanho de vestuário excluído com sucesso.'
-    else
-      redirect_to garment_sizes_path, alert: 'Erro ao excluir tamanho de vestuário.'
+    begin
+      if @garment_size.destroy
+        redirect_to garment_sizes_path, notice: 'Tamanho de vestuário excluído com sucesso.'
+      end
+    rescue StandardError => e
+      redirect_to garment_sizes_path, alert: 'Não foi possível excluir o tamanho de vestuário.'
     end
   end
 

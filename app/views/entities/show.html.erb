@@ -31,6 +31,9 @@
         <th scope="row">Tipo de entidade</th>
         <td><%= @entity.entity_type.nome %></td>
       </tr>
+      <tr>
+        <th scope="row">Status</th>
+        <td><%= @entity.status.capitalize %></td>
     </tbody>
   </table>
 </div>
@@ -38,6 +41,10 @@
 <div class="mt-3">
   <% if current_user.user_permission.entities_create || current_user.user_permission.admin %>
     <a href="<%= edit_entity_path(@entity.id) %>" class="btn btn-primary me-3">Editar</a>
+    <%= link_to "#{@entity[:status] == 'ativo' ? 'Inativar' : 'Ativar'}", 
+                toggle_status_entity_path(@entity.id), 
+                method: :patch, 
+                class: "btn #{ @entity[:status] == 'ativo' ? 'btn-danger' : 'btn-success' } me-3" %>
   <% end %>
-  <a href="<%= entidades_path %>" class="btn btn-secondary">Voltar</a>
+  <%= link_to 'Voltar', entidades_path, class: "btn btn-secondary" %>
 </div>

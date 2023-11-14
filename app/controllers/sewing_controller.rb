@@ -5,7 +5,8 @@ class SewingController < SharedController
     variables = {
       model: GarmentSewing,
       model_name: "garment_sewing",
-      redirect_path: new_sewing_details_path
+      redirect_path: new_sewing_details_path,
+      tipo: 'Costureira'
     }
     generic_new(variables)
   end
@@ -66,7 +67,7 @@ class SewingController < SharedController
       flash[:notice] << 'Envio à Serigrafia criado com sucesso!'
       redirect_to new_sewing_details_path
     else
-      busca_entidades
+      buscar_entidades('Costureira')
       render :new
     end
   end
@@ -584,10 +585,5 @@ class SewingController < SharedController
     #@financial_errors = financial_record.errors
     @financial_errors = financial_record.errors
     financial_record.valid?
-  end
-
-  def busca_entidades
-    entity_type = EntityType.find_by(nome: 'Costureira')
-    @entidades = Entity.where(entity_type: entity_type)
   end
 end

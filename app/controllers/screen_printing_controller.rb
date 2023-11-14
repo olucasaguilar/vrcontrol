@@ -3,7 +3,8 @@ class ScreenPrintingController < SharedController
     variables = {
       model: GarmentScreenPrinting,
       model_name: "garment_screen_printing",
-      redirect_path: new_screen_printing_details_path
+      redirect_path: new_screen_printing_details_path,
+      tipo: 'Serigrafia'
     }
     generic_new(variables)
   end
@@ -64,7 +65,7 @@ class ScreenPrintingController < SharedController
       flash[:notice] << 'Envio à Serigrafia criado com sucesso!'
       redirect_to new_screen_printing_details_path
     else
-      busca_entidades
+      buscar_entidades('Serigrafia')
       render :new
     end
   end
@@ -577,10 +578,5 @@ class ScreenPrintingController < SharedController
     #@financial_errors = financial_record.errors
     @financial_errors = financial_record.errors
     financial_record.valid?
-  end
-
-  def busca_entidades
-    entity_type = EntityType.find_by(nome: 'Serigrafia')
-    @entidades = Entity.where(entity_type: entity_type)
   end
 end

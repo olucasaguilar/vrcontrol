@@ -4,7 +4,7 @@ class FabricCutsController < ApplicationController
       redirect_to new_fabric_cut_details_path
     else
       data_hora = Time.now - 3.hour
-      busca_cortadores()
+      buscar_entidades('Cortador')
       @fabric_cut = FabricCut.new
       @fabric_cut.data_hora_ida = data_hora   
       @financial_records = []
@@ -67,7 +67,7 @@ class FabricCutsController < ApplicationController
       flash[:notice] << 'Envio ao corte criado com sucesso!'
       redirect_to new_fabric_cut_details_path
     else
-      busca_cortadores()
+      buscar_entidades('Cortador')
       render :new
     end
   end
@@ -609,10 +609,5 @@ class FabricCutsController < ApplicationController
     #@financial_errors = financial_record.errors
     @financial_errors = financial_record.errors
     financial_record.valid?
-  end
-
-  def busca_cortadores
-    entity_type_cortador = EntityType.find_by(nome: 'Cortador')
-    @cortadores = Entity.where(entity_type: entity_type_cortador)
   end
 end

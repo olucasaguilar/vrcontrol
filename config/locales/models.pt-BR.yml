@@ -18,3 +18,4 @@ pt-BR:
         entity_types_id: "Tipo de entidade"
         cnpj: "CNPJ"
         ie: "IE"
+        status: "Status"

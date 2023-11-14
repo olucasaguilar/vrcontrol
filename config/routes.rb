@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   get '/entity/new/:id', to: 'entities#new', as: 'new_entity'
   get '/entities', to: 'entities#show', as: 'entities'
   post '/entities', to: 'entities#create', as: 'create_entity'
+  patch '/entities/:id/toggle_status', to: 'entities#toggle_status', as: 'toggle_status_entity'
+  get '/entidades/inativos', to: 'entities#inactives', as: 'entity_inactives'
 
   # Rotas de Caixa
   get '/caixa', to: 'financial_records#index', as: 'financial_records'
@@ -87,7 +89,7 @@ Rails.application.routes.draw do
   get   '/cadastro_usuario/admin/todos',       to: 'users#index',            as: 'index_users'
   get   '/cadastro_usuario/admin/:id/edit/',   to: 'users#edit',             as: 'admin_edit'
   post  '/cadastro_usuario/admin/:id/edit/',   to: 'users#admin_update',     as: 'admin_update'
-
+  
   # Rota para tela temporária venda saida
   get '/temp_view/venda/saida', to: 'temp_views#venda_saida', as: 'temp_view_venda_saida'
   # Rota para tela temporária venda retorno

@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :verify_admin, only: [:new, :edit, :index]
+  before_action :verify_admin, only: [:new, :edit, :index, :admin_update]
 
   def home; end
 
@@ -61,7 +61,7 @@ class UsersController < ApplicationController
     if password_and_confirm_password_match?
       if @user.save
         UserPermission.create(user: @user)
-        redirect_to cadastro_usuario_path
+        redirect_to index_users_path
         flash[:notice] = "Usuário criado com sucesso!"
       else
         render :new
@@ -89,6 +89,16 @@ class UsersController < ApplicationController
       @user.update(password: "123456")
       flash[:notice] = "Senha resetada com sucesso! (123456)"
       redirect_to index_users_path
+      return
+    elsif params[:commit] == "Excluir"
+      begin
+        @user = User.find(params[:id])
+        if @user.destroy
+          redirect_to index_users_path, notice: 'Usuário excluído com sucesso.'
+        end
+      rescue StandardError => e
+        redirect_to index_users_path, alert: 'Não foi possível excluir o usuário.'
+      end
       return
     end
 

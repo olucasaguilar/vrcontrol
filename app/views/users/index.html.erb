@@ -16,5 +16,10 @@
         </td>
       </tr>
     <% end %>
+    <% if @users.empty? %>
+      <tr>
+        <td colspan="2">Nenhum usuário cadastrado</td>
+      </tr>
+    <% end %>
   </tbody>
 </table>

@@ -31,10 +31,12 @@ class GarmentTypesController < ApplicationController
   end
 
   def destroy
-    if @garment_type.destroy
-      redirect_to garment_types_path, notice: 'Tipo de vestuário excluído com sucesso.'
-    else
-      redirect_to garment_types_path, alert: 'Erro ao excluir tipo de vestuário.'
+    begin
+      if @garment_type.destroy
+        redirect_to garment_types_path, notice: 'Tipo de vestuário excluído com sucesso.'
+      end
+    rescue StandardError => e
+      redirect_to garment_types_path, alert: 'Não foi possível excluir o tipo de vestuário.'
     end
   end
 

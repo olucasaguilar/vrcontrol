@@ -201,7 +201,8 @@
 <% if current_user.user_permission.entities_create || current_user.user_permission.admin %>
   <tr> 
     <td colspan="6">
-      <a href="<%= new_entity_path(1) %>" type="button" class="btn btn-success" style="float: left;">+ Nova Entidade</a>
+      <%= link_to '+ Nova Entidade', new_entity_path(1), class: 'btn btn-success' %>
+      <%= link_to 'Inativos', entity_inactives_path, class: 'btn btn-secondary' %>
     </td>
   </tr>
 <% end %>

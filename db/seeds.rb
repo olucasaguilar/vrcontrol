@@ -93,12 +93,6 @@ Entity.find_or_create_by(nome: 'Transportadoras Unidos', num_contato: '(47) 3333
 Entity.find_or_create_by(nome: 'Transporte Ágil Ltda.', num_contato: '(31) 6666-5555', cidade: 'Belo Horizonte', estado: 'MG', entity_types_id: 7)
 Entity.find_or_create_by(nome: 'Transporte Seguro', num_contato: '(54) 2222-1111', cidade: 'Caxias do Sul', estado: 'RS', entity_types_id: 7)
 
-# Registros de Caixa
-# Comandos úteis no console do Rails
-# CashMovement.delete_all
-# record = FinancialRecord.create!(
-#   valor: 6.5,
-#   tipo_movimento: 'Saída',
-#   observacao: 'Saída',
-#   data_hora: DateTime.now
-# )
+# Usuário
+admin = User.create(name: 'Lucas', password: '123456')
+admin.user_permission = UserPermission.create(admin: true)

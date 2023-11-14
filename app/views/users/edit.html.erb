@@ -35,6 +35,7 @@
       <div class="col-md-offset-2 col-md-10">
         <%= submit_tag "Salvar", class: "btn btn-primary" %>
         <%= submit_tag "Resetar Senha", class: "btn btn-danger", data: { confirm: 'Tem certeza que deseja resetar a senha do usuário?' } %>
+        <%= submit_tag "Excluir", method: :delete, data: { confirm: 'Tem certeza que deseja excluir o usuário?' }, class: "btn btn-danger" %>
       </div>
     </div>
   <% end %>

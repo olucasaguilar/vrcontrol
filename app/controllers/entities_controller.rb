@@ -5,23 +5,21 @@ class EntitiesController < ApplicationController
   before_action :verify_entities, only: [:index]
 
   def index
-    flash[:notice] = []
-
     @entity_types = EntityType.all
 
     if params[:filter] != "" && params[:filter] != nil
       entity_type = EntityType.where(id: params[:filter]).first
       if entity_type != nil
-        @entities = Entity.where(entity_types_id: entity_type.id).all
+        @entities = Entity.ativo.where(entity_types_id: entity_type.id).all
       else
         @entities = []
       end
     else
-      @entities = Entity.all
+      @entities = Entity.ativo
     end
 
     if params[:search].present?
-      @entities = Entity.where("nome ILIKE ? OR cidade ILIKE ? OR estado ILIKE ?",
+      @entities = Entity.ativo.where("nome ILIKE ? OR cidade ILIKE ? OR estado ILIKE ?",
                                 "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
     end
 
@@ -49,6 +47,10 @@ class EntitiesController < ApplicationController
     end
 
     @pagy, @entities = pagy(@entities, page: page, items: 5)
+  end
+
+  def inactives
+    @entidades = Entity.inativo
   end
 
   def show; end
@@ -85,13 +87,21 @@ class EntitiesController < ApplicationController
   end
 
   def destroy
-    if @entity.destroy
-      redirect_to entidades_path, notice: 'Entidade excluída com sucesso'
-    else
-      redirect_to entity_path(@entity.id), alert: 'Erro ao excluir entidade'
+    begin
+      if @entity.destroy
+        redirect_to entidades_path, notice: 'Entidade excluída com sucesso.'
+      end
+    rescue StandardError => e
+      redirect_to entity_path(@entity.id), alert: 'Não foi possível excluir a entidade.'
     end
   end
 
+  def toggle_status
+    @entity = Entity.find(params[:id])
+    @entity.ativo? ? @entity.inativo! : @entity.ativo!
+    redirect_to entity_path(@entity.id), notice: 'Status alterado com sucesso.'
+  end
+  
   private
 
   def verify_entities_create    

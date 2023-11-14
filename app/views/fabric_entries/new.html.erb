@@ -86,7 +86,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><%= form.collection_select :entity_id, @malharias, :id, :nome, { prompt: true }, { class: "form-select", required: true } %></td>
+        <td><%= form.collection_select :entity_id, @entidades, :id, :nome, { prompt: true }, { class: "form-select", required: true } %></td>
         <td><%= form.datetime_local_field :data_hora, class: "form-control", required: true %></td>
       </tr>
     </tbody>

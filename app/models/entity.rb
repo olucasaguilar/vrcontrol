@@ -6,4 +6,6 @@ class Entity < ApplicationRecord
   has_many :fabric_entries
   has_many :fabric_cuts
   has_many :garment_screen_printings
+
+  enum status: { inativo: 0, ativo: 1 }
 end

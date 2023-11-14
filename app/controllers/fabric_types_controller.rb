@@ -31,10 +31,12 @@ class FabricTypesController < ApplicationController
   end
 
   def destroy
-    if @fabric_type.destroy
-      redirect_to fabric_types_path, notice: 'Tipo de tecido excluído com sucesso.'
-    else
-      redirect_to fabric_types_path, alert: 'Erro ao excluir tipo de tecido'
+    begin
+      if @fabric_type.destroy
+        redirect_to fabric_types_path, notice: 'Tipo de tecido excluído com sucesso.'
+      end
+    rescue StandardError => e
+      redirect_to fabric_types_path, alert: 'Não foi possível excluir o tipo de tecido.'
     end
   end
 

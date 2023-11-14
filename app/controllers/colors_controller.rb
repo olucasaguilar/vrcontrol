@@ -31,10 +31,12 @@ class ColorsController < ApplicationController
   end
 
   def destroy
-    if @color.destroy
-      redirect_to colors_path, notice: 'Cor excluída com sucesso.'
-    else
-      redirect_to colors_path, alert: 'Erro ao excluir Cor'
+    begin
+      if @color.destroy
+        redirect_to colors_path, notice: 'Cor excluída com sucesso.'
+      end
+    rescue StandardError => e
+      redirect_to colors_path, alert: 'Não foi possível excluir a cor.'
     end
   end
 

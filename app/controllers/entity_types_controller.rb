@@ -31,10 +31,12 @@ class EntityTypesController < ApplicationController
   end
 
   def destroy
-    if @entity_type.destroy
-      redirect_to entity_types_path, notice: 'Tipo de entidade excluído com sucesso.'
-    else
-      redirect_to entity_types_path, alert: 'Erro ao excluir tipo de entidade'
+    begin
+      if @entity_type.destroy
+        redirect_to entity_types_path, notice: 'Tipo de entidade excluído com sucesso.'
+      end
+    rescue StandardError => e
+      redirect_to entity_types_path, alert: 'Não foi possível excluir o tipo de entidade.'
     end
   end
 
