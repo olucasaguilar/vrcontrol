@@ -76,6 +76,11 @@ class FabricCutsController < ApplicationController
     unless (FabricCut.any? && (FabricCut.last.finalizado == false))
       redirect_to new_fabric_cut_path
     else
+      buscar_entidades('Cortador')
+      @entidade = 'Cortador'
+      @selected_entity = FabricCut.last.cortador.id
+      @data_hora_ida = FabricCut.last.data_hora_ida
+
       @tecido = {
         fabric_type_id: 0,
         color_id: 0,
@@ -114,6 +119,13 @@ class FabricCutsController < ApplicationController
   end
 
   def create_details
+    buscar_entidades('Cortador')
+    @entidade = 'Cortador'
+    @selected_entity = params[:entidade_id]
+    @data_hora_ida = params[:data_hora_ida].to_datetime
+    FabricCut.last.update(cortador_id: @selected_entity)
+    FabricCut.last.update(data_hora_ida: @data_hora_ida)
+    
     @fabric_stock_groups = FabricStock.all.group_by { |fabric_stock| [fabric_stock.tipo_tecido.nome, fabric_stock.cor.nome] }
     @fabric_stock_groups.each do |fabric_stock_group|
       last_saldo = fabric_stock_group[1].last.saldo

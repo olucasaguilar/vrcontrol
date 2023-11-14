@@ -74,6 +74,11 @@ class FabricEntriesController < ApplicationController
 
   def new_details
     if FabricEntry.any? && FabricEntry.last.total_tecido == nil
+      buscar_entidades('Malharia')
+      @entidade = 'Malharia'
+      @selected_entity = FabricEntry.last.entity_id
+      @data_hora = FabricEntry.last.data_hora
+
       @fabric_stocks = [FabricStock.new]
       @fabric_types = FabricType.all
       @colors = Color.all
@@ -87,6 +92,13 @@ class FabricEntriesController < ApplicationController
   end
 
   def create_details
+    buscar_entidades('Malharia')
+    @entidade = 'Malharia'
+    @selected_entity = params[:entidade_id]
+    @data_hora = params[:data_hora].to_datetime
+    FabricEntry.last.update(entity_id: @selected_entity)
+    FabricEntry.last.update(data_hora: @data_hora)
+
     @fabric_stocks = []
     @fabric_types = FabricType.all
     @colors = Color.all

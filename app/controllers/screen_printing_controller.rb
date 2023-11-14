@@ -76,6 +76,11 @@ class ScreenPrintingController < SharedController
     unless (GarmentScreenPrinting.any? && (GarmentScreenPrinting.last.finalizado == false))
       redirect_to new_screen_printing_path
     else
+      buscar_entidades('Serigrafia')
+      @entidade = 'Serigrafia'
+      @selected_entity = GarmentScreenPrinting.last.serigrafia_id
+      @data_hora_ida = GarmentScreenPrinting.last.data_hora_ida
+
       @peca = {
         garment_type_id: 0,
         costurada: false,
@@ -101,6 +106,13 @@ class ScreenPrintingController < SharedController
   end
 
   def create_details
+    buscar_entidades('Serigrafia')
+    @entidade = 'Serigrafia'
+    @selected_entity = params[:entidade_id]
+    @data_hora_ida = params[:data_hora_ida].to_datetime
+    GarmentScreenPrinting.last.update(serigrafia_id: @selected_entity)
+    GarmentScreenPrinting.last.update(data_hora_ida: @data_hora_ida)
+
     @garment_stocks_groups = GarmentStock.all.group_by { |garment_stock| [garment_stock.tipo_peca.nome, garment_stock.costurada, garment_stock.estampada] }
     @garment_stocks_groups.each do |garment_stock_group|
       last = garment_stock_group[1].last

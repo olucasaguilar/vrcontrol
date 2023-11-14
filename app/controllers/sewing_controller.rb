@@ -78,6 +78,11 @@ class SewingController < SharedController
     unless (GarmentSewing.any? && (GarmentSewing.last.finalizado == false))
       redirect_to new_sewing_path
     else
+      buscar_entidades('Costureira')
+      @entidade = 'Costureira'
+      @selected_entity = GarmentSewing.last.costureira_id
+      @data_hora_ida = GarmentSewing.last.data_hora_ida
+
       @peca = {
         garment_type_id: 0,
         estampada: false,
@@ -103,6 +108,13 @@ class SewingController < SharedController
   end
 
   def create_details
+    buscar_entidades('Costureira')
+    @entidade = 'Costureira'
+    @selected_entity = params[:entidade_id]
+    @data_hora_ida = params[:data_hora_ida].to_datetime
+    GarmentSewing.last.update(costureira_id: @selected_entity)
+    GarmentSewing.last.update(data_hora_ida: @data_hora_ida)
+
     @garment_stocks_groups = GarmentStock.all.group_by { |garment_stock| [garment_stock.tipo_peca.nome, garment_stock.costurada, garment_stock.estampada] }
     @garment_stocks_groups.each do |garment_stock_group|
       last = garment_stock_group[1].last

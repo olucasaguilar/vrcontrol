@@ -119,6 +119,21 @@
     <%= submit_tag 'Finalizar', class: "btn btn-success" %>
   </div><br>
 
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th><%= @entidade %><span class="required"></span></th>
+        <th>Data e Hora</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= select_tag 'entidade_id', options_from_collection_for_select(@entidades, 'id', 'nome', prompt: "Selecione um #{@entidade}", selected: @selected_entity), class: "form-select", required: true %></td>
+        <td><%= datetime_local_field_tag 'data_hora_ida', @data_hora_ida.try(:strftime, "%Y-%m-%dT%H:%M"), class: "form-control", required: true %></td>
+      </tr>
+    </tbody>
+  </table>
+
   <div class="input-group mb-3" style="width: 50%;">
     <span class="input-group-text">Total (peças)</span>
     <% quantidade = @pecas.sum { |peca| peca[:quantidade] } %>

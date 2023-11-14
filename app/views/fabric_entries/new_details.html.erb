@@ -16,7 +16,7 @@
       var colors = <%= raw @colors.to_json %>;
 
       
-      index = $('table tbody tr').length
+      index = $('table.mb-4 tbody tr').length
 
       // Crie as colunas para a nova linha
       cols += '<td>' + (index + 1).toString() + '</td>';
@@ -39,14 +39,14 @@
       newRow.append(cols);
 
       // Adicione a nova linha à tabela
-      $('table tbody').append(newRow);
+      $('table.mb-4 tbody').append(newRow);
 
       updateValorTotal();
       updateValorTotalPeso();
     });
 
     // Evento de clique no botão "Remover"
-    $('table').on('click', '.remove-row-button', function() {
+    $('table.mb-4').on('click', '.remove-row-button', function() {
         $(this).closest('tr').remove();
     });
 
@@ -126,6 +126,21 @@
       <% end %>
     <% end %>
   <% end %>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th><%= @entidade %><span class="required"></span></th>
+        <th>Data e Hora</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= select_tag 'entidade_id', options_from_collection_for_select(@entidades, 'id', 'nome', prompt: "Selecione um #{@entidade}", selected: @selected_entity), class: "form-select", required: true %></td>
+        <td><%= datetime_local_field_tag 'data_hora', @data_hora.try(:strftime, "%Y-%m-%dT%H:%M"), class: "form-control", required: true %></td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="input-group mb-3" style="width: 50%;">
     <span class="input-group-text">Total (kg)</span>
