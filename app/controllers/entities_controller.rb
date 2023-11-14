@@ -3,7 +3,7 @@ class EntitiesController < ApplicationController
   before_action :set_entity, only: [:edit, :show, :update, :destroy]
   before_action :verify_entities_create, only: [:edit, :new, :update, :create]
   before_action :verify_entities, only: [:index]
-
+  
   def index
     @entity_types = EntityType.all
 
@@ -51,7 +51,7 @@ class EntitiesController < ApplicationController
 
   def inactives
     @entidades = Entity.inativo
-  end
+  end  
 
   def show; end
 

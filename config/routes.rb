@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
   root "home#index"
+  post 'atualizar_menu_status', to: 'application#atualizar_menu_status'
 
   # Rotas dentro de Cadastros Extras
   resources :entity_types, except: [:show]

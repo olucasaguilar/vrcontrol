@@ -1,25 +1,28 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
 
+<% ativo = session[:menu_status] == "true" %>
+<% ativo ? expansion = 0 : expansion = 250 %>
+
 <script>
-  $(document).ready(function() {  
+  $(document).ready(function() {
     var hamburger = document.querySelector(".hamburger");
 
-    //document.querySelector("body").classList.add("active");
-    if (localStorage.getItem("menu") == "fechado") {
+    <% if ativo %>
       document.querySelector("body").classList.add("active");
-    } else {
+    <% else %>
       document.querySelector("body").classList.remove("active");
-    }
-    
-    hamburger.addEventListener("click", function(){
-      document.querySelector("body").classList.toggle("active");
+    <% end %>
 
-      // abaixo, salva o estado do menu aberto ou fechado no localStorage
-      if (document.querySelector("body").classList.contains("active")) {
-        localStorage.setItem("menu", "fechado");
-      } else {
-        localStorage.setItem("menu", "aberto");
-      }
+    hamburger.addEventListener("click", function(){
+      // define o width do .wrapper .sidebar para 250px
+      document.querySelector(".wrapper .sidebar").style.width = "250px";
+
+      document.querySelector("body").classList.toggle("active");  
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/atualizar_menu_status", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.send("status=" + document.querySelector("body").classList.contains("active"));
     })
   });
 </script>
@@ -53,7 +56,7 @@
     position: fixed;
     top: 50px;
     left: 0;
-    width: 250px; /* 0 para começar fechado */
+    width: <%= expansion %>px; /* 0 para começar fechado */
     height: 100%;
     max-height: 100%; /* Altura máxima do sidebar */
     padding: 20px 0;
@@ -120,8 +123,8 @@
   }
 
   .wrapper .section{
-    width: calc(100% - 250px); /* 0 para começar fechado */
-    margin-left: 250px; /* 0 para começar fechado */
+    width: calc(100% - <%= expansion %>px); /* 0 para começar fechado */
+    margin-left: <%= expansion %>px; /* 0 para começar fechado */
     transition: all 0.5s ease;
   }
 
