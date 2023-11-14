@@ -54,17 +54,17 @@ class SewingController < SharedController
         if financial_garment_sewing.valid?
           financial_garment_sewing.save
           # Temp
-          flash[:notice] << 'Vinculo entre movimentação de caixa e peca à costureira criado com sucesso!'
+          #flash[:notice] << 'Vinculo entre movimentação de caixa e peca à costureira criado com sucesso!'
         else
-          flash[:notice] << 'Erro ao criar o vinculo entre movimentação de caixa e peca à costureira!'
+          #flash[:notice] << 'Erro ao criar o vinculo entre movimentação de caixa e peca à costureira!'
         end
       end
       # Temp
       if @financial_records.any?
-        flash[:notice] << 'Movimentação de caixa criada com sucesso!'
+        #flash[:notice] << 'Movimentação de caixa criada com sucesso!'
       end
 
-      flash[:notice] << 'Envio à Serigrafia criado com sucesso!'
+      #flash[:notice] << 'Envio à Serigrafia criado com sucesso!'
       redirect_to new_sewing_details_path
     else
       buscar_entidades('Costureira')

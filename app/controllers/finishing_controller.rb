@@ -54,17 +54,17 @@ class FinishingController < SharedController
         if financial_garment_finishing.valid?
           financial_garment_finishing.save
           # Temp
-          flash[:notice] << 'Vinculo entre movimentação de caixa e peca ao acabamento criado com sucesso!'
+          #flash[:notice] << 'Vinculo entre movimentação de caixa e peca ao acabamento criado com sucesso!'
         else
-          flash[:notice] << 'Erro ao criar o vinculo entre movimentação de caixa e peca ao acabamento!'
+          #flash[:notice] << 'Erro ao criar o vinculo entre movimentação de caixa e peca ao acabamento!'
         end
       end
       # Temp
       if @financial_records.any?
-        flash[:notice] << 'Movimentação de caixa criada com sucesso!'
+        #flash[:notice] << 'Movimentação de caixa criada com sucesso!'
       end
 
-      flash[:notice] << 'Envio ao Acabamento criado com sucesso!'
+      #flash[:notice] << 'Envio ao Acabamento criado com sucesso!'
       redirect_to new_finishing_details_path
     else
       buscar_entidades('Acabamento')

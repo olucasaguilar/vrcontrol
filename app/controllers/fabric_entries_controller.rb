@@ -54,17 +54,17 @@ class FabricEntriesController < ApplicationController
         if financial_fabric_entry.valid?
           financial_fabric_entry.save
           # Temp
-          flash[:notice] << 'Vinculo entre movimentação de caixa e entrada de tecido criado com sucesso!'
+          #flash[:notice] << 'Vinculo entre movimentação de caixa e entrada de tecido criado com sucesso!'
         else
-          flash[:notice] << 'Erro ao criar o vinculo entre movimentação de caixa e entrada de tecido!'
+          #flash[:notice] << 'Erro ao criar o vinculo entre movimentação de caixa e entrada de tecido!'
         end
       end
       # Temp
       if @financial_records.any?
-        flash[:notice] << 'Movimentação de caixa criada com sucesso!'
+        #flash[:notice] << 'Movimentação de caixa criada com sucesso!'
       end
 
-      flash[:notice] << 'Entrada de tecido criada com sucesso!'
+      #flash[:notice] << 'Entrada de tecido criada com sucesso!'
       redirect_to new_fabric_entry_details_path
     else
       buscar_entidades('Malharia')
@@ -176,7 +176,7 @@ class FabricEntriesController < ApplicationController
     FabricEntry.last.update(total_tecido: total_peso)
 
     flash[:notice] << 'Entrada de tecido(s) criada com sucesso!'
-    redirect_to new_fabric_entry_path # Temp
+    redirect_to root_path # Temp
   end
 
   private

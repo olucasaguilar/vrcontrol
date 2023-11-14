@@ -105,7 +105,7 @@
           <td><%= garment_stock_exit[:tipo_peca] %></td>
           <td><%= garment_stock_exit[:"#{estado_peca.downcase}"] ? "Sim" : "Não" %></td>
           <td><%= garment_stock_exit[:quantidade] %></td>
-          <td><input type="text" name="pecas[<%= index %>]" value="<%= garment_stock_exit[:pecas] %>"class="form-control <%= 'is-invalid' if erro_peca[index] %>" required placeholder = "Quantidade"></td>
+          <td><input type="number" name="pecas[<%= index %>]" value="<%= garment_stock_exit[:pecas] %>"class="form-control <%= 'is-invalid' if erro_peca[index] %>" required placeholder = "Quantidade"></td>
         </tr>
       <% end %>        
     </tbody>

@@ -52,17 +52,17 @@ class ScreenPrintingController < SharedController
         if financial_garment_screens.valid?
           financial_garment_screens.save
           # Temp
-          flash[:notice] << 'Vinculo entre movimentação de caixa e peca à serigrafia criado com sucesso!'
+          #flash[:notice] << 'Vinculo entre movimentação de caixa e peca à serigrafia criado com sucesso!'
         else
-          flash[:notice] << 'Erro ao criar o vinculo entre movimentação de caixa e peca à serigrafia!'
+          #flash[:notice] << 'Erro ao criar o vinculo entre movimentação de caixa e peca à serigrafia!'
         end
       end
       # Temp
       if @financial_records.any?
-        flash[:notice] << 'Movimentação de caixa criada com sucesso!'
+        #flash[:notice] << 'Movimentação de caixa criada com sucesso!'
       end
 
-      flash[:notice] << 'Envio à Serigrafia criado com sucesso!'
+      #flash[:notice] << 'Envio à Serigrafia criado com sucesso!'
       redirect_to new_screen_printing_details_path
     else
       buscar_entidades('Serigrafia')
@@ -433,10 +433,12 @@ class ScreenPrintingController < SharedController
     end
 
     if button == 'Remover'
+      flash[:notice] << 'Valor Extra removido com sucesso!'
       financial_extra_index = params[:remove_button].keys.first.to_i
       @financial_extra.delete_at(financial_extra_index)
     elsif button == 'Adicionar Valor Extra'
       if financial_validate(@financial, @lote[:data_hora_volta])
+        flash[:notice] << 'Valor Extra adicionado com sucesso!'
         @financial_extra << @financial.clone
         @financial = {
           valor: nil,

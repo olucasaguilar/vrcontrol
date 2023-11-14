@@ -54,17 +54,17 @@ class FabricCutsController < ApplicationController
         if financial_fabric_cut.valid?
           financial_fabric_cut.save
           # Temp
-          flash[:notice] << 'Vinculo entre movimentação de caixa e tecido ao corte criado com sucesso!'
+          #flash[:notice] << 'Vinculo entre movimentação de caixa e tecido ao corte criado com sucesso!'
         else
-          flash[:notice] << 'Erro ao criar o vinculo entre movimentação de caixa e tecido ao corte!'
+          #flash[:notice] << 'Erro ao criar o vinculo entre movimentação de caixa e tecido ao corte!'
         end
       end
       # Temp
       if @financial_records.any?
-        flash[:notice] << 'Movimentação de caixa criada com sucesso!'
+        #flash[:notice] << 'Movimentação de caixa criada com sucesso!'
       end
 
-      flash[:notice] << 'Envio ao corte criado com sucesso!'
+      #flash[:notice] << 'Envio ao corte criado com sucesso!'
       redirect_to new_fabric_cut_details_path
     else
       buscar_entidades('Cortador')
@@ -464,10 +464,12 @@ class FabricCutsController < ApplicationController
     end
 
     if button == 'Remover'
+      flash[:notice] << 'Valor extra removido com sucesso!'
       financial_extra_index = params[:remove_button].keys.first.to_i
       @financial_extra.delete_at(financial_extra_index)
     elsif button == 'Adicionar Valor Extra'
       if financial_validate(@financial, @lote[:data_hora_volta])
+        flash[:notice] << 'Valor extra adicionado com sucesso!'
         @financial_extra << @financial.clone
         @financial = {
           valor: nil,

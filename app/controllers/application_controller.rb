@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   add_flash_types :info
   before_action :menu_status
+  before_action :validate_error
   
   skip_before_action :verify_authenticity_token, only: [:atualizar_menu_status]
   def atualizar_menu_status
@@ -19,5 +20,9 @@ class ApplicationController < ActionController::Base
 
   def menu_status
     session[:menu_status] = 'false' if session[:menu_status].nil?
+  end
+
+  def validate_error
+    begin; GarmentScreenGarments; rescue StandardError => e; end
   end
 end
