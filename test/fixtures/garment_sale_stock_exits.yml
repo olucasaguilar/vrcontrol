@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  peca_venda_saida: one
+  estoque_pecas_acabadas: one
+
+two:
+  peca_venda_saida: two
+  estoque_pecas_acabadas: two

@@ -10,7 +10,6 @@ Rails.application.routes.draw do
   resources :garment_types, except: [:show]
   resources :garment_sizes, except: [:show]
 
-
   # Rotas de Entidades
   get '/entidades', to: 'entities#index', as: 'entidades'
   get '/entities/:id/edit', to: 'entities#edit', as: 'edit_entity'
@@ -91,8 +90,7 @@ Rails.application.routes.draw do
   get   '/cadastro_usuario/admin/:id/edit/',   to: 'users#edit',             as: 'admin_edit'
   post  '/cadastro_usuario/admin/:id/edit/',   to: 'users#admin_update',     as: 'admin_update'
   
-  # Rota para tela temporária venda saida
-  get '/temp_view/venda/saida', to: 'temp_views#venda_saida', as: 'temp_view_venda_saida'
-  # Rota para tela temporária venda retorno
-  get '/temp_view/venda/retorno', to: 'temp_views#venda_retorno', as: 'temp_view_venda_retorno'
+  # Rotas para Venda
+  get '/venda/saida', to: 'sales#new', as: 'new_sale'
+  get '/venda/retorno', to: 'sales#return', as: 'return_sale'
 end

@@ -17,51 +17,105 @@
 <div id="notification-container">
   <% if notice %>
     <% if notice.is_a?(Array) %>
-      <% notice.each do |message| %>
-        <div class="alert alert-success alert-dismissible fade show notification" role="alert">
+      <% notice.each_with_index do |message, index| %>
+        <div class="alert alert-success alert-dismissible fade show notification" role="alert" id="autoCloseAlert<%= index %>">
           <li><%= message %></li>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+        <script>
+          // Adiciona um temporizador para fechar automaticamente a mensagem após 5 segundos
+          setTimeout(function() {
+            var autoCloseAlert<%= index %> = document.getElementById('autoCloseAlert<%= index %>');
+            if (autoCloseAlert<%= index %>) {
+              autoCloseAlert<%= index %>.remove();
+            }
+          }, 5000); // 5000 milissegundos = 5 segundos
+        </script>
       <% end %>
     <% else %>
-      <div class="alert alert-success alert-dismissible fade show notification" role="alert">
+      <div class="alert alert-success alert-dismissible fade show notification" role="alert" id="autoCloseAlert">
         <%= notice %>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
+      <script>
+        // Adiciona um temporizador para fechar automaticamente a mensagem após 5 segundos
+        setTimeout(function() {
+          var autoCloseAlert = document.getElementById('autoCloseAlert');
+          if (autoCloseAlert) {
+            autoCloseAlert.remove();
+          }
+        }, 5000); // 5000 milissegundos = 5 segundos
+      </script>
     <% end %>
     <% flash[:notice] = [] %>
   <% end %>
 
   <% if alert %>
     <% if alert.is_a?(Array) %>
-      <% alert.each do |message| %>
-        <div class="alert alert-danger alert-dismissible fade show notification" role="alert">
+      <% alert.each_with_index do |message, index| %>
+        <div class="alert alert-danger alert-dismissible fade show notification" role="alert" id="autoCloseAlertDanger<%= index %>">
           <li><%= message %></li>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+        <script>
+          // Adiciona um temporizador para fechar automaticamente a mensagem de erro após 5 segundos
+          setTimeout(function() {
+            var autoCloseAlertDanger<%= index %> = document.getElementById('autoCloseAlertDanger<%= index %>');
+            if (autoCloseAlertDanger<%= index %>) {
+              autoCloseAlertDanger<%= index %>.remove();
+            }
+          }, 5000); // 5000 milissegundos = 5 segundos
+        </script>
       <% end %>
     <% else %>
-      <div class="alert alert-danger alert-dismissible fade show notification" role="alert">
+      <div class="alert alert-danger alert-dismissible fade show notification" role="alert" id="autoCloseAlertDanger">
         <%= alert %>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
+      <script>
+        // Adiciona um temporizador para fechar automaticamente a mensagem de erro após 5 segundos
+        setTimeout(function() {
+          var autoCloseAlertDanger = document.getElementById('autoCloseAlertDanger');
+          if (autoCloseAlertDanger) {
+            autoCloseAlertDanger.remove();
+          }
+        }, 5000); // 5000 milissegundos = 5 segundos
+      </script>
     <% end %>
     <% flash[:alert] = [] %>
   <% end %>
 
   <% if info %>
     <% if info.is_a?(Array) %>
-      <% info.each do |message| %>
-        <div class="alert alert-info alert-dismissible fade show notification" role="alert">
+      <% info.each_with_index do |message, index| %>
+        <div class="alert alert-info alert-dismissible fade show notification" role="alert" id="autoCloseAlertInfo<%= index %>">
           <li><%= message %></li>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+        <script>
+          // Adiciona um temporizador para fechar automaticamente a mensagem de informação após 5 segundos
+          setTimeout(function() {
+            var autoCloseAlertInfo<%= index %> = document.getElementById('autoCloseAlertInfo<%= index %>');
+            if (autoCloseAlertInfo<%= index %>) {
+              autoCloseAlertInfo<%= index %>.remove();
+            }
+          }, 5000); // 5000 milissegundos = 5 segundos
+        </script>
       <% end %>
     <% else %>
-      <div class="alert alert-info alert-dismissible fade show notification" role="alert">
+      <div class="alert alert-info alert-dismissible fade show notification" role="alert" id="autoCloseAlertInfo">
         <%= info %>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
+      <script>
+        // Adiciona um temporizador para fechar automaticamente a mensagem de informação após 5 segundos
+        setTimeout(function() {
+          var autoCloseAlertInfo = document.getElementById('autoCloseAlertInfo');
+          if (autoCloseAlertInfo) {
+            autoCloseAlertInfo.remove();
+          }
+        }, 5000); // 5000 milissegundos = 5 segundos
+      </script>
     <% end %>
     <% flash[:info] = [] %>
   <% end %>

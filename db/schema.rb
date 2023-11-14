@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_14_034759) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_14_220312) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -151,6 +151,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_034759) do
     t.index ["registro_financeiro_id"], name: "index_financial_garment_finishings_on_registro_financeiro_id"
   end
 
+  create_table "financial_garment_return_sales", force: :cascade do |t|
+    t.bigint "registro_financeiro_id", null: false
+    t.bigint "peca_venda_retorno_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["peca_venda_retorno_id"], name: "index_financial_garment_return_sales_on_peca_venda_retorno_id"
+    t.index ["registro_financeiro_id"], name: "index_financial_garment_return_sales_on_registro_financeiro_id"
+  end
+
   create_table "financial_garment_sewings", force: :cascade do |t|
     t.bigint "registro_financeiro_id", null: false
     t.bigint "peca_costura_id", null: false
@@ -230,6 +239,32 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_034759) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["acabamento_id"], name: "index_garment_finishings_on_acabamento_id"
+  end
+
+  create_table "garment_sale_exits", force: :cascade do |t|
+    t.bigint "vendedor_id", null: false
+    t.datetime "data_hora"
+    t.decimal "total_pecas"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["vendedor_id"], name: "index_garment_sale_exits_on_vendedor_id"
+  end
+
+  create_table "garment_sale_returns", force: :cascade do |t|
+    t.bigint "vendedor_id", null: false
+    t.datetime "data_hora"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["vendedor_id"], name: "index_garment_sale_returns_on_vendedor_id"
+  end
+
+  create_table "garment_sale_stock_exits", force: :cascade do |t|
+    t.bigint "peca_venda_saida_id", null: false
+    t.bigint "estoque_pecas_acabadas_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["estoque_pecas_acabadas_id"], name: "index_garment_sale_stock_exits_on_estoque_pecas_acabadas_id"
+    t.index ["peca_venda_saida_id"], name: "index_garment_sale_stock_exits_on_peca_venda_saida_id"
   end
 
   create_table "garment_screen_garment_sizes", force: :cascade do |t|
@@ -318,6 +353,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_034759) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "garment_stock_entries", force: :cascade do |t|
+    t.bigint "saida_peca_acabada_id", null: false
+    t.bigint "peca_venda_retorno_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["peca_venda_retorno_id"], name: "index_garment_stock_entries_on_peca_venda_retorno_id"
+    t.index ["saida_peca_acabada_id"], name: "index_garment_stock_entries_on_saida_peca_acabada_id"
+  end
+
   create_table "garment_stocks", force: :cascade do |t|
     t.bigint "tipo_peca_id", null: false
     t.boolean "costurada"
@@ -381,6 +425,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_034759) do
   add_foreign_key "financial_fabric_entries", "financial_records", column: "registro_financeiro_id"
   add_foreign_key "financial_garment_finishings", "financial_records", column: "registro_financeiro_id"
   add_foreign_key "financial_garment_finishings", "garment_finishings", column: "peca_acabamento_id"
+  add_foreign_key "financial_garment_return_sales", "financial_records", column: "registro_financeiro_id"
+  add_foreign_key "financial_garment_return_sales", "garment_sale_returns", column: "peca_venda_retorno_id"
   add_foreign_key "financial_garment_sewings", "financial_records", column: "registro_financeiro_id"
   add_foreign_key "financial_garment_sewings", "garment_sewings", column: "peca_costura_id"
   add_foreign_key "financial_screens_printings", "financial_records", column: "registro_financeiro_id"
@@ -393,6 +439,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_034759) do
   add_foreign_key "garment_finishing_stock_exits", "garment_finishings", column: "peca_acabamento_id"
   add_foreign_key "garment_finishing_stock_exits", "garment_stocks", column: "estoque_peca_id"
   add_foreign_key "garment_finishings", "entities", column: "acabamento_id"
+  add_foreign_key "garment_sale_exits", "entities", column: "vendedor_id"
+  add_foreign_key "garment_sale_returns", "entities", column: "vendedor_id"
+  add_foreign_key "garment_sale_stock_exits", "garment_finished_stocks", column: "estoque_pecas_acabadas_id"
+  add_foreign_key "garment_sale_stock_exits", "garment_sale_exits", column: "peca_venda_saida_id"
   add_foreign_key "garment_screen_garment_sizes", "garment_screen_garments", column: "peca_serigrafia_peca_id"
   add_foreign_key "garment_screen_garment_sizes", "garment_sizes", column: "tamanho_id"
   add_foreign_key "garment_screen_garments", "garment_screen_printing_stock_exits", column: "saida_peca_serigrafia_id"
@@ -407,6 +457,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_034759) do
   add_foreign_key "garment_sewing_stock_exits", "garment_sewings", column: "peca_costura_id"
   add_foreign_key "garment_sewing_stock_exits", "garment_stocks", column: "estoque_peca_id"
   add_foreign_key "garment_sewings", "entities", column: "costureira_id"
+  add_foreign_key "garment_stock_entries", "garment_finished_stocks", column: "saida_peca_acabada_id"
+  add_foreign_key "garment_stock_entries", "garment_sale_returns", column: "peca_venda_retorno_id"
   add_foreign_key "garment_stocks", "garment_types", column: "tipo_peca_id"
   add_foreign_key "user_permissions", "users"
 end

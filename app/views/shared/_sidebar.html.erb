@@ -364,20 +364,20 @@
         </div>
       </li>
       <li>
-        <a class="nav-link dropdown-toggle" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='sales' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="icon"><i class="fas fa-shopping-cart"></i></span>
           <span class="item">Venda</span>
         </a>
         <div class="dropup">
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
             <li>
-              <a class="dropdown-item" href="<%= temp_view_venda_saida_path %>">
+              <a class="dropdown-item" href="<%= new_sale_path %>">
                 <span class="icon"><i class="fas fa-shopping-cart"></i></span>
                 <span class="item">Venda Saída</span>
               </a>
             </li>
             <li>
-              <a class="dropdown-item" href="<%= temp_view_venda_retorno_path %>">
+              <a class="dropdown-item" href="<%= return_sale_path %>">
                 <span class="icon"><i class="fas fa-shopping-cart"></i></span>
                 <span class="item">Venda Retorno</span>
               </a>

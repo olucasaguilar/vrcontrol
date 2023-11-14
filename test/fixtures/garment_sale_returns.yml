@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  vendedor: one
+  data_hora: 2023-11-14 18:54:43
+
+two:
+  vendedor: two
+  data_hora: 2023-11-14 18:54:43
