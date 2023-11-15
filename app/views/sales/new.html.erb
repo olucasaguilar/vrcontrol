@@ -1,66 +1,95 @@
-<% @vendedores = [
-  'Vendedores do Sul',
-  'Vendas Inteligentes Ltda.',
-  'Vendedores Experientes S.A.',
-  'Vendas Estratégicas',
-  'Vendedores Eficazes Ltda.',
-  'Vendedores do Norte'
-] %>
+<script>
+  $(document).ready(function() {
+    //////////////////////////
+    // Seletor para o campo de entrada de texto
+    var inputField = $("input#quantidade_field");
 
-<h1>Venda - Saída</h1>
+    inputField.keypress(function(e) {
+      var key = e.which;
 
-<form class="mt-4">
+      // Código ASCII para números (48-57) e vírgula (44)
+      if ((key < 48 || key > 57) && key !== 44) {
+        e.preventDefault();
+      }
+    });
+
+    inputField.on('input', function() {
+      var currentValue = inputField.val();
+
+      // Substitua todas as vírgulas por pontos
+      currentValue = currentValue.replace(/,/g, '');
+
+      // Atualize o valor do campo de entrada
+      inputField.val(currentValue);
+    });
+
+
+    //////////////////////////
+
+    // Seleciona a tabela pelo ID (substitua 'myTable' pelo ID da sua tabela)
+    $("#myTable").on("keydown", function(event) {
+      // Verifica se a tecla pressionada é a tecla "Enter" (código 13)
+      if (event.which === 13) {
+        // Impede o comportamento padrão do "Enter" (enviar o formulário)
+        event.preventDefault();
+
+        // Encontra o botão "Adicionar" e aciona seu evento de clique
+        $("input[value='Adicionar']").click();
+      }
+    });
+  });
+</script>
+
+<h1>Venda - Saída</h1><br>
+
+<%= form_tag create_new_sales_path do %>
+  <%
+    erro_quantidade = false 
+    erro_tipo_peca = false
+  %>
+  
+  <% unless @garment_finished_stock.nil? %>
+    <% if @garment_finished_stock.errors.any? %>
+      <% @garment_finished_stock.errors.full_messages.each do |message| %>
+        <% flash[:alert] << message %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% 
+    if @garment_finished_stock.present? && @garment_finished_stock.errors.any?
+      erro_quantidade = true if @garment_finished_stock.errors[:quantidade].any?
+      erro_tipo_peca = true if @garment_finished_stock.errors[:tipo_peca].any?
+    end
+  %>
+
+  <div class="form-group">
+    <%= submit_tag 'Finalizar', class: "btn btn-success" %>
+  </div><br>
+
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th>Vendedor<span class="required">*</span></th>
+        <th>Vendedor*</th>
         <th>Data e Hora</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>
-          <select class="form-select">
-            <option selected class="form-control">Selecione um Vendedor</option>
-            <% @vendedores.each do |vendedor| %>
-              <option value="<%= vendedor %>"><%= vendedor %></option>
-            <% end %>
-          </select>
-        </td>
-        <td><input type="datetime-local" name="data_hora" class="form-control"></td>
+        <td><%= select_tag 'vendedor_id', options_from_collection_for_select(@vendedores, 'id', 'nome', prompt: "Selecione um Vendedor", selected: @garment_sale_exit.vendedor_id), class: "form-select", required: true, prompt: "Selecione um Vendedor" %></td>
+        <td><%= datetime_local_field_tag 'data_hora', @garment_sale_exit.data_hora.try(:strftime, "%Y-%m-%dT%H:%M"), class: "form-control", required: true %></td>
       </tr>
     </tbody>
   </table>
-</form>
 
-<% @colors = [
-  'Preto',
-  'Branco',
-  'Vermelho',
-  'Azul',
-  'Amarelo',
-  'Verde',
-  'Rosa',
-  'Laranja',
-  'Roxo'
-]
-
-@garment_types = ['Camiseta', 'Calça', 'Bermuda'] %>
-
-<form>
   <div class="input-group mb-3" style="width: 50%;">
     <span class="input-group-text">Total (peças)</span>
-    <input type="text" id="valor-total-peso" class="form-control" value="60" readonly>
+    <% quantidade = session[:pecas].map { |peca| peca["quantidade"].to_i }.sum %>
+    <input type="text" id="valor-total-qtd" class="form-control" value="<%= quantidade %>" readonly>
     <span class="input-group-text"></span>
   </div>
-  
-  <div class="form-group mb-3">
-    <button type="button" id="add-field-button" class="btn btn-primary">Mais um Tipo de Peça</button>
-    <input type="submit" value="Finalizar" class="btn btn-success">
-    <a href="#" class="btn btn-secondary">Voltar</a>
-  </div>
 
-  <table class="mb-4 table table-bordered">
+  <table class="mb-4 table table-bordered" id="myTable">
     <thead>
       <tr>
         <th>Nº</th>
@@ -71,22 +100,37 @@
     </thead>
     <tbody>
       <tr>
-        <td>1</td>
+        <td>0</td>
         <td>
-          <select class="form-select">
-            <option value="">Selecione um tipo...</option>
-            <% @garment_types.each do |garment_type| %>
-              <option value="<%= garment_type %>"><%= garment_type %></option>
+          <%= select_tag "peca[garment_type_id]", options_from_collection_for_select(@garment_types, :id, :nome, selected: @peca[:garment_type_id]), class: "form-select #{'is-invalid' if erro_tipo_peca }", include_blank: "Selecione um tipo...", id: "garment_type_select" %>
+        </td>
+        <td>
+          <%= text_field_tag "peca[quantidade]", @peca[:quantidade], class: "form-control #{'is-invalid' if erro_quantidade }", id: "quantidade_field", placeholder: "0" %>
+        </td>
+        <td>
+          <%= submit_tag 'Adicionar', class: "btn btn-primary" %>
+        </td>
+      </tr>
+      <% session[:pecas].each_with_index do |peca, index| %>
+        <tr>
+          <td>
+            <%= (index + 1).to_s %>
+          </td>
+          <%# [{"garment_type_id"=>"1", "quantidade"=>"4000"}, {"garment_type_id"=>"1", "quantidade"=>"1"}, {:garment_type_id=>"1", :quantidade=>"222"}] %>
+          <td>
+            <%= select_tag "pecas[#{index}][garment_type_id]", options_from_collection_for_select(@garment_types, :id, :nome, selected: peca["garment_type_id"]), class: "form-select", include_blank: "Selecione um tipo...", disabled: true %>
+          </td>
+          <td>
+            <%= text_field_tag "pecas[#{index}][quantidade]", peca["quantidade"], class: "form-control", disabled: true %>
+          </td>
+          <td>
+            <%= form_tag create_new_sales_path do %>
+              <%= hidden_field_tag "peca_index", index %>
+              <%= submit_tag 'Remover', class: "btn btn-danger remove-row-button" %>
             <% end %>
-          </select>
-        </td>
-        <td>
-          <input type="text" class="form-control" value="60">
-        </td>
-        <td>
-          <button type="button" class="btn btn-danger remove-row-button" disabled>Remover</button>
-        </td>
-      </tr>                
+          </td>
+        </tr>
+      <% end %>
     </tbody>
-  </table>  
-</form>
+  </table>
+<% end %>

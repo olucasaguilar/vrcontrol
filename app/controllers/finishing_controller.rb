@@ -493,13 +493,6 @@ class FinishingController < SharedController
         garment_finished_stock.tipo_movimento = 'Entrada'
         garment_finished_stock.data_hora = @lote[:data_hora_volta]
         garment_finished_stock.valid?
-        #flash[:notice] << "Index: #{index} valid: #{garment_stock.valid?}"
-        #@errors[:garment_stock] = [] if @errors[:garment_stock].nil?
-        #@errors[:garment_stock] << { index: index, errors: garment_stock.errors }
-        #flash[:notice] << @errors.inspect
-        #flash[:notice] << garment_stock.tipo_peca_id.inspect
-        #flash[:notice] << fabric_stock_exit[:tipo_peca].inspect
-        #flash[:notice] << GarmentType.find(garment_stock.tipo_peca_id).inspect
       
         # ativar isso
         #flash[:notice] << garment_finished_stock.valid?

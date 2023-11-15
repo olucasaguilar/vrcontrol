@@ -7,7 +7,7 @@ class GarmentFinishedStock < ApplicationRecord
   validates :quantidade, numericality: { greater_than_or_equal_to: 1 }
 
   validate :saldo_nao_negativo
-
+  
   private
 
   def calculate_and_set_saldo
@@ -31,7 +31,7 @@ class GarmentFinishedStock < ApplicationRecord
 
     last_record_saldo = 0 if last_record_saldo < 0
 
-    if self.tipo_movimento == 'Saída'
+    if self.tipo_movimento == 'Saída' && !self.quantidade.nil? && !self.tipo_peca_id.nil?
       if last_record_saldo - self.quantidade < 0
         errors.add(:quantidade, " para #{self.tipo_peca.nome} excedeu #{self.quantidade - last_record_saldo}")
       end

@@ -85,6 +85,8 @@
 <h1><%= titulo %> - Envio</h1>
 <h3>Seleção de Peças</h3><br>
 
+<% flash[:alert] = [] %>
+
 <%= form_tag create_path do %>
 
   <%  

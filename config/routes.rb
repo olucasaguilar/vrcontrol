@@ -92,5 +92,7 @@ Rails.application.routes.draw do
   
   # Rotas para Venda
   get '/venda/saida', to: 'sales#new', as: 'new_sale'
+  post '/venda/saida', to: 'sales#create', as: 'create_new_sales'
   get '/venda/retorno', to: 'sales#return', as: 'return_sale'
+  post '/venda/retorno', to: 'sales#create_return', as: 'create_return_sale'
 end
