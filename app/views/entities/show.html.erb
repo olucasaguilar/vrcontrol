@@ -19,14 +19,21 @@
         <th scope="row">Estado</th>
         <td><%= @entity.estado %></td>
       </tr>
-      <tr>
-        <th scope="row">CNPJ</th>
-        <td><%= @entity.cnpj %></td>
-      </tr>
-      <tr>
-        <th scope="row">Inscrição Estadual</th>
-        <td><%= @entity.ie %></td>
-      </tr>
+      <% if @entity.juridica %>
+        <tr>
+          <th scope="row">CNPJ</th>
+          <td><%= @entity.cnpj %></td>
+        </tr>
+        <tr>
+          <th scope="row">Inscrição Estadual</th>
+          <td><%= @entity.ie %></td>
+        </tr>
+      <% else %>
+        <tr>
+          <th scope="row">CPF</th>
+          <td><%= @entity.cpf %></td>
+        </tr>
+      <% end %>
       <tr>
         <th scope="row">Tipo de entidade</th>
         <td><%= @entity.entity_type.nome %></td>
@@ -34,6 +41,7 @@
       <tr>
         <th scope="row">Status</th>
         <td><%= @entity.status.capitalize %></td>
+      </tr>
     </tbody>
   </table>
 </div>

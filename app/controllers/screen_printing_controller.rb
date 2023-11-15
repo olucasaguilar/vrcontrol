@@ -1,4 +1,7 @@
 class ScreenPrintingController < SharedController
+  before_action :verify_screen_print,       only: [:new, :create, :new_details, :create_details]
+  before_action :verify_screen_print_return, only: [:return, :return_details, :create_screen_printing_return]
+
   def new
     variables = {
       model: GarmentScreenPrinting,
@@ -592,5 +595,19 @@ class ScreenPrintingController < SharedController
     #@financial_errors = financial_record.errors
     @financial_errors = financial_record.errors
     financial_record.valid?
+  end
+
+  def verify_screen_print
+    unless current_user.user_permission.screen_print || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
+
+  def verify_screen_print_return
+    unless current_user.user_permission.screen_print_return || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
   end
 end

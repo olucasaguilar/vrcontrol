@@ -1,4 +1,7 @@
 class FabricCutsController < ApplicationController
+  before_action :verify_fabric_cut,       only: [:new, :create]
+  before_action :verify_fabric_cut_return, only: [:new_details, :create_details]
+
   def new
     if (FabricCut.any? && (FabricCut.last.finalizado == false))
       redirect_to new_fabric_cut_details_path
@@ -616,6 +619,20 @@ class FabricCutsController < ApplicationController
   end
 
   private
+
+  def verify_fabric_cut
+    unless current_user.user_permission.fabric_cut || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
+
+  def verify_fabric_cut_return
+    unless current_user.user_permission.fabric_cut_return || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
 
   def financial_validate(financial, data_hora)
     financial_record = FinancialRecord.new(valor: financial[:valor], tipo_movimento: 'Entrada', observacao: financial[:observacao], data_hora: data_hora)

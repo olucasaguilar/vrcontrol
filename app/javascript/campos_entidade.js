@@ -36,6 +36,18 @@ $(document).ready(function() {
     value = value.replace(/(\d{4})(\d)/,"$1-$2")
     return value
   }
+
+  handleCPF = (event) => {
+    let input = event.target
+    input.value = cpfMask(input.value)
+  }
+  cpfMask = (value) => {if (!value) return "";  
+    value = value.replace(/\D/g, '');
+    value = value.replace(/(\d{3})(\d)/, "$1.$2");6
+    value = value.replace(/(\d{3})(\d)/, "$1.$2");
+    value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+    return value;
+  }
   
   handleInscEstadual = (event) => {
     let input = event.target

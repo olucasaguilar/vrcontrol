@@ -1,4 +1,4 @@
-class FabricTypesController < ApplicationController
+class FabricTypesController < ExtrasController
   before_action :set_fabric_type, only: [:edit, :update, :destroy]
 
   def index

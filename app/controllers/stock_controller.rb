@@ -1,4 +1,8 @@
 class StockController < ApplicationController
+  before_action :verify_fabric_stock, only: [:tecidos_view]
+  before_action :verify_garment_stock, only: [:pecas_view]
+  before_action :verify_finished_garment_stock, only: [:pecas_acabadas_view]
+
   def tecidos_view
     flash[:notice] = []
 
@@ -101,4 +105,28 @@ class StockController < ApplicationController
 
     @garment_stocks_finished_groups = @garment_stocks_finished_groups.sort_by { |garment_finished_stock_group| garment_finished_stock_group[1].last.data_hora }.reverse
   end
+
+  private
+
+  def verify_fabric_stock
+    unless current_user.user_permission.fabric_stock || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
+
+  def verify_garment_stock
+    unless current_user.user_permission.garment_stock || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
+
+  def verify_finished_garment_stock
+    unless current_user.user_permission.finished_garment_stock || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
 end
+

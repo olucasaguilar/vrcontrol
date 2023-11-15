@@ -1,6 +1,8 @@
 class FinishingController < SharedController
   skip_before_action :verify_authenticity_token
-
+  before_action :verify_finishing,       only: [:new, :create, :new_details, :create_details]
+  before_action :verify_finishing_return, only: [:return, :return_details, :create_finishing_return]
+    
   def new
     variables = {
       model: GarmentFinishing,
@@ -462,25 +464,10 @@ class FinishingController < SharedController
         end
       end
     end
-    
-    #temp
-    #all_valid = false
-    
+
     unless all_valid
       render :return_details and return
     else
-      #flash[:notice] << "all_valid: #{all_valid}"
-
-      # salva tudo
-      # render de confirmação
-      
-      # 
-      # @lote //
-      # @lote_tamanhos //
-      # @financial ///
-      # @financial_extra ///
-      # 
-
       garment_sizes = GarmentSize.all
 
       @lote[:garment_stock_exits].each_with_index do |garment_stock_exit, index|
@@ -582,6 +569,20 @@ class FinishingController < SharedController
 
   private
 
+  def verify_finishing
+    unless current_user.user_permission.finishing || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
+  
+  def verify_finishing_return
+    unless current_user.user_permission.finishing_return || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
+
   def financial_validate(financial, data_hora)
     financial_record = FinancialRecord.new(valor: financial[:valor], tipo_movimento: 'Entrada', observacao: financial[:observacao], data_hora: data_hora)
     financial_record.valid?
@@ -590,12 +591,3 @@ class FinishingController < SharedController
     financial_record.valid?
   end
 end
-
-# get '/acabamento/envio',              to: 'finishing#new',                      as: 'new_finishing'
-# post '/acabamento/envio',             to: 'finishing#create',                   as: 'create_finishing'
-# get '/acabamento/envio/detalhes',     to: 'finishing#new_details',              as: 'new_finishing_details'
-# post '/acabamento/envio/detalhes',    to: 'finishing#create_details',           as: 'create_finishing_details'
-# get 'get_total_acabamento_estampada', to: 'finishing#get_total_quantity_estampada'
-# get '/acabamento/retorno',            to: 'finishing#return',                   as: 'return_finishing'
-# get '/acabamento/retorno/:id',        to: 'finishing#return_details',           as: 'return_finishing_details'
-# post '/acabamento/retorno',           to: 'finishing#create_finishing_return',  as: 'create_finishing_return'

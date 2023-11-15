@@ -1,3 +1,102 @@
+<script>
+  function handleTipoPessoa() {
+    var checkbox = document.getElementById("tipoPessoaCheckbox");
+    var cpfContainer = document.getElementById("cpfContainer");
+    var cnpjContainer = document.getElementById("cnpjContainer");
+    var ieContainer = document.getElementById("ieContainer");
+
+    if (checkbox.checked) {
+      // Se Pessoa Jurídica estiver selecionada, mostra os campos de CNPJ e IE e oculta o campo de CPF
+      cpfContainer.style.display = "none";
+      cnpjContainer.style.display = "block";
+      ieContainer.style.display = "block";
+    } else {
+      // Se Pessoa Física estiver selecionada, mostra o campo de CPF e oculta os campos de CNPJ e IE
+      cpfContainer.style.display = "block";
+      cnpjContainer.style.display = "none";
+      ieContainer.style.display = "none";
+    }
+  }
+
+  // Chamada inicial para garantir que os campos estejam ocultos ou visíveis corretamente ao carregar a página
+  $(document).ready(function () {
+    handleTipoPessoa();
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    // Função para preencher o dropdown com os estados
+    function preencherEstados(estados) {
+      var dropdown = $('#entity_estado');
+      dropdown.empty();      
+      dropdown.append('<option value="">Selecione o estado</option>');
+
+      $.each(estados, function (index, estado) {
+        if (estado.sigla == '<%= @entity.estado %>') {
+          dropdown.append($('<option></option>').attr('value', estado.sigla).attr('selected', 'selected').text(estado.nome));
+          carregarCidades(estado.sigla);
+        } else {
+          dropdown.append($('<option></option>').attr('value', estado.sigla).text(estado.nome));
+        }
+      });
+    }
+
+    // Função para preencher o dropdown com as cidades
+    function preencherCidades(cidades) {
+      var dropdown = $('#entity_cidade');
+      dropdown.empty();
+      dropdown.append('<option value="">Selecione a cidade</option>');      
+      $.each(cidades, function (index, cidade) {
+        if(cidade.nome == '<%= @entity.cidade %>') {
+          dropdown.append($('<option></option>').attr('value', cidade.nome).attr('selected', 'selected').text(cidade.nome));
+        } else {
+          dropdown.append($('<option></option>').attr('value', cidade.nome).text(cidade.nome));
+        }
+      });
+    }
+
+    // Função para buscar as cidades da API do IBGE com base no estado selecionado
+    function carregarCidades(estadoSigla) {
+      $.ajax({
+        url: 'https://servicodados.ibge.gov.br/api/v1/localidades/estados/' + estadoSigla + '/municipios',
+        type: 'GET',
+        success: function (data) {
+          preencherCidades(data);
+        },
+        error: function (error) {
+          console.error('Erro ao carregar cidades:', error);
+        }
+      });
+    } 
+
+    // Função para buscar os estados da API do IBGE
+    function carregarEstados() {
+      $.ajax({
+        url: 'https://servicodados.ibge.gov.br/api/v1/localidades/estados',
+        type: 'GET',
+        success: function (data) {
+          preencherEstados(data);
+        },
+        error: function (error) {
+          console.error('Erro ao carregar estados:', error);
+        }
+      });
+    }
+
+    // Função para lidar com a mudança
+    $('#entity_estado').change(function () {
+      var selectedEstado = $(this).val();
+      //console.log('Estado selecionado:', selectedEstado);
+
+      // Carregar cidades com base no estado selecionado
+      carregarCidades(selectedEstado);
+    });
+
+    carregarEstados();
+  });
+</script>
+
 <% if @entity.errors.any? %>
   <% @entity.errors.full_messages.each do |message| %>
     <% flash[:alert] << message %></li>
@@ -19,30 +118,20 @@
 </div>
 
 <div class="form-group">
-  <%= f.label :cidade, class: "col-md-4 control-label" %>
-  <div class="col-md-4 inputGroupContainer">
-    <%= f.text_field :cidade, class: "form-control", placeholder: "Cidade" %>
-  </div>
-</div>
-
-<div class="form-group">
   <%= f.label :estado, class: "col-md-4 control-label" %>
   <div class="col-md-4 inputGroupContainer">
-    <%= f.text_field :estado, class: "form-control", maxlength: 2, onkeyup: "handleUF(event)", placeholder: "UF" %>
+    <select id="entity_estado" name="entity[estado]" class="form-control">
+      <option value="">Selecione o estado</option>
+    </select>
   </div>
 </div>
 
 <div class="form-group">
-  <%= f.label :cnpj, "CNPJ", class: "col-md-4 control-label" %>
+  <%= f.label :cidade, class: "col-md-4 control-label" %>
   <div class="col-md-4 inputGroupContainer">
-    <%= f.text_field :cnpj, class: "form-control", maxlength: 18, onkeyup: "handleCNPJ(event)", placeholder: "00.000.000/0000-00" %>
-  </div>
-</div>
-
-<div class="form-group">
-  <%= f.label :ie, "Inscrição Estadual", class: "col-md-4 control-label" %>
-  <div class="col-md-4 inputGroupContainer">
-    <%= f.text_field :ie, class: "form-control", maxlength: 12, onkeyup: "handleInscEstadual(event)", placeholder: "000.000.0000" %>
+    <select id="entity_cidade" name="entity[cidade]" class="form-control">
+      <option value="">Selecione a cidade</option>
+    </select>
   </div>
 </div>
 
@@ -50,5 +139,37 @@
   <%= f.label :entity_types_id, class: "col-md-4 control-label" %>
   <div class="col-md-4 inputGroupContainer">
     <%= f.collection_select :entity_types_id, @entity_types, :id, :nome, { prompt: true }, class: "form-control" %>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-md-4 control-label" for="tipoPessoaCheckbox">Tipo de Pessoa</label>
+  <div class="col-md-4 inputGroupContainer">
+    <label class="checkbox-inline">
+      <input type="checkbox" id="tipoPessoaCheckbox" name="entity[juridica]" onclick="handleTipoPessoa()" <%= @entity.juridica? ? 'checked' : '' %>> Pessoa Jurídica
+    </label>
+  </div>
+</div>
+
+<!-- Campos CPF -->
+<div class="form-group" id="cpfContainer">
+  <%= f.label :cpf, "CPF", class: "col-md-4 control-label" %>
+  <div class="col-md-4 inputGroupContainer">
+    <%= f.text_field :cpf, class: "form-control", maxlength: 14, onkeyup: "handleCPF(event)", placeholder: "000.000.000-00" %>
+  </div>
+</div>
+
+<!-- Campos CNPJ e Inscrição Estadual -->
+<div class="form-group" id="cnpjContainer">
+  <%= f.label :cnpj, "CNPJ", class: "col-md-4 control-label" %>
+  <div class="col-md-4 inputGroupContainer">
+    <%= f.text_field :cnpj, class: "form-control", maxlength: 18, onkeyup: "handleCNPJ(event)", placeholder: "00.000.000/0000-00" %>
+  </div>
+</div>
+
+<div class="form-group" id="ieContainer">
+  <%= f.label :ie, "Inscrição Estadual", class: "col-md-4 control-label" %>
+  <div class="col-md-4 inputGroupContainer">
+    <%= f.text_field :ie, class: "form-control", maxlength: 12, onkeyup: "handleInscEstadual(event)", placeholder: "000.000.0000" %>
   </div>
 </div><br>

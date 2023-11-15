@@ -1,4 +1,4 @@
-class GarmentSizesController < ApplicationController
+class GarmentSizesController < ExtrasController
   before_action :set_garment_size, only: [:edit, :update, :destroy]
 
   def index

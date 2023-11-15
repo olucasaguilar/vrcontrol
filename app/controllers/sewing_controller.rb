@@ -1,5 +1,7 @@
 class SewingController < SharedController
   skip_before_action :verify_authenticity_token
+  before_action :verify_sewing,       only: [:new, :create, :new_details, :create_details]
+  before_action :verify_sewing_return, only: [:return, :return_details, :create_sewing_return]
 
   def new
     variables = {
@@ -597,5 +599,19 @@ class SewingController < SharedController
     #@financial_errors = financial_record.errors
     @financial_errors = financial_record.errors
     financial_record.valid?
+  end
+
+  def verify_sewing
+    unless current_user.user_permission.sewing || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
+  
+  def verify_sewing_return
+    unless current_user.user_permission.sewing_return || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
   end
 end

@@ -1,4 +1,4 @@
-class ColorsController < ApplicationController
+class ColorsController < ExtrasController
   before_action :set_color, only: [:edit, :update, :destroy]
 
   def index

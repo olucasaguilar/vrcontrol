@@ -1,42 +1,174 @@
+<style>
+  .empty-column {
+    width: 33%; /* Ajuste conforme necessário para ocupar o espaço restante */
+  }
+</style>
+
 <%= render partial: 'menu' %>
 
 <div class="user-profile-form">
-  <%= form_tag admin_update_path, method: :post do %>
+  <%= form_tag admin_update_path, method: :post do %>  
 
-    <%# @user.errors[:name].any? %>
     <div class="form-group">
-      <%= label_tag :name, "Nome *", class: "col-md-4 control-label" %>
+      <%= label_tag :name, "Nome", class: "col-md-4 control-label" %>
       <div class="col-md-4 inputGroupContainer">
         <%= text_field_tag :name, @user.name, class: "form-control #{'is-invalid' if @user.errors[:name].any?}", placeholder: "Nome", required: true %>
       </div>
     </div><br >
-    
-    <div class="form-group">
-      <%= label_tag :entities, "Entidades", class: "control-label" %>
-      <%= check_box_tag :entities, "1", @user.user_permission.entities %>
-    </div>
+
+    <table class="table">
+      <tr>
+        <th>Permissões</th>
+        <th>Configurações</th>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Entidades -->
+      <tr>
+        <td><%= label_tag :entities, "Entidades" %></td>
+        <td><%= check_box_tag :entities, "1", @user.user_permission.entities %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Gerenciar Entidade -->
+      <tr>
+        <td><%= label_tag :entities_create, "Gerenciar Entidade" %></td>
+        <td><%= check_box_tag :entities_create, "1", @user.user_permission.entities_create %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Transações -->
+      <tr>
+        <td><%= label_tag :financial, "Transações" %></td>
+        <td><%= check_box_tag :financial, "1", @user.user_permission.financial %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Criar Transações -->
+      <tr>
+        <td><%= label_tag :financial_create, "Criar Transações" %></td>
+        <td><%= check_box_tag :financial_create, "1", @user.user_permission.financial_create %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Estoque Tecidos -->
+      <tr>
+        <td><%= label_tag :fabric_stock, "Estoque Tecidos" %></td>
+        <td><%= check_box_tag :fabric_stock, "1", @user.user_permission.fabric_stock %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Estoque Peças -->
+      <tr>
+        <td><%= label_tag :garment_stock, "Estoque Peças" %></td>
+        <td><%= check_box_tag :garment_stock, "1", @user.user_permission.garment_stock %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Estoque Peças Acabadas -->
+      <tr>
+        <td><%= label_tag :finished_garment_stock, "Estoque Peças Acabadas" %></td>
+        <td><%= check_box_tag :finished_garment_stock, "1", @user.user_permission.finished_garment_stock %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Entrada Tecido -->
+      <tr>
+        <td><%= label_tag :fabric_entry, "Entrada Tecido" %></td>
+        <td><%= check_box_tag :fabric_entry, "1", @user.user_permission.fabric_entry %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Corte Envio -->
+      <tr>
+        <td><%= label_tag :fabric_cut, "Corte Envio" %></td>
+        <td><%= check_box_tag :fabric_cut, "1", @user.user_permission.fabric_cut %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Corte Retorno -->
+      <tr>
+        <td><%= label_tag :fabric_cut_return, "Corte Retorno" %></td>
+        <td><%= check_box_tag :fabric_cut_return, "1", @user.user_permission.fabric_cut_return %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Serigrafia Envio -->
+      <tr>
+        <td><%= label_tag :screen_print, "Serigrafia Envio" %></td>
+        <td><%= check_box_tag :screen_print, "1", @user.user_permission.screen_print %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Serigrafia Retorno -->
+      <tr>
+        <td><%= label_tag :screen_print_return, "Serigrafia Retorno" %></td>
+        <td><%= check_box_tag :screen_print_return, "1", @user.user_permission.screen_print_return %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Costura Envio -->
+      <tr>
+        <td><%= label_tag :sewing, "Costura Envio" %></td>
+        <td><%= check_box_tag :sewing, "1", @user.user_permission.sewing %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Costura Retorno -->
+      <tr>
+        <td><%= label_tag :sewing_return, "Costura Retorno" %></td>
+        <td><%= check_box_tag :sewing_return, "1", @user.user_permission.sewing_return %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Acabamento Envio -->
+      <tr>
+        <td><%= label_tag :finishing, "Acabamento Envio" %></td>
+        <td><%= check_box_tag :finishing, "1", @user.user_permission.finishing %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Acabamento Retorno -->
+      <tr>
+        <td><%= label_tag :finishing_return, "Acabamento Retorno" %></td>
+        <td><%= check_box_tag :finishing_return, "1", @user.user_permission.finishing_return %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Vendas Saida -->
+      <tr>
+        <td><%= label_tag :sales, "Vendas Saida" %></td>
+        <td><%= check_box_tag :sales, "1", @user.user_permission.sales %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Vendas Retorno -->
+      <tr>
+        <td><%= label_tag :sales_return, "Vendas Retorno" %></td>
+        <td><%= check_box_tag :sales_return, "1", @user.user_permission.sales_return %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Relatórios -->
+      <tr>
+        <td><%= label_tag :relatorio, "Relatórios" %></td>
+        <td><%= check_box_tag :relatorio, "1", @user.user_permission.relatorio %></td>
+        <th class="empty-column"></th>
+      </tr>
+
+      <!-- Extras -->
+      <tr>
+        <td><%= label_tag :extras, "Cadastros Extras" %></td>
+        <td><%= check_box_tag :extras, "1", @user.user_permission.extras %></td>
+        <th class="empty-column"></th>
+      </tr>
+    </table>
 
     <div class="form-group">
-      <%= label_tag :entities_create, "Gerenciar Entidade", class: "control-label" %>
-      <%= check_box_tag :entities_create, "1", @user.user_permission.entities_create %>
-    </div>
-
-    <div class="form-group">
-      <%= label_tag :financial, "Transações", class: "control-label" %>
-      <%= check_box_tag :financial, "1", @user.user_permission.financial %>
-    </div>
-
-    <div class="form-group">
-      <%= label_tag :financial_create, "Criar Transações", class: "control-label" %>
-      <%= check_box_tag :financial_create, "1", @user.user_permission.financial_create %>
-    </div><br >
-
-    <div class="form-group">
-      <div class="col-md-offset-2 col-md-10">
-        <%= submit_tag "Salvar", class: "btn btn-primary" %>
-        <%= submit_tag "Resetar Senha", class: "btn btn-danger", data: { confirm: 'Tem certeza que deseja resetar a senha do usuário?' } %>
-        <%= submit_tag "Excluir", method: :delete, data: { confirm: 'Tem certeza que deseja excluir o usuário?' }, class: "btn btn-danger" %>
-      </div>
+      <%= submit_tag "Salvar", class: "btn btn-primary" %>
+      <%= submit_tag "Resetar Senha", class: "btn btn-danger", data: { confirm: 'Tem certeza que deseja resetar a senha do usuário?' } %>
+      <%= submit_tag "Excluir", method: :delete, data: { confirm: 'Tem certeza que deseja excluir o usuário?' }, class: "btn btn-danger" %>
     </div>
   <% end %>
 </div>
+

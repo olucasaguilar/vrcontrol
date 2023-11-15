@@ -1,6 +1,6 @@
-<%= link_to "Meu Perfil", my_profile_path, class: "btn btn-primary" %>
+<%= link_to "Meu Perfil", current_page?(my_profile_path) ? cadastro_usuario_path : my_profile_path, class: "btn btn-primary #{'active' if current_page?(my_profile_path)}" %>
 <% if current_user.user_permission.admin? %>
-  <%= link_to "Gerenciar Usuários", index_users_path, class: "btn btn-primary" %>
-  <%= link_to "Cadastrar Usuário", new_user_path, class: "btn btn-primary" %>
+  <%= link_to "Gerenciar Usuários", current_page?(index_users_path) ? cadastro_usuario_path : index_users_path, class: "btn btn-primary #{'active' if current_page?(index_users_path) || params[:action] == 'edit'}" %>
+  <%= link_to "Cadastrar Usuário", current_page?(new_user_path) ? cadastro_usuario_path : new_user_path, class: "btn btn-primary #{'active' if current_page?(new_user_path)}" %>
 <% end %>
 <%= link_to "Sair", destroy_session_path, class: "btn btn-danger" %> <br ><br >

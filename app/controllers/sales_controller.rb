@@ -1,4 +1,7 @@
 class SalesController < SharedController
+  before_action :verify_sales,       only: [:new, :create]
+  before_action :verify_sales_return, only: [:return, :create_return]
+  
   def new
     session.delete(:pecas)
     session[:pecas] ||= []
@@ -345,6 +348,20 @@ class SalesController < SharedController
   end
 
   private
+
+  def verify_sales
+    unless current_user.user_permission.sales || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
+  
+  def verify_sales_return
+    unless current_user.user_permission.sales_return || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
 
   def financial_validate(financial, data_hora)
     financial_record = FinancialRecord.new(valor: financial['valor'], tipo_movimento: 'Saída', observacao: financial['observacao'], data_hora: data_hora)

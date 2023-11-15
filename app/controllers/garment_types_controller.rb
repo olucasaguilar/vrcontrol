@@ -1,4 +1,4 @@
-class GarmentTypesController < ApplicationController
+class GarmentTypesController < ExtrasController
   before_action :set_garment_type, only: [:edit, :update, :destroy]
 
   def index

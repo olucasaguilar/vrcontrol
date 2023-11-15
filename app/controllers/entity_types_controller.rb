@@ -1,4 +1,4 @@
-class EntityTypesController < ApplicationController
+class EntityTypesController < ExtrasController
   before_action :set_entity_type, only: [:edit, :update, :destroy]
 
   def index

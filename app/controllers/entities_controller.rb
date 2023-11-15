@@ -76,7 +76,7 @@ class EntitiesController < ApplicationController
   end
 
   def create
-    @entity = Entity.new(entity_params)
+    @entity = Entity.new(entity_params)   
 
     if @entity.save
       redirect_to entity_path(@entity.id), notice: 'Entidade criada com sucesso'
@@ -123,6 +123,17 @@ class EntitiesController < ApplicationController
   end
 
   def entity_params
-    params.require(:entity).permit(:nome, :num_contato, :cidade, :estado, :cnpj, :ie, :entity_types_id)
+    validate = params.require(:entity).permit(:nome, :num_contato, :cidade, :estado, :cpf, :cnpj, :ie, :juridica, :entity_types_id)
+
+    if validate[:juridica] == "on"
+      validate[:juridica] = true
+      validate[:cpf] = nil
+    else
+      validate[:juridica] = false
+      validate[:cnpj] = nil
+      validate[:ie] = nil
+    end
+
+    validate
   end
 end

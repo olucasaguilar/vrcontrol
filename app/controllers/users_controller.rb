@@ -107,6 +107,22 @@ class UsersController < ApplicationController
                                   entities_create: params[:entities_create],
                                   financial: params[:financial],
                                   financial_create: params[:financial_create],
+                                  fabric_stock: params[:fabric_stock],
+                                  garment_stock: params[:garment_stock],
+                                  finished_garment_stock: params[:finished_garment_stock],
+                                  fabric_entry: params[:fabric_entry],
+                                  fabric_cut: params[:fabric_cut],
+                                  fabric_cut_return: params[:fabric_cut_return],
+                                  screen_print: params[:screen_print],
+                                  screen_print_return: params[:screen_print_return],
+                                  sewing: params[:sewing],
+                                  sewing_return: params[:sewing_return],
+                                  finishing: params[:finishing],
+                                  finishing_return: params[:finishing_return],
+                                  sales: params[:sales],
+                                  sales_return: params[:sales_return],
+                                  extras: params[:extras],
+                                  relatorio: params[:relatorio],
                                 )
     if @user.update(name: params[:name])
       flash[:notice] = "Usuário atualizado com sucesso!"

@@ -240,197 +240,265 @@
           </a>
         </li>        
       <% end %>
+      
+      <% if current_user.user_permission.fabric_stock || current_user.user_permission.garment_stock || current_user.user_permission.finished_garment_stock || current_user.user_permission.admin %>
+        <li>
+          <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='stock' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="icon"><i class="fas fa-chart-line"></i></span>
+            <span class="item">Estoque</span>
+          </a>
+          <div class="dropup">
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
+              <% if current_user.user_permission.fabric_stock || current_user.user_permission.admin %>
+                <li>
+                  <a class="dropdown-item" href="<%= tecidos_view_stock_path %>">
+                    <span class="icon"><i class="fas fa-chart-line"></i></span>
+                    <span class="item">Tecidos</span>
+                  </a>
+                </li>
+              <% end %>
 
-      <li>
-        <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='stock' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <span class="icon"><i class="fas fa-chart-line"></i></span>
-          <span class="item">Estoque</span>
-        </a>
-        <div class="dropup">
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
-            <li>
-              <a class="dropdown-item" href="<%= tecidos_view_stock_path %>">
-                <span class="icon"><i class="fas fa-chart-line"></i></span>
-                <span class="item">Tecidos</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="<%= pecas_view_stock_path %>">
-                <span class="icon"><i class="fas fa-chart-line"></i></span>
-                <span class="item">Peças</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="<%= pecas_acabadas_view_stock_path %>">
-                <span class="icon"><i class="fas fa-chart-line"></i></span>
-                <span class="item">Peças Acabadas</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <a href="<%= new_fabric_entry_path %>" class="nav-link <%= 'active' if controller.controller_name=='fabric_entries' %>">
-          <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
-          <span class="item">Entrada Tecido</span>
-        </a>
-      </li>
-      <li>
-        <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='fabric_cuts' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <span class="icon"><i class="fas fa-cut"></i></span>
-          <span class="item">Corte</span>
-        </a>
-        <div class="dropup">
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
-            <li>
-              <a class="dropdown-item" href="<%= new_fabric_cut_path %>">
-                <span class="icon"><i class="fas fa-cut"></i></span>
-                <span class="item">Corte Envio</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="<%= return_fabric_cut_path %>">
-                <span class="icon"><i class="fas fa-cut"></i></span>
-                <span class="item">Corte Retorno</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='screen_printing' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <span class="icon"><i class="fas fa-paint-roller"></i></span>
-          <span class="item">Serigrafia</span>
-        </a>
-        <div class="dropup">
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
-            <li>
-              <a class="dropdown-item" href="<%= new_screen_printing_path %>">
-                <span class="icon"><i class="fas fa-paint-roller"></i></span>
-                <span class="item">Serigrafia Envio</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="<%= return_screen_printing_path %>">
-                <span class="icon"><i class="fas fa-paint-roller"></i></span>
-                <span class="item">Serigrafia Retorno</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='sewing' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <span class="icon"><i class="fas fa-cut"></i></span>
-          <span class="item">Costura</span>
-        </a>
-        <div class="dropup">
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
-            <li>
-              <a class="dropdown-item" href="<%= new_sewing_path %>">
-                <span class="icon"><i class="fas fa-cut"></i></span>
-                <span class="item">Costura Envio</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="<%= return_sewing_path %>">
-                <span class="icon"><i class="fas fa-cut"></i></span>
-                <span class="item">Costura Retorno</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='finishing' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <span class="icon"><i class="fas fa-tools"></i></span>
-          <span class="item">Acabamento</span>
-        </a>
-        <div class="dropup">
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
-            <li>
-              <a class="dropdown-item" href="<%= new_finishing_path %>">
-                <span class="icon"><i class="fas fa-tools"></i></span>
-                <span class="item">Acabamento Envio</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="<%= return_finishing_path %>">
-                <span class="icon"><i class="fas fa-tools"></i></span>
-                <span class="item">Acabamento Retorno</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='sales' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <span class="icon"><i class="fas fa-shopping-cart"></i></span>
-          <span class="item">Venda</span>
-        </a>
-        <div class="dropup">
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
-            <li>
-              <a class="dropdown-item" href="<%= new_sale_path %>">
-                <span class="icon"><i class="fas fa-shopping-cart"></i></span>
-                <span class="item">Venda Saída</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="<%= return_sale_path %>">
-                <span class="icon"><i class="fas fa-shopping-cart"></i></span>
-                <span class="item">Venda Retorno</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <a href="<%= root_path %>" class="nav-link">
-          <span class="icon"><i class="fas fa-file-alt"></i></span>
-          <span class="item">Relatórios</span>
-        </a>
-      </li>
-      <li>
-        <a class="nav-link dropdown-toggle" id="navbarDropdownCadastros" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <span class="icon"><i class="fas fa-cog"></i></span>
-          <span class="item">Cadastros Extras</span>
-        </a>
-        <div class="btn-group dropup">
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownCadastros">
-            <li>
-              <a class="dropdown-item" href="<%= entity_types_path %>">
-                <span class="icon"><i class="fas fa-cog"></i></span>
-                <span class="item">Tipos de Entidades</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="<%= fabric_types_path %>">
-                <span class="icon"><i class="fas fa-cog"></i></span>
-                <span class="item">Tipos de Tecidos</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="<%= colors_path %>">
-                <span class="icon"><i class="fas fa-cog"></i></span>
-                <span class="item">Cores</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="<%= garment_types_path %>">
-                <span class="icon"><i class="fas fa-cog"></i></span>
-                <span class="item">Tipos de Peças</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="<%= garment_sizes_path %>">
-                <span class="icon"><i class="fas fa-cog"></i></span>
-                <span class="item">Tamanhos de Peças</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
+              <% if current_user.user_permission.garment_stock || current_user.user_permission.admin %>
+                <li>
+                  <a class="dropdown-item" href="<%= pecas_view_stock_path %>">
+                    <span class="icon"><i class="fas fa-chart-line"></i></span>
+                    <span class="item">Peças</span>
+                  </a>
+                </li>
+              <% end %>
+
+              <% if current_user.user_permission.finished_garment_stock || current_user.user_permission.admin %>
+                <li>
+                  <a class="dropdown-item" href="<%= pecas_acabadas_view_stock_path %>">
+                    <span class="icon"><i class="fas fa-chart-line"></i></span>
+                    <span class="item">Peças Acabadas</span>
+                  </a>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </li>
+      <% end %>
+
+      <% if current_user.user_permission.fabric_entry || current_user.user_permission.admin %>
+        <li>
+          <a href="<%= new_fabric_entry_path %>" class="nav-link <%= 'active' if controller.controller_name=='fabric_entries' %>">
+            <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
+            <span class="item">Entrada Tecido</span>
+          </a>
+        </li>
+      <% end %>
+      
+      <% if current_user.user_permission.fabric_cut || current_user.user_permission.fabric_cut_return || current_user.user_permission.admin %>
+        <li>
+          <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='fabric_cuts' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="icon"><i class="fas fa-cut"></i></span>
+            <span class="item">Corte</span>
+          </a>
+          <div class="dropup">
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
+
+              <% if current_user.user_permission.fabric_cut || current_user.user_permission.admin %>  
+                <li>
+                  <a class="dropdown-item" href="<%= new_fabric_cut_path %>">
+                    <span class="icon"><i class="fas fa-cut"></i></span>
+                    <span class="item">Corte Envio</span>
+                  </a>
+                </li>
+              <% end %>
+
+              <% if current_user.user_permission.fabric_cut_return || current_user.user_permission.admin %>
+                <li>
+                  <a class="dropdown-item" href="<%= return_fabric_cut_path %>">
+                    <span class="icon"><i class="fas fa-cut"></i></span>
+                    <span class="item">Corte Retorno</span>
+                  </a>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </li>
+      <% end %>
+
+      <% if current_user.user_permission.screen_print || current_user.user_permission.screen_print_return || current_user.user_permission.admin %>
+        <li>
+          <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='screen_printing' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="icon"><i class="fas fa-paint-roller"></i></span>
+            <span class="item">Serigrafia</span>
+          </a>
+          <div class="dropup">
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
+
+              <% if current_user.user_permission.screen_print || current_user.user_permission.admin %>
+                <li>
+                  <a class="dropdown-item" href="<%= new_screen_printing_path %>">
+                    <span class="icon"><i class="fas fa-paint-roller"></i></span>
+                    <span class="item">Serigrafia Envio</span>
+                  </a>
+                </li>
+              <% end %>
+
+              <% if current_user.user_permission.screen_print_return || current_user.user_permission.admin %>
+                <li>
+                  <a class="dropdown-item" href="<%= return_screen_printing_path %>">
+                    <span class="icon"><i class="fas fa-paint-roller"></i></span>
+                    <span class="item">Serigrafia Retorno</span>
+                  </a>
+                </li>
+              <% end %>
+              
+            </ul>
+          </div>
+        </li>
+      <% end %>
+
+      <% if current_user.user_permission.sewing || current_user.user_permission.sewing_return || current_user.user_permission.admin %>
+        <li>
+          <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='sewing' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="icon"><i class="fas fa-cut"></i></span>
+            <span class="item">Costura</span>
+          </a>
+          <div class="dropup">
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
+
+              <% if current_user.user_permission.sewing || current_user.user_permission.admin %>
+                <li>
+                  <a class="dropdown-item" href="<%= new_sewing_path %>">
+                    <span class="icon"><i class="fas fa-cut"></i></span>
+                    <span class="item">Costura Envio</span>
+                  </a>
+                </li>
+              <% end %>
+
+              <% if current_user.user_permission.sewing_return || current_user.user_permission.admin %>
+                <li>
+                  <a class="dropdown-item" href="<%= return_sewing_path %>">
+                    <span class="icon"><i class="fas fa-cut"></i></span>
+                    <span class="item">Costura Retorno</span>
+                  </a>
+                </li>
+              <% end %>
+              
+            </ul>
+          </div>
+        </li>
+      <% end %>
+
+      <% if current_user.user_permission.finishing || current_user.user_permission.finishing_return || current_user.user_permission.admin %>
+        <li>
+          <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='finishing' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="icon"><i class="fas fa-tools"></i></span>
+            <span class="item">Acabamento</span>
+          </a>
+          <div class="dropup">
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
+
+              <% if current_user.user_permission.finishing || current_user.user_permission.admin %>
+                <li>
+                  <a class="dropdown-item" href="<%= new_finishing_path %>">
+                    <span class="icon"><i class="fas fa-tools"></i></span>
+                    <span class="item">Acabamento Envio</span>
+                  </a>
+                </li>
+              <% end %>
+
+              <% if current_user.user_permission.finishing_return || current_user.user_permission.admin %>
+                <li>
+                  <a class="dropdown-item" href="<%= return_finishing_path %>">
+                    <span class="icon"><i class="fas fa-tools"></i></span>
+                    <span class="item">Acabamento Retorno</span>
+                  </a>
+                </li>
+              <% end %>
+              
+            </ul>
+          </div>
+        </li>
+      <% end %>
+      
+      <% if current_user.user_permission.sales || current_user.user_permission.sales_return || current_user.user_permission.admin %>
+        <li>
+          <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='sales' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+            <span class="item">Venda</span>
+          </a>
+          <div class="dropup">
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownEstoque">
+              
+              <% if current_user.user_permission.sales || current_user.user_permission.admin %>
+                <li>
+                  <a class="dropdown-item" href="<%= new_sale_path %>">
+                    <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+                    <span class="item">Venda Saída</span>
+                  </a>
+                </li>
+              <% end %>
+
+              <% if current_user.user_permission.sales_return || current_user.user_permission.admin %>
+                <li>
+                  <a class="dropdown-item" href="<%= return_sale_path %>">
+                    <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+                    <span class="item">Venda Retorno</span>
+                  </a>
+                </li>
+              <% end %>
+              
+            </ul>
+          </div>
+        </li>
+      <% end %>
+
+      <% if current_user.user_permission.relatorio || current_user.user_permission.admin %>
+        <li>
+          <a href="<%= root_path %>" class="nav-link">
+            <span class="icon"><i class="fas fa-file-alt"></i></span>
+            <span class="item">Relatórios</span>
+          </a>
+        </li>
+      <% end %>
+
+      <% if current_user.user_permission.extras || current_user.user_permission.admin %>
+        <li>
+          <a class="nav-link dropdown-toggle" id="navbarDropdownCadastros" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="icon"><i class="fas fa-cog"></i></span>
+            <span class="item">Cadastros Extras</span>
+          </a>
+          <div class="btn-group dropup">
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownCadastros">
+              <li>
+                <a class="dropdown-item" href="<%= entity_types_path %>">
+                  <span class="icon"><i class="fas fa-cog"></i></span>
+                  <span class="item">Tipos de Entidades</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="<%= fabric_types_path %>">
+                  <span class="icon"><i class="fas fa-cog"></i></span>
+                  <span class="item">Tipos de Tecidos</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="<%= colors_path %>">
+                  <span class="icon"><i class="fas fa-cog"></i></span>
+                  <span class="item">Cores</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="<%= garment_types_path %>">
+                  <span class="icon"><i class="fas fa-cog"></i></span>
+                  <span class="item">Tipos de Peças</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="<%= garment_sizes_path %>">
+                  <span class="icon"><i class="fas fa-cog"></i></span>
+                  <span class="item">Tamanhos de Peças</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      <% end %>
     </ul>
   </div>        
 </div>

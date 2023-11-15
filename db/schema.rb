@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_14_220312) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -31,6 +31,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_220312) do
     t.string "cnpj"
     t.string "ie"
     t.integer "status", default: 1
+    t.string "cpf"
+    t.boolean "juridica", default: false
     t.index ["entity_types_id"], name: "index_entities_on_entity_types_id"
   end
 
@@ -390,6 +392,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_220312) do
     t.datetime "updated_at", null: false
     t.boolean "financial", default: false
     t.boolean "financial_create", default: false
+    t.boolean "fabric_stock", default: false
+    t.boolean "garment_stock", default: false
+    t.boolean "finished_garment_stock", default: false
+    t.boolean "fabric_entry", default: false
+    t.boolean "fabric_cut", default: false
+    t.boolean "fabric_cut_return", default: false
+    t.boolean "screen_print", default: false
+    t.boolean "screen_print_return", default: false
+    t.boolean "sewing", default: false
+    t.boolean "sewing_return", default: false
+    t.boolean "finishing", default: false
+    t.boolean "finishing_return", default: false
+    t.boolean "sales", default: false
+    t.boolean "sales_return", default: false
+    t.boolean "extras", default: false
+    t.boolean "relatorio", default: false
     t.index ["user_id"], name: "index_user_permissions_on_user_id"
   end
 

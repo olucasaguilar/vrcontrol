@@ -1,4 +1,6 @@
 class FabricEntriesController < ApplicationController
+  before_action :verify_fabric_entry
+
   def new
     # Alterar de unless para if
     if FabricEntry.any? && FabricEntry.last.total_tecido == nil
@@ -180,6 +182,13 @@ class FabricEntriesController < ApplicationController
   end
 
   private
+
+  def verify_fabric_entry
+    unless current_user.user_permission.fabric_entry || current_user.user_permission.admin
+      redirect_to root_path, info: "Você não tem permissão para acessar essa página"
+      return
+    end
+  end
 
   def fabric_entry_params
     params.require(:fabric_entry).permit(:data_hora, :entity_id)
