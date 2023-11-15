@@ -1,5 +1,7 @@
 <%= javascript_include_tag "campos_dinheiro" %>
 
+<% flash[:alert] = [] %>
+
 <legend>Novo Registro Financeiro</legend>
 
 <%= form_for @financial_record, html: { class: "form-horizontal", id: "formulario" } do |f| %>
@@ -34,7 +36,7 @@
   <div class="form-group">
     <%= f.label :data_hora, class: "col-md-4 control-label" %>
     <div class="col-md-4 inputGroupContainer">
-      <%= f.datetime_local_field :data_hora, class: "form-control" %>
+      <%= f.datetime_local_field :data_hora, class: "form-control", readonly: true %>
     </div>
   </div><br>
 

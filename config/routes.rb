@@ -95,4 +95,5 @@ Rails.application.routes.draw do
   post '/venda/saida', to: 'sales#create', as: 'create_new_sales'
   get '/venda/retorno', to: 'sales#return', as: 'return_sale'
   post '/venda/retorno', to: 'sales#create_return', as: 'create_return_sale'
+  get 'get_total_quantity_finished', to: 'sales#get_total_quantity_finished'
 end

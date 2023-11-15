@@ -1,5 +1,32 @@
 <script>
   $(document).ready(function() {
+    function realizarRequisicaoAjax(garmentTypeId) {
+      var garmentTypeId = garmentTypeId;
+      
+      $.ajax({
+        url: '/get_total_quantity_finished',
+        method: 'GET',
+        data: {
+          garment_type_id: garmentTypeId
+        },
+        dataType: 'json',
+        success: function(data) {
+          var totalQuantity = parseFloat(data.total_quantity);
+          var quantidadeField = $('#quantidade_field');
+          quantidadeField.attr('placeholder', totalQuantity);
+          quantidadeField.change(); // Se necessário, acione o evento de mudança
+        }
+      });
+    }
+
+    $('#garment_type_select').change(function() {
+      var garmentTypeId = $(this).val();
+
+      if (garmentTypeId > 0) {
+        realizarRequisicaoAjax(garmentTypeId);
+      }
+    });
+
     //////////////////////////
     // Seletor para o campo de entrada de texto
     var inputField = $("input#quantidade_field");
