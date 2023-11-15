@@ -155,7 +155,7 @@
 <div class="form-group" id="cpfContainer">
   <%= f.label :cpf, "CPF", class: "col-md-4 control-label" %>
   <div class="col-md-4 inputGroupContainer">
-    <%= f.text_field :cpf, class: "form-control", maxlength: 14, onkeyup: "handleCPF(event)", placeholder: "000.000.000-00" %>
+    <%= f.text_field :cpf, class: "form-control #{f.object.errors[:cpf].any? ? 'is-invalid' : ''}", maxlength: 14, onkeyup: "handleCPF(event)", placeholder: "000.000.000-00" %>
   </div>
 </div>
 
@@ -163,7 +163,7 @@
 <div class="form-group" id="cnpjContainer">
   <%= f.label :cnpj, "CNPJ", class: "col-md-4 control-label" %>
   <div class="col-md-4 inputGroupContainer">
-    <%= f.text_field :cnpj, class: "form-control", maxlength: 18, onkeyup: "handleCNPJ(event)", placeholder: "00.000.000/0000-00" %>
+    <%= f.text_field :cnpj, class: "form-control #{f.object.errors[:cnpj].any? ? 'is-invalid' : ''}", maxlength: 18, onkeyup: "handleCNPJ(event)", placeholder: "00.000.000/0000-00" %>
   </div>
 </div>
 
