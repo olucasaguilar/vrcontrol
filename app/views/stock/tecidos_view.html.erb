@@ -77,3 +77,5 @@
     </table>
   </div>
 <% end %>
+
+<%= link_to 'Listagem PDF', tecidos_report_stock_path(tipo_tecido_id: params[:tipo_tecido_id], cor_id: params[:cor_id]), method: :get, class: 'btn btn-secondary', target: '_blank', style: 'float: right;' %>

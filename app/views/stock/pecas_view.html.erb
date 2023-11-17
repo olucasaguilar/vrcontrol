@@ -92,3 +92,5 @@
     </table>
   </div>
 <% end %>
+
+<%= link_to 'Listagem PDF', pecas_report_stock_path(tipo_peca_id: params[:tipo_peca_id], costurada: params[:costurada], estampada: params[:estampada]), method: :get, class: 'btn btn-secondary', target: '_blank', style: 'float: right;' %>

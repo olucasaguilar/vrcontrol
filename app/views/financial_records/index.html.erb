@@ -27,7 +27,7 @@
       <th>Saldo</th>
       <th>Observação</th>
       <th>Data Hora</th>
-      <th>Entidade</th>
+      <%# <th>Entidade</th> %>
     </tr>
   </thead>
   <tbody>
@@ -37,8 +37,8 @@
         <td><%= number_to_currency(financial_record.valor, unit: 'R$', separator: ',', delimiter: '.') %></td>
         <td><%= number_to_currency(financial_record.saldo, unit: 'R$', separator: ',', delimiter: '.') %></td>
         <td><%= financial_record[:observacao] %></td>
-        <td><%= financial_record.data_hora.strftime("%d/%m/%Y %H:%M:%S") %></td>
-        <td><%= financial_record[:entidade] %></td>
+        <td><%= financial_record.data_hora.strftime("%d/%m/%Y %H:%M") %></td>
+        <%# <td><%= financial_record[:entidade] </td> %>
       </tr>
     <% end %>
     <%# verifica se tem o numero de pagy.items %>
@@ -51,7 +51,7 @@
           <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
-          <td>&nbsp;</td>
+          <%# <td>&nbsp;</td> %>
         </tr>    
       <% end %>
     <% end %>
@@ -104,5 +104,4 @@
   </ul>
 </nav>
 
-<!-- Botão de Impressão -->
-<%# <button class="btn btn-secondary" style="float: right;">Imprimir</button> %>
+<%= link_to 'Listagem PDF', financial_report_path, method: :get, class: 'btn btn-secondary', target: '_blank', style: 'float: right;' %>

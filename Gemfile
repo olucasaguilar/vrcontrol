@@ -77,3 +77,6 @@ end
 
 gem 'pagy'
 gem "devise", "~> 4.9"
+
+gem 'prawn'
+gem 'prawn-table'

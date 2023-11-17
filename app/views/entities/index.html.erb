@@ -208,3 +208,5 @@
 <% end %>
 
 <%# <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="arrowIcon"><path d="M4 8L8 12L12 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg> %>
+
+<%= link_to 'Listagem PDF', entity_report_path(filter: params[:filter], sort: params[:sort]), method: :get, class: 'btn btn-secondary', target: '_blank', style: 'float: right;' %>

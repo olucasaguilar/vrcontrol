@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   resources :garment_types, except: [:show]
   resources :garment_sizes, except: [:show]
 
+  # Rotas de Relatórios
+  #get 'index', to: 'relatorios#index', as: 'relatorios'
+
   # Rotas de Entidades
   get '/entidades', to: 'entities#index', as: 'entidades'
   get '/entities/:id/edit', to: 'entities#edit', as: 'edit_entity'
@@ -21,11 +24,13 @@ Rails.application.routes.draw do
   post '/entities', to: 'entities#create', as: 'create_entity'
   patch '/entities/:id/toggle_status', to: 'entities#toggle_status', as: 'toggle_status_entity'
   get '/entidades/inativos', to: 'entities#inactives', as: 'entity_inactives'
+  get '/entidades/listagem', to: 'entities#report', as: 'entity_report'
 
   # Rotas de Caixa
   get '/caixa', to: 'financial_records#index', as: 'financial_records'
   get '/caixa/new', to: 'financial_records#new', as: 'new_financial_record'
   post '/caixa', to: 'financial_records#create', as: 'create_financial_record'
+  get '/caixa/listagem', to: 'financial_records#report', as: 'financial_report'
 
   # Rotas de Entrada Tecido
   get '/tecidos/entrada', to: 'fabric_entries#new', as: 'new_fabric_entry'
@@ -37,6 +42,9 @@ Rails.application.routes.draw do
   get '/estoque/tecidos',         to: 'stock#tecidos_view', as: 'tecidos_view_stock'
   get '/estoque/pecas',           to: 'stock#pecas_view', as: 'pecas_view_stock'
   get '/estoque/pecas_acabadas',  to: 'stock#pecas_acabadas_view', as: 'pecas_acabadas_view_stock'
+  get '/estoque/tecidos/listagem', to: 'stock#tecidos_report', as: 'tecidos_report_stock'
+  get '/estoque/pecas/listagem',   to: 'stock#pecas_report', as: 'pecas_report_stock'
+  get '/estoque/pecas_acabadas/listagem', to: 'stock#pecas_acabadas_report', as: 'pecas_acabadas_report_stock'
 
   # Rota para tela de Corte
   get '/corte/envio', to: 'fabric_cuts#new', as: 'new_fabric_cut'

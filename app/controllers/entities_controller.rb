@@ -46,6 +46,8 @@ class EntitiesController < ApplicationController
       page = page.to_i
     end
 
+    return if params[:action] == 'report'    
+
     @pagy, @entities = pagy(@entities, page: page, items: 5)
   end
 
@@ -98,10 +100,70 @@ class EntitiesController < ApplicationController
 
   def toggle_status
     @entity = Entity.find(params[:id])
-    @entity.ativo? ? @entity.inativo! : @entity.ativo!
-    redirect_to entity_path(@entity.id), notice: 'Status alterado com sucesso.'
+    if @entity.valid?
+      @entity.ativo? ? @entity.inativo! : @entity.ativo!
+      redirect_to entity_path(@entity.id), notice: 'Status alterado com sucesso.'
+    else
+      redirect_to entity_path(@entity.id), alert: @entity.errors.full_messages
+    end    
   end
+
+  def report
+    index
+
+    pdf = Prawn::Document.new
+
+    # Adicionando o título do sistema
+    pdf.text "VR Control", size: 24, style: :bold, align: :center
+    pdf.move_down 10
+
+    # Adding a title to the PDF
+    pdf.text "Listagem de Entidades", size: 16, style: :bold
+    pdf.move_down 10
   
+    # Adding a subtitle to the PDF
+    pdf.text "Filtros:", size: 12, style: :bold
+    #
+    if EntityType.where(id: params[:filter]).first.nil?
+      pdf.text "Tipo: #{params[:filter]}", size: 12
+    else
+      pdf.text "Tipo: #{EntityType.where(id: params[:filter]).first.nome}", size: 12
+    end
+    #
+    pdf.text "Ordenação: #{params[:sort]}", size: 12
+    pdf.move_down 10
+  
+    # Creating a table for the list of entities
+    table_data = [["#", "Tipo", "Nome", "Cidade", "Estado"]]
+  
+    @entities.each_with_index do |entity, index|
+      table_data << [
+        index + 1,
+        entity.entity_type.nome,
+        entity.nome,
+        entity.cidade,
+        entity.estado
+      ]
+    end
+  
+    pdf.table(table_data, header: true, width: pdf.bounds.width) do
+      row(0).font_style = :bold
+    
+      cells.borders = [:top, :bottom]
+      cells.border_width = 0.5
+      cells.padding = 5
+      cells.valign = :middle
+      row(0).background_color = 'DDDDDD'
+    end
+    
+  
+    # Sending the PDF data
+    send_data(pdf.render,
+              filename: 'listagem_entidades.pdf',
+              type: 'application/pdf',
+              disposition: 'inline')
+  end
+
   private
 
   def verify_entities_create    

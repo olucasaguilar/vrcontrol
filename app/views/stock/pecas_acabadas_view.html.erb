@@ -80,3 +80,5 @@
     </table>
   </div>
 <% end %>
+
+<%= link_to 'Listagem PDF', pecas_acabadas_report_stock_path(tipo_peca_id: params[:tipo_peca_id]), method: :get, class: 'btn btn-secondary', target: '_blank', style: 'float: right;' %>
