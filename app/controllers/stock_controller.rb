@@ -119,6 +119,11 @@ class StockController < ApplicationController
     pdf.text "Relatório de Estoque de Tecidos", size: 16, style: :bold
     pdf.move_down 10
 
+    # Adding the date
+    pdf.text "Data de Impressão: #{Time.now.strftime("%d/%m/%Y %H:%M")}", size: 12,
+    size: 12, align: :right
+    pdf.move_down 10
+
     # Adding a subtitle to the PDF
     pdf.text "Filtros:", size: 12, style: :bold
     #
@@ -152,7 +157,7 @@ class StockController < ApplicationController
       ]
     end
   
-    pdf.table(table_data, header: true, width: pdf.bounds.width) do
+    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['ECECEC', 'FFFFFF']) do
       row(0).font_style = :bold
   
       cells.borders = [:top, :bottom]
@@ -180,6 +185,11 @@ class StockController < ApplicationController
 
     # Adicionando um título ao PDF
     pdf.text "Relatório de Estoque de Peças", size: 16, style: :bold
+    pdf.move_down 10
+
+    # Adding the date
+    pdf.text "Data de Impressão: #{Time.now.strftime("%d/%m/%Y %H:%M")}", size: 12,
+    size: 12, align: :right
     pdf.move_down 10
 
     # Adding a subtitle to the PDF
@@ -222,7 +232,7 @@ class StockController < ApplicationController
       ]
     end
 
-    pdf.table(table_data, header: true, width: pdf.bounds.width) do
+    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['ECECEC', 'FFFFFF']) do
       row(0).font_style = :bold
 
       cells.borders = [:top, :bottom]
@@ -252,6 +262,11 @@ class StockController < ApplicationController
     pdf.text "Relatório de Estoque de Peças Acabadas", size: 16, style: :bold
     pdf.move_down 10
 
+    # Adding the date
+    pdf.text "Data de Impressão: #{Time.now.strftime("%d/%m/%Y %H:%M")}", size: 12,
+    size: 12, align: :right
+    pdf.move_down 10
+
     # Adding a subtitle to the PDF
     pdf.text "Filtros:", size: 12, style: :bold
     #
@@ -278,7 +293,7 @@ class StockController < ApplicationController
       ]
     end
 
-    pdf.table(table_data, header: true, width: pdf.bounds.width) do
+    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['ECECEC', 'FFFFFF']) do
       row(0).font_style = :bold
 
       cells.borders = [:top, :bottom]

@@ -4,8 +4,35 @@ class FinancialRecordsController < ApplicationController
   before_action :verify_financial, only: [:index]
 
   def index
-    @financial_records = FinancialRecord.order(id: :desc).all
-    @saldo = FinancialRecord.last.saldo if @financial_records.any?
+    data_inicio = params[:data_inicio].to_datetime if params[:data_inicio] != nil
+    data_fim = params[:data_fim].to_datetime if params[:data_fim] != nil
+    
+    data_inicio = (DateTime.now - 1.month) if data_inicio == nil
+    data_fim = (DateTime.now) if data_fim == nil
+
+    @data_inicio = data_inicio.change(hour: 0, minute: 0, second: 0)
+    @data_fim = data_fim.change(hour: 23, minute: 59, second: 59)
+    
+    @financial_records = FinancialRecord.where("data_hora >= ? AND data_hora <= ?", @data_inicio, @data_fim).order(data_hora: :desc)
+        
+    @saldo = {}
+    @financial_records.reverse.each_with_index do  |record, index|
+      if index == 0
+        if record.tipo_movimento == "Entrada"
+          @saldo[record.id] = record.valor
+        else
+          @saldo[record.id] = -record.valor
+        end
+      else
+        if record.tipo_movimento == "Entrada"
+          @saldo[record.id] = @saldo.values[index - 1] + record.valor
+        else
+          @saldo[record.id] = @saldo.values[index - 1] - record.valor
+        end
+      end
+    end
+    
+    return if params[:action] == "report"
 
     page = params[:page]
     if page == nil || page == "" || page.to_i <= 0
@@ -42,6 +69,8 @@ class FinancialRecordsController < ApplicationController
   end
 
   def report
+    index
+
     pdf = Prawn::Document.new
 
     # Adicionando o título do sistema
@@ -51,17 +80,28 @@ class FinancialRecordsController < ApplicationController
     # Adicionando um título ao PDF
     pdf.text "Histórico de Registros Financeiros", size: 16, style: :bold
     pdf.move_down 10
-  
-    # Buscando todos os registros financeiros em ordem decrescente
-    @financial_records = FinancialRecord.order(id: :desc).all
-  
+
+    # Adding the date
+    pdf.text "Data de Impressão: #{Time.now.strftime("%d/%m/%Y %H:%M")}", size: 12,
+    size: 12, align: :right
+    pdf.move_down 10
+
+    # Período de consulta
+    pdf.text "Período de Consulta: #{@data_inicio.strftime("%d/%m/%Y")} até #{@data_fim.strftime("%d/%m/%Y")}"
+    pdf.move_down 10
+
+    # Mostra o saldo (ultimo) na direita
+    pdf.text "Ultimo Saldo: R$ #{'%.2f' % @saldo[@financial_records[0][:id]]}"
+    pdf.move_down 10
+
+
     # Criando uma tabela para a lista de registros financeiros
     table_data = [["#", "Tipo de Mov.", "Valor", "Saldo", "Observação", "Data e Hora"]]
   
     @financial_records.each_with_index do |record, index|
       # Formatação manual dos valores como moeda brasileira
       formatted_valor = "R$ #{'%.2f' % record.valor}"
-      formatted_saldo = "R$ #{'%.2f' % record.saldo}"
+      formatted_saldo = "R$ #{'%.2f' % @saldo[record.id]}"
   
       table_data << [
         index + 1,
@@ -73,7 +113,7 @@ class FinancialRecordsController < ApplicationController
       ]
     end
   
-    pdf.table(table_data, header: true, width: pdf.bounds.width) do
+    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['ECECEC', 'FFFFFF']) do
       row(0).font_style = :bold
     
       cells.borders = [:top, :bottom]
@@ -81,6 +121,9 @@ class FinancialRecordsController < ApplicationController
       cells.padding = 5
       cells.valign = :middle
       row(0).background_color = 'DDDDDD'
+
+      # Ajustando a largura da coluna "Observação"
+      columns([4]).width = pdf.bounds.width - columns([0, 1, 2, 3, 5]).width
     end
   
     # Enviando os dados do PDF

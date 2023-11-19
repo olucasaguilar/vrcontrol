@@ -120,6 +120,11 @@ class EntitiesController < ApplicationController
     # Adding a title to the PDF
     pdf.text "Listagem de Entidades", size: 16, style: :bold
     pdf.move_down 10
+
+    # Adding the date
+    pdf.text "Data de Impressão: #{Time.now.strftime("%d/%m/%Y %H:%M")}", size: 12,
+    size: 12, align: :right
+    pdf.move_down 10
   
     # Adding a subtitle to the PDF
     pdf.text "Filtros:", size: 12, style: :bold
@@ -146,7 +151,7 @@ class EntitiesController < ApplicationController
       ]
     end
   
-    pdf.table(table_data, header: true, width: pdf.bounds.width) do
+    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['ECECEC', 'FFFFFF']) do
       row(0).font_style = :bold
     
       cells.borders = [:top, :bottom]
