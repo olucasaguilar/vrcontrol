@@ -151,7 +151,7 @@ class EntitiesController < ApplicationController
       ]
     end
   
-    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['ECECEC', 'FFFFFF']) do
+    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['F3F3F3', 'FFFFFF']) do
       row(0).font_style = :bold
     
       cells.borders = [:top, :bottom]

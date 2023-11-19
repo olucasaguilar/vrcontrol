@@ -107,7 +107,7 @@ class StockController < ApplicationController
   end
 
   def tecidos_report
-    tecidos_view
+    tecidos_view # recebe os dados sobre tecido
 
     pdf = Prawn::Document.new
 
@@ -144,7 +144,7 @@ class StockController < ApplicationController
     table_data = [["Tipo de Tecido", "Cor", "Quantidade em Quilos", "Última Atualização"]]
   
     @fabric_stock_groups.each do |(tipo_tecido, cor), fabric_stocks|
-      fabric_stock = fabric_stocks.first # Pega o primeiro item do grupo
+      fabric_stock = fabric_stocks.last # Pega o primeiro item do grupo
   
       # Formatação manual dos valores como moeda brasileira
       formatted_saldo = "#{fabric_stock.saldo.to_s.gsub('.', ',')} kg"
@@ -156,8 +156,17 @@ class StockController < ApplicationController
         fabric_stock.data_hora.strftime("%d/%m/%Y %H:%M")
       ]
     end
+
+    if @fabric_stock_groups.empty?
+      table_data_tecidos << [
+        "Não há tecidos no estoque",
+        "",
+        "",
+        ""
+      ]
+    end
   
-    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['ECECEC', 'FFFFFF']) do
+    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['F3F3F3', 'FFFFFF']) do
       row(0).font_style = :bold
   
       cells.borders = [:top, :bottom]
@@ -218,7 +227,7 @@ class StockController < ApplicationController
     table_data = [["Tipo de Peça", "Costurada", "Estampada", "Quantidade", "Última Atualização"]]
 
     @garment_stocks_groups.each do |(tipo_peca, costurada, estampada), garment_stocks|
-      garment_stock = garment_stocks.first # Pega o primeiro item do grupo
+      garment_stock = garment_stocks.last # Pega o primeiro item do grupo
 
       # Formatação manual dos valores como moeda brasileira
       formatted_saldo = "#{garment_stock.saldo.to_s.gsub('.', ',')} peças"
@@ -232,7 +241,17 @@ class StockController < ApplicationController
       ]
     end
 
-    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['ECECEC', 'FFFFFF']) do
+    if @garment_stocks_groups.empty?
+      table_data << [
+        "Não há peças no estoque",
+        "",
+        "",
+        "",
+        ""
+      ]
+    end
+
+    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['F3F3F3', 'FFFFFF']) do
       row(0).font_style = :bold
 
       cells.borders = [:top, :bottom]
@@ -281,7 +300,7 @@ class StockController < ApplicationController
     table_data = [["Tipo de Peça", "Quantidade", "Última Atualização"]]
 
     @garment_stocks_finished_groups.each do |(tipo_peca), garment_stocks_finished|
-      garment_stock_finished = garment_stocks_finished.first # Pega o primeiro item do grupo
+      garment_stock_finished = garment_stocks_finished.last # Pega o primeiro item do grupo
 
       # Formatação manual dos valores como moeda brasileira
       formatted_saldo = "#{garment_stock_finished.saldo.to_s.gsub('.', ',')} peças"
@@ -293,7 +312,15 @@ class StockController < ApplicationController
       ]
     end
 
-    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['ECECEC', 'FFFFFF']) do
+    if @garment_stocks_finished_groups.empty?
+      table_data << [
+        "Não há peças acabadas no estoque",
+        "",
+        ""
+      ]
+    end
+
+    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['F3F3F3', 'FFFFFF']) do
       row(0).font_style = :bold
 
       cells.borders = [:top, :bottom]

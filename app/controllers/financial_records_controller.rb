@@ -112,8 +112,19 @@ class FinancialRecordsController < ApplicationController
         record.data_hora.strftime("%d/%m/%Y %H:%M")
       ]
     end
-  
-    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['ECECEC', 'FFFFFF']) do
+
+    if @financial_records.empty?
+      table_data << [
+        "Não há registros financeiros no período selecionado",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    end
+        
+    pdf.table(table_data, header: true, width: pdf.bounds.width, row_colors: ['F3F3F3', 'FFFFFF']) do
       row(0).font_style = :bold
     
       cells.borders = [:top, :bottom]

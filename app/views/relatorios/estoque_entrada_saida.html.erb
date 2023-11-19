@@ -1,0 +1,32 @@
+<%= render partial: 'menu' %> <br><br>
+
+<%= form_with(url: estoque_entrada_saida_listagem_path, method: :get, target: '_blank') do |f| %>
+  <div class="table-wrapper">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Tipo de Tecido</th>
+          <th>Data Inicial</th>
+          <th>Data Final</th>
+          <th>Ações</th>          
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <%= f.select :tipo_objeto, @tipo_objetos.collect { |tipo_objeto| [tipo_objeto[1], tipo_objeto[0]] }, { include_blank: "Selecionar" }, { class: "form-control" } %>            
+          </td>
+          <td>
+            <%= f.date_field :data_inicio, value: Date.today-1.month, class: "form-control" %>
+          </td>
+          <td>
+            <%= f.date_field :data_fim, value: Date.today, class: "form-control" %>
+          </td>
+          <td>
+            <%= f.submit "Gerar", class: "btn btn-primary" %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<% end %>
