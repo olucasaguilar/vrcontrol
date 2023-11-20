@@ -14,7 +14,7 @@
       <tbody>
         <tr>
           <td>
-            <%= f.select :tipo_objeto, @tipo_objetos.collect { |tipo_objeto| [tipo_objeto[1], tipo_objeto[0]] }, { include_blank: "Selecionar" }, { class: "form-control" } %>            
+            <%= f.select :tipo_objeto, @tipo_objetos.collect { |tipo_objeto| [tipo_objeto[1], tipo_objeto[0]] }, { include_blank: "Selecionar" }, { class: "form-control", required: true } %>
           </td>
           <td>
             <%= f.date_field :data_inicio, value: Date.today-1.month, class: "form-control" %>

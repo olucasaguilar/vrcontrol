@@ -1,0 +1,4 @@
+<h3>Relatórios de Produção</h3> <br>
+
+<%#= link_to "<i class='fas fa-list'></i> Peças em produção".html_safe, producao_ativos_path, class: "btn btn-primary", method: :get, target: '_blank', data: { confirm: 'Gerar o relatório de peças em produção?' } %>
+<%= link_to "<i class='fas fa-cogs'></i> Histórico por Etapa".html_safe, current_page?(relatorios_producao_path) ? producao_historico_path : relatorios_producao_path, class: "btn btn-primary #{'active' if current_page?(producao_historico_path)}" %>

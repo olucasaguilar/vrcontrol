@@ -1,7 +1,7 @@
-class RelatoriosController < ApplicationController
-  def estoque_index; end
+class RelatoriosEstoqueController < ApplicationController
+  def index; end
 
-  def estoque_geral
+  def geral
     set_tecidos('ultimo')
     set_pecas('ultimo')
     set_pecas_acabadas('ultimo')
@@ -155,7 +155,7 @@ class RelatoriosController < ApplicationController
               disposition: 'inline')
   end
 
-  def estoque_entrada_saida
+  def entrada_saida
     @tipo_objetos = {
       :tecido => 'Tecido',
       :peca => 'Peça',
@@ -163,7 +163,7 @@ class RelatoriosController < ApplicationController
     }
   end
 
-  def estoque_entrada_saida_listagem    
+  def entrada_saida_listagem    
     tipo_objeto = params[:tipo_objeto]
     @data_inicio = params[:data_inicio].to_datetime.change(hour: 0, minute: 0, second: 0)
     @data_fim = params[:data_fim].to_datetime.change(hour: 23, minute: 59, second: 59)

@@ -202,7 +202,7 @@
         </a>
       </div>
       <div class="logout-button">
-        <%= link_to current_user.name, cadastro_usuario_path, class: 'btn btn-primary' %>
+        <%= link_to "#{current_user.name} <i class='fas fa-user'></i>".html_safe, cadastro_usuario_path, class: 'btn btn-primary' %>
       </div>
     </div>   
     <%#= render "shared/navbar" %>
@@ -218,7 +218,6 @@
       <%# <img src="https://1.bp.blogspot.com/-vhmWFWO2r8U/YLjr2A57toI/AAAAAAAACO4/0GBonlEZPmAiQW4uvkCTm5LvlJVd_-l_wCNcBGAsYHQ/s16000/team-1-2.jpg" alt="profile_picture"> %>
       <a href="<%= root_path %>" class="link-sem-efeito">
         <h3>VRControl</h3>
-        <p>Gerente</p>
       </a>
 
     </div>
@@ -460,6 +459,12 @@
                 <a class="dropdown-item" href="<%= relatorios_estoque_path %>">
                   <span class="icon"><i class="fas fa-chart-bar"></i></span>
                   <span class="item">Relatório de Estoque</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="<%= relatorios_producao_path %>">
+                  <span class="icon"><i class="fas fa-chart-bar"></i></span>
+                  <span class="item">Relatório de Produção</span>
                 </a>
               </li>
             </ul>

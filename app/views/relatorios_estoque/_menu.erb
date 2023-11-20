@@ -1,0 +1,4 @@
+<h3>Relatórios de Estoque</h3> <br>
+
+<%= link_to "<i class='fas fa-list'></i> Estoque Geral".html_safe, estoque_geral_path, class: "btn btn-primary", method: :get, target: '_blank', data: { confirm: 'Gerar o relatório de estoque geral?' } %>
+<%= link_to "<i class='fas fa-history'></i> Histórico".html_safe, current_page?(relatorios_estoque_path) ? estoque_entrada_saida_path : relatorios_estoque_path, class: "btn btn-primary #{'active' if current_page?(estoque_entrada_saida_path)}" %>

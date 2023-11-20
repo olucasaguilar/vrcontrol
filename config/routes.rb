@@ -11,11 +11,20 @@ Rails.application.routes.draw do
   resources :garment_sizes, except: [:show]
 
   # Rotas de Relatórios
-  scope '/relatorios' do
-    get            '/estoque',                        to: 'relatorios#estoque_index',                  as: 'relatorios_estoque'
-    get            '/estoque/geral',                  to: 'relatorios#estoque_geral',                  as: 'estoque_geral'
-    get            '/estoque/entrada_saida',          to: 'relatorios#estoque_entrada_saida',          as: 'estoque_entrada_saida'
-    get            '/estoque/entrada_saida/listagem', to: 'relatorios#estoque_entrada_saida_listagem', as: 'estoque_entrada_saida_listagem'
+  scope '/relatorios/' do
+    scope          '/estoque/' do
+      get                  '/',                       to: 'relatorios_estoque#index',                  as: 'relatorios_estoque'
+      get                  '/geral',                  to: 'relatorios_estoque#geral',                  as: 'estoque_geral'
+      get                  '/entrada_saida',          to: 'relatorios_estoque#entrada_saida',          as: 'estoque_entrada_saida'
+      get                  '/entrada_saida/listagem', to: 'relatorios_estoque#entrada_saida_listagem', as: 'estoque_entrada_saida_listagem'
+    end
+
+    scope          '/producao/' do
+      get                   '/',                      to: 'relatorios_producao#index',                       as: 'relatorios_producao'
+     #get                   '/ativos',                to: 'relatorios_producao#producao_ativos',             as: 'producao_ativos'
+      get                   '/historico',             to: 'relatorios_producao#historico',                   as: 'producao_historico'
+      get                   '/historico/listagem',    to: 'relatorios_producao#historico_listagem',          as: 'producao_historico_listagem'
+    end
   end
 
   # Rotas de Entidades
