@@ -52,7 +52,29 @@
   });
 </script>
 
+<style>
+  #manual-button {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #495057;
+    border-radius: 5px;
+    
+    position: absolute;
+    right: 5%;
+  }
+
+
+  h1 {
+    display: inline-block;
+    margin-right: 10px;
+  }
+</style>
+
 <h1>Venda - Retorno</h1><br>
+
+<%= link_to 'ajuda', "/assets/Manual-Tecnico-VR-Control.pdf#page=58", id: 'manual-button', target: '_blank' %>
 
 <%= form_tag create_return_sale_path do %>
   <%

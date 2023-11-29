@@ -1,3 +1,14 @@
+<style>
+  #manual-button {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #495057;
+    border-radius: 5px;
+  }
+</style>
+
 <h3>Configurações de Usuário</h3> <br>
 
 <%= link_to "<i class='fas fa-user'></i> Meu Perfil".html_safe, current_page?(my_profile_path) ? cadastro_usuario_path : my_profile_path, class: "btn btn-primary #{'active' if current_page?(my_profile_path)}" %>

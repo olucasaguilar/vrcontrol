@@ -449,7 +449,7 @@
 
       <% if current_user.user_permission.relatorio || current_user.user_permission.admin %>
         <li>
-          <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name=='relatorios' %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle <%= 'active' if controller.controller_name.include?('relatorios') %>" id="navbarDropdownEstoque" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <span class="icon"><i class="fas fa-chart-bar"></i></span>
             <span class="item">Relatórios</span>
           </a>
@@ -473,8 +473,15 @@
       <% end %>
 
       <% if current_user.user_permission.extras || current_user.user_permission.admin %>
+
+        <% cadastros_extras_active = true if controller.controller_name=='entity_types' %>
+        <% cadastros_extras_active = true if controller.controller_name=='fabric_types' %>
+        <% cadastros_extras_active = true if controller.controller_name=='colors' %>
+        <% cadastros_extras_active = true if controller.controller_name=='garment_types' %>
+        <% cadastros_extras_active = true if controller.controller_name=='garment_sizes' %>
+
         <li>
-          <a class="nav-link dropdown-toggle" id="navbarDropdownCadastros" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle <%= 'active' if cadastros_extras_active %>" id="navbarDropdownCadastros" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <span class="icon"><i class="fas fa-cog"></i></span>
             <span class="item">Cadastros Extras</span>
           </a>

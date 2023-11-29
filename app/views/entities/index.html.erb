@@ -9,18 +9,37 @@
 
 <style>
   .no-link-effect {
-    text-decoration: none; /* Remove a sublinhado */
-    color: inherit; /* Mantém a cor do texto padrão */
-    /* Outros estilos personalizados, se necessário */
+    text-decoration: none;
+    color: inherit;
   }
 
   .table-wrapper {
     max-width: 350px;
-    /* margin-left: auto; */
+  }
+
+  #manual-button {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #495057;
+    border-radius: 5px;
+    
+    position: absolute;
+    right: 5%;
+  }
+
+
+  h1 {
+    display: inline-block;
+    margin-right: 10px;
   }
 </style>
 
-<h1>Entidades</h1>
+<div class="header-container">
+  <h1>Entidades</h1>
+  <%= link_to 'ajuda', '/assets/Manual-Tecnico-VR-Control.pdf#page=30', id: 'manual-button', target: '_blank' %>
+<div>
 
 <%= form_with url: entidades_path, method: :get do %>
   <div class="btn-group" style="width: 100%;">

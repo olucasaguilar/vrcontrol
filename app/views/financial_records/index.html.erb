@@ -1,13 +1,43 @@
 <script>
   $(document).ready(function() {
-    // pega a mudança do date_field e submete o form apenas quando o usuário tirar o foco do campo
     $("input[type=date]").blur(function() {
+      $('#financialForm').submit();
+    });
+    
+    $("select").change(function() {
+      $('#financialForm').submit();
+    });
+    
+    $("input[type=text]").blur(function() {
       $('#financialForm').submit();
     });
   });
 </script>
 
+<style>
+  #manual-button {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #495057;
+    border-radius: 5px;
+    
+    position: absolute;
+    right: 5%;
+  }
+
+
+  h1 {
+    display: inline-block;
+    margin-right: 10px;
+  }
+</style>
+
 <h1>Registros Financeiros</h1>
+
+<%= link_to 'ajuda', '/assets/Manual-Tecnico-VR-Control.pdf#page=36', id: 'manual-button', target: '_blank' %>
+
 <br>
 
 <%= form_with(url: financial_records_path, method: :get, html: { id: "financialForm" }) do |f| %>
@@ -17,18 +47,34 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th>Data Inicial</th>
-          <th>Data Final</th>
+          <th>
+            <%= f.label :tipo_movimento, "Tipo Movimento" %>
+          </th>
+          <th>
+            <%= f.label :data_inicio, "Data Inicial" %>
+          </th>
+          <th>
+            <%= f.label :data_fim, "Data Final" %>
+          </th>
+          <th>
+            <%= f.label :search, "Observação" %>
+          </th>
           <th>Ações</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>
+            <%= f.select :tipo_movimento, ["Entrada", "Saída"], { include_blank: "Todos", selected: params[:tipo_movimento] }, { class: "form-select" } %>
+          </td>
+          <td>
             <%= f.date_field :data_inicio, value: @data_inicio.strftime("%Y-%m-%d"), class: "form-control" %>
           </td>
           <td>
             <%= f.date_field :data_fim, value: @data_fim.strftime("%Y-%m-%d"), class: "form-control" %>
+          </td>
+          <td>
+            <%= f.text_field :search, class: "form-control", placeholder: "Observação", value: params[:search] %>
           </td>
           <td>
             <%= link_to "Limpar", financial_records_path, class: "btn btn-secondary" %>

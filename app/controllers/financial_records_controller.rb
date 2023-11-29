@@ -14,7 +14,15 @@ class FinancialRecordsController < ApplicationController
     @data_fim = data_fim.change(hour: 23, minute: 59, second: 59)
     
     @financial_records = FinancialRecord.where("data_hora >= ? AND data_hora <= ?", @data_inicio, @data_fim).order(data_hora: :desc)
-        
+    
+    if params[:search].present?
+      @financial_records = @financial_records.where("observacao ILIKE ?", "%#{params[:search]}%")
+    end
+
+    if params[:tipo_movimento].present?
+      @financial_records = @financial_records.where(tipo_movimento: params[:tipo_movimento])
+    end
+
     @saldo = {}
     @financial_records.reverse.each_with_index do  |record, index|
       if index == 0
@@ -30,8 +38,8 @@ class FinancialRecordsController < ApplicationController
           @saldo[record.id] = @saldo.values[index - 1] - record.valor
         end
       end
-    end
-    
+    end    
+
     return if params[:action] == "report"
 
     page = params[:page]
