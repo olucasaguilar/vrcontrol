@@ -28,7 +28,6 @@ class SalesController < SharedController
     garment_type_id ||= nil
     quantidade ||= nil
 
-
     @peca = {
       garment_type_id: garment_type_id,
       quantidade: quantidade
@@ -95,6 +94,7 @@ class SalesController < SharedController
         return
       end
       @garment_sale_exit.save
+      total_pecas = 0
       session[:pecas].each do |peca|
         garment_finished_stock = GarmentFinishedStock.new
         garment_finished_stock.tipo_peca_id = peca['garment_type_id']
@@ -102,11 +102,13 @@ class SalesController < SharedController
         garment_finished_stock.tipo_movimento = 'Saída'
         garment_finished_stock.data_hora = params[:data_hora]
         garment_finished_stock.save
+        total_pecas += garment_finished_stock.quantidade
         garment_sale_stock_exit = GarmentSaleStockExit.new
         garment_sale_stock_exit.peca_venda_saida = @garment_sale_exit
         garment_sale_stock_exit.estoque_pecas_acabadas = @garment_finished_stock
         garment_sale_stock_exit.save
       end
+      @garment_sale_exit.update(total_pecas: total_pecas)
       flash[:notice] << 'Saida para venda criada com sucesso!'
       redirect_to root_path
       return

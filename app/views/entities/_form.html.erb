@@ -104,22 +104,22 @@
 <% end %>
 
 <div class="form-group">
-  <%= f.label :nome, "Nome*", class: "col-md-4 control-label" %>
-  <div class="col-md-4 inputGroupContainer">
+  <%= f.label :nome, "Nome*", class: "control-label" %>
+  <div class="inputGroupContainer">
     <%= f.text_field :nome, required: true, class: "form-control #{f.object.errors[:nome].any? ? 'is-invalid' : ''}", placeholder: "Nome da entidade" %>
   </div>
 </div>
 
 <div class="form-group">
-  <%= f.label :num_contato, class: "col-md-4 control-label" %>
-  <div class="col-md-4 inputGroupContainer">
+  <%= f.label :num_contato, class: "control-label" %>
+  <div class="inputGroupContainer">
     <%= f.text_field :num_contato, class: "form-control", maxlength: 15, onkeyup: "handlePhone(event)", placeholder: "(00) 00000-0000" %>
   </div>
 </div>
 
 <div class="form-group">
-  <%= f.label :estado, class: "col-md-4 control-label" %>
-  <div class="col-md-4 inputGroupContainer">
+  <%= f.label :estado, class: "control-label" %>
+  <div class="inputGroupContainer">
     <select id="entity_estado" name="entity[estado]" class="form-control">
       <option value="">Selecione o estado</option>
     </select>
@@ -127,8 +127,8 @@
 </div>
 
 <div class="form-group">
-  <%= f.label :cidade, class: "col-md-4 control-label" %>
-  <div class="col-md-4 inputGroupContainer">
+  <%= f.label :cidade, class: "control-label" %>
+  <div class="inputGroupContainer">
     <select id="entity_cidade" name="entity[cidade]" class="form-control">
       <option value="">Selecione a cidade</option>
     </select>
@@ -136,15 +136,15 @@
 </div>
 
 <div class="form-group">
-  <%= f.label :entity_types_id, class: "col-md-4 control-label" %>
-  <div class="col-md-4 inputGroupContainer">
+  <%= f.label :entity_types_id, class: "control-label" %>
+  <div class="inputGroupContainer">
     <%= f.collection_select :entity_types_id, @entity_types, :id, :nome, { prompt: true }, class: "form-control" %>
   </div>
 </div>
 
 <div class="form-group">
-  <label class="col-md-4 control-label" for="tipoPessoaCheckbox">Tipo de Pessoa</label>
-  <div class="col-md-4 inputGroupContainer">
+  <label class="control-label" for="tipoPessoaCheckbox">Tipo de Pessoa</label>
+  <div class="inputGroupContainer">
     <label class="checkbox-inline">
       <input type="checkbox" id="tipoPessoaCheckbox" name="entity[juridica]" onclick="handleTipoPessoa()" <%= @entity.juridica? ? 'checked' : '' %>> Pessoa Jurídica
     </label>
@@ -153,23 +153,23 @@
 
 <!-- Campos CPF -->
 <div class="form-group" id="cpfContainer">
-  <%= f.label :cpf, "CPF", class: "col-md-4 control-label" %>
-  <div class="col-md-4 inputGroupContainer">
+  <%= f.label :cpf, "CPF", class: "control-label" %>
+  <div class="inputGroupContainer">
     <%= f.text_field :cpf, class: "form-control #{f.object.errors[:cpf].any? ? 'is-invalid' : ''}", maxlength: 14, onkeyup: "handleCPF(event)", placeholder: "000.000.000-00" %>
   </div>
 </div>
 
 <!-- Campos CNPJ e Inscrição Estadual -->
 <div class="form-group" id="cnpjContainer">
-  <%= f.label :cnpj, "CNPJ", class: "col-md-4 control-label" %>
-  <div class="col-md-4 inputGroupContainer">
+  <%= f.label :cnpj, "CNPJ", class: "control-label" %>
+  <div class="inputGroupContainer">
     <%= f.text_field :cnpj, class: "form-control #{f.object.errors[:cnpj].any? ? 'is-invalid' : ''}", maxlength: 18, onkeyup: "handleCNPJ(event)", placeholder: "00.000.000/0000-00" %>
   </div>
 </div>
 
 <div class="form-group" id="ieContainer">
-  <%= f.label :ie, "Inscrição Estadual", class: "col-md-4 control-label" %>
-  <div class="col-md-4 inputGroupContainer">
+  <%= f.label :ie, "Inscrição Estadual", class: "control-label" %>
+  <div class="inputGroupContainer">
     <%= f.text_field :ie, class: "form-control", maxlength: 12, onkeyup: "handleInscEstadual(event)", placeholder: "000.000.0000" %>
   </div>
 </div><br>

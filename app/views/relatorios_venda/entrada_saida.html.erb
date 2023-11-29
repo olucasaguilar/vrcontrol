@@ -1,0 +1,28 @@
+<%= render partial: 'menu' %> <br><br>
+
+<%= form_with(url: vendas_entrada_saida_listagem_path, method: :get, target: '_blank') do |f| %>
+  <div class="table-wrapper">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Data Inicial</th>
+          <th>Data Final</th>
+          <th>Ações</th>          
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <%= f.date_field :data_inicio, value: Date.today-1.month, class: "form-control" %>
+          </td>
+          <td>
+            <%= f.date_field :data_fim, value: Date.today, class: "form-control" %>
+          </td>
+          <td>
+            <%= f.submit "Gerar", class: "btn btn-primary" %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<% end %>

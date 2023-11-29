@@ -25,6 +25,12 @@ Rails.application.routes.draw do
       get                   '/historico',             to: 'relatorios_producao#historico',                   as: 'producao_historico'
       get                   '/historico/listagem',    to: 'relatorios_producao#historico_listagem',          as: 'producao_historico_listagem'
     end
+
+    scope          '/vendas/' do
+      get                  '/',                       to: 'relatorios_venda#index',                     as: 'relatorios_venda'
+      get                  '/entrada_saida',          to: 'relatorios_venda#entrada_saida',             as: 'vendas_entrada_saida'
+      get                  '/entrada_saida/listagem', to: 'relatorios_venda#entrada_saida_listagem',    as: 'vendas_entrada_saida_listagem'
+    end
   end
 
   # Rotas de Entidades

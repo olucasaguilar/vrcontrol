@@ -1,0 +1,3 @@
+<h3>Relatórios de Venda</h3> <br>
+
+<%= link_to "<i class='fas fa-list'></i> Entrada e Saída".html_safe, current_page?(relatorios_venda_path) ? vendas_entrada_saida_path : relatorios_venda_path, class: "btn btn-primary #{'active' if current_page?(vendas_entrada_saida_path)}", method: :get %>
