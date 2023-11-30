@@ -1,3 +1,17 @@
+<style>
+  #manual-button {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #495057;
+    border-radius: 5px;
+    
+    position: absolute;
+    right: 5%;
+  }
+</style>
+
 <div class="container py-5 h-100">
   <div class="row d-flex justify-content-center align-items-center h-100">
     <div class="col col-xl-10">
@@ -37,6 +51,7 @@
 
                 <div class="pt-1 mb-0">
                   <%= f.submit "Login", class: "btn btn-dark btn-lg btn-block" %>
+                  <%= link_to 'ajuda', '/assets/Manual-Tecnico-VR-Control.pdf#page=15', id: 'manual-button', target: '_blank' %>
                 </div>
               <% end %>
 
