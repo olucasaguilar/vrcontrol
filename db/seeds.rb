@@ -41,7 +41,6 @@ EntityType.find_or_create_by(nome: 'Costureira')
 EntityType.find_or_create_by(nome: 'Serigrafia')
 EntityType.find_or_create_by(nome: 'Acabamento')
 EntityType.find_or_create_by(nome: 'Vendedor')
-EntityType.find_or_create_by(nome: 'Transportadora')
 
 # Exemplos de entidades do tipo 'Malharia'
 Entity.find_or_create_by(nome: 'Malharia Fashion Ltda.', num_contato: '(11) 5555-1234', cidade: 'São Paulo', estado: 'SP', entity_types_id: 1, juridica: true)
@@ -85,13 +84,6 @@ Entity.find_or_create_by(nome: 'Vendedores Experientes S.A.', num_contato: '(21)
 Entity.find_or_create_by(nome: 'Vendas Estratégicas', num_contato: '(47) 6666-5555', cidade: 'Blumenau', estado: 'SC', entity_types_id: 6, juridica: true)
 Entity.find_or_create_by(nome: 'Vendedores Eficazes Ltda.', num_contato: '(31) 7777-6666', cidade: 'Belo Horizonte', estado: 'MG', entity_types_id: 6, juridica: true)
 Entity.find_or_create_by(nome: 'Vendedores do Norte', num_contato: '(54) 5555-4444', cidade: 'Caxias do Sul', estado: 'RS', entity_types_id: 6, juridica: true)
-
-# Exemplos de entidades do tipo 'Transportadora'
-Entity.find_or_create_by(nome: 'TransLogística Expressa Ltda.', num_contato: '(11) 5555-8888', cidade: 'São Paulo', estado: 'SP', entity_types_id: 7, juridica: true)
-Entity.find_or_create_by(nome: 'Transporte Rápido S.A.', num_contato: '(21) 4444-7777', cidade: 'Rio de Janeiro', estado: 'RJ', entity_types_id: 7, juridica: true)
-Entity.find_or_create_by(nome: 'Transportadoras Unidos', num_contato: '(47) 3333-2222', cidade: 'Blumenau', estado: 'SC', entity_types_id: 7, juridica: true)
-Entity.find_or_create_by(nome: 'Transporte Ágil Ltda.', num_contato: '(31) 6666-5555', cidade: 'Belo Horizonte', estado: 'MG', entity_types_id: 7, juridica: true)
-Entity.find_or_create_by(nome: 'Transporte Seguro', num_contato: '(54) 2222-1111', cidade: 'Caxias do Sul', estado: 'RS', entity_types_id: 7, juridica: true)
 
 # Usuário
 admin = User.create(name: 'Lucas', password: '123456')

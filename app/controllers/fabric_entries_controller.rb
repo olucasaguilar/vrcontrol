@@ -6,7 +6,7 @@ class FabricEntriesController < ApplicationController
     if FabricEntry.any? && FabricEntry.last.total_tecido == nil
       redirect_to new_fabric_entry_details_path
     else
-      data_hora = Time.now - 3.hour
+      data_hora = Time.now
       buscar_entidades('Malharia')
       @fabric_entry = FabricEntry.new
       @fabric_entry.data_hora = data_hora
