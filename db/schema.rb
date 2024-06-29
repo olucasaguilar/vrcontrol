@@ -11,9 +11,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "colors", force: :cascade do |t|
     t.string "nome"
     t.datetime "created_at", null: false
@@ -25,7 +22,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
     t.string "num_contato"
     t.string "cidade"
     t.string "estado"
-    t.bigint "entity_types_id", null: false
+    t.integer "entity_types_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "cnpj"
@@ -43,9 +40,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "fabric_cut_garment_sizes", force: :cascade do |t|
-    t.bigint "tecido_corte_peca_id", null: false
+    t.integer "tecido_corte_peca_id", null: false
     t.integer "qtd_tamanho"
-    t.bigint "tamanho_id", null: false
+    t.integer "tamanho_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tamanho_id"], name: "index_fabric_cut_garment_sizes_on_tamanho_id"
@@ -53,10 +50,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "fabric_cut_garments", force: :cascade do |t|
-    t.bigint "estoque_pecas_id", null: false
+    t.integer "estoque_pecas_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "saida_tecido_estoque_id"
+    t.integer "saida_tecido_estoque_id"
     t.index ["estoque_pecas_id"], name: "index_fabric_cut_garments_on_estoque_pecas_id"
     t.index ["saida_tecido_estoque_id"], name: "index_fabric_cut_garments_on_saida_tecido_estoque_id"
   end
@@ -67,14 +64,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
     t.decimal "total_peca_retorno"
     t.boolean "finalizado"
     t.datetime "data_hora_volta"
-    t.bigint "cortador_id", null: false
+    t.integer "cortador_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cortador_id"], name: "index_fabric_cuts_on_cortador_id"
   end
 
   create_table "fabric_entries", force: :cascade do |t|
-    t.bigint "entity_id", null: false
+    t.integer "entity_id", null: false
     t.datetime "data_hora"
     t.decimal "total_tecido"
     t.datetime "created_at", null: false
@@ -83,8 +80,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "fabric_stock_entries", force: :cascade do |t|
-    t.bigint "entrada_tecido_id", null: false
-    t.bigint "estoque_tecido_id", null: false
+    t.integer "entrada_tecido_id", null: false
+    t.integer "estoque_tecido_id", null: false
     t.decimal "valor_tecido"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -93,11 +90,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "fabric_stock_exits", force: :cascade do |t|
-    t.bigint "tecido_corte_id", null: false
-    t.bigint "estoque_tecido_id", null: false
+    t.integer "tecido_corte_id", null: false
+    t.integer "estoque_tecido_id", null: false
     t.float "multiplicador"
     t.float "rendimento"
-    t.bigint "tipo_peca_id", null: false
+    t.integer "tipo_peca_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["estoque_tecido_id"], name: "index_fabric_stock_exits_on_estoque_tecido_id"
@@ -106,8 +103,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "fabric_stocks", force: :cascade do |t|
-    t.bigint "tipo_tecido_id", null: false
-    t.bigint "cor_id", null: false
+    t.integer "tipo_tecido_id", null: false
+    t.integer "cor_id", null: false
     t.decimal "quantidade"
     t.string "tipo_movimento"
     t.datetime "data_hora"
@@ -125,8 +122,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "financial_fabric_cuts", force: :cascade do |t|
-    t.bigint "registro_financeiro_id", null: false
-    t.bigint "tecido_corte_id", null: false
+    t.integer "registro_financeiro_id", null: false
+    t.integer "tecido_corte_id", null: false
     t.boolean "retorno"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -135,8 +132,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "financial_fabric_entries", force: :cascade do |t|
-    t.bigint "registro_financeiro_id", null: false
-    t.bigint "entrada_tecido_id", null: false
+    t.integer "registro_financeiro_id", null: false
+    t.integer "entrada_tecido_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["entrada_tecido_id"], name: "index_financial_fabric_entries_on_entrada_tecido_id"
@@ -144,8 +141,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "financial_garment_finishings", force: :cascade do |t|
-    t.bigint "registro_financeiro_id", null: false
-    t.bigint "peca_acabamento_id", null: false
+    t.integer "registro_financeiro_id", null: false
+    t.integer "peca_acabamento_id", null: false
     t.boolean "retorno"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -154,8 +151,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "financial_garment_return_sales", force: :cascade do |t|
-    t.bigint "registro_financeiro_id", null: false
-    t.bigint "peca_venda_retorno_id", null: false
+    t.integer "registro_financeiro_id", null: false
+    t.integer "peca_venda_retorno_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["peca_venda_retorno_id"], name: "index_financial_garment_return_sales_on_peca_venda_retorno_id"
@@ -163,8 +160,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "financial_garment_sewings", force: :cascade do |t|
-    t.bigint "registro_financeiro_id", null: false
-    t.bigint "peca_costura_id", null: false
+    t.integer "registro_financeiro_id", null: false
+    t.integer "peca_costura_id", null: false
     t.boolean "retorno"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -183,8 +180,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "financial_screens_printings", force: :cascade do |t|
-    t.bigint "registro_financeiro_id", null: false
-    t.bigint "peca_serigrafia_id", null: false
+    t.integer "registro_financeiro_id", null: false
+    t.integer "peca_serigrafia_id", null: false
     t.boolean "retorno"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -193,7 +190,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_finished_stocks", force: :cascade do |t|
-    t.bigint "tipo_peca_id", null: false
+    t.integer "tipo_peca_id", null: false
     t.integer "quantidade"
     t.string "tipo_movimento"
     t.datetime "data_hora"
@@ -204,8 +201,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_finishing_garments", force: :cascade do |t|
-    t.bigint "estoque_pecas_acabada_id", null: false
-    t.bigint "saida_peca_estoque_id", null: false
+    t.integer "estoque_pecas_acabada_id", null: false
+    t.integer "saida_peca_estoque_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["estoque_pecas_acabada_id"], name: "index_garment_finishing_garments_on_estoque_pecas_acabada_id"
@@ -213,9 +210,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_finishing_sizes", force: :cascade do |t|
-    t.bigint "peca_acabamento_peca_id", null: false
+    t.integer "peca_acabamento_peca_id", null: false
     t.integer "qtd_tamanho"
-    t.bigint "tamanho_id", null: false
+    t.integer "tamanho_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["peca_acabamento_peca_id"], name: "index_garment_finishing_sizes_on_peca_acabamento_peca_id"
@@ -223,8 +220,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_finishing_stock_exits", force: :cascade do |t|
-    t.bigint "peca_acabamento_id", null: false
-    t.bigint "estoque_peca_id", null: false
+    t.integer "peca_acabamento_id", null: false
+    t.integer "estoque_peca_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["estoque_peca_id"], name: "index_garment_finishing_stock_exits_on_estoque_peca_id"
@@ -232,7 +229,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_finishings", force: :cascade do |t|
-    t.bigint "acabamento_id", null: false
+    t.integer "acabamento_id", null: false
     t.datetime "data_hora_ida"
     t.decimal "total_pecas_envio"
     t.decimal "total_pecas_retorno"
@@ -244,7 +241,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_sale_exits", force: :cascade do |t|
-    t.bigint "vendedor_id", null: false
+    t.integer "vendedor_id", null: false
     t.datetime "data_hora"
     t.decimal "total_pecas"
     t.datetime "created_at", null: false
@@ -253,7 +250,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_sale_returns", force: :cascade do |t|
-    t.bigint "vendedor_id", null: false
+    t.integer "vendedor_id", null: false
     t.datetime "data_hora"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -261,8 +258,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_sale_stock_exits", force: :cascade do |t|
-    t.bigint "peca_venda_saida_id", null: false
-    t.bigint "estoque_pecas_acabadas_id", null: false
+    t.integer "peca_venda_saida_id", null: false
+    t.integer "estoque_pecas_acabadas_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["estoque_pecas_acabadas_id"], name: "index_garment_sale_stock_exits_on_estoque_pecas_acabadas_id"
@@ -270,9 +267,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_screen_garment_sizes", force: :cascade do |t|
-    t.bigint "peca_serigrafia_peca_id", null: false
+    t.integer "peca_serigrafia_peca_id", null: false
     t.integer "qtd_tamanho"
-    t.bigint "tamanho_id", null: false
+    t.integer "tamanho_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["peca_serigrafia_peca_id"], name: "index_garment_screen_garment_sizes_on_peca_serigrafia_peca_id"
@@ -280,8 +277,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_screen_garments", force: :cascade do |t|
-    t.bigint "estoque_pecas_id", null: false
-    t.bigint "saida_peca_serigrafia_id", null: false
+    t.integer "estoque_pecas_id", null: false
+    t.integer "saida_peca_serigrafia_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["estoque_pecas_id"], name: "index_garment_screen_garments_on_estoque_pecas_id"
@@ -289,8 +286,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_screen_printing_stock_exits", force: :cascade do |t|
-    t.bigint "peca_serigrafia_id", null: false
-    t.bigint "estoque_peca_id", null: false
+    t.integer "peca_serigrafia_id", null: false
+    t.integer "estoque_peca_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["estoque_peca_id"], name: "index_garment_screen_printing_stock_exits_on_estoque_peca_id"
@@ -298,7 +295,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_screen_printings", force: :cascade do |t|
-    t.bigint "serigrafia_id", null: false
+    t.integer "serigrafia_id", null: false
     t.datetime "data_hora_ida"
     t.decimal "total_pecas_envio"
     t.decimal "total_pecas_retorno"
@@ -310,9 +307,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_sewing_garment_sizes", force: :cascade do |t|
-    t.bigint "peca_costura_peca_id", null: false
+    t.integer "peca_costura_peca_id", null: false
     t.integer "qtd_tamanho"
-    t.bigint "tamanho_id", null: false
+    t.integer "tamanho_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["peca_costura_peca_id"], name: "index_garment_sewing_garment_sizes_on_peca_costura_peca_id"
@@ -320,8 +317,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_sewing_garments", force: :cascade do |t|
-    t.bigint "estoque_pecas_id", null: false
-    t.bigint "saida_peca_estoque_costura_id", null: false
+    t.integer "estoque_pecas_id", null: false
+    t.integer "saida_peca_estoque_costura_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["estoque_pecas_id"], name: "index_garment_sewing_garments_on_estoque_pecas_id"
@@ -329,8 +326,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_sewing_stock_exits", force: :cascade do |t|
-    t.bigint "peca_costura_id", null: false
-    t.bigint "estoque_peca_id", null: false
+    t.integer "peca_costura_id", null: false
+    t.integer "estoque_peca_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["estoque_peca_id"], name: "index_garment_sewing_stock_exits_on_estoque_peca_id"
@@ -343,7 +340,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
     t.decimal "total_pecas_retorno"
     t.boolean "finalizado"
     t.datetime "data_hora_volta"
-    t.bigint "costureira_id", null: false
+    t.integer "costureira_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["costureira_id"], name: "index_garment_sewings_on_costureira_id"
@@ -356,8 +353,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_stock_entries", force: :cascade do |t|
-    t.bigint "saida_peca_acabada_id", null: false
-    t.bigint "peca_venda_retorno_id", null: false
+    t.integer "saida_peca_acabada_id", null: false
+    t.integer "peca_venda_retorno_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["peca_venda_retorno_id"], name: "index_garment_stock_entries_on_peca_venda_retorno_id"
@@ -365,7 +362,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "garment_stocks", force: :cascade do |t|
-    t.bigint "tipo_peca_id", null: false
+    t.integer "tipo_peca_id", null: false
     t.boolean "costurada"
     t.boolean "estampada"
     t.integer "quantidade"
@@ -384,7 +381,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_215742) do
   end
 
   create_table "user_permissions", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.integer "user_id", null: false
     t.boolean "admin", default: false
     t.boolean "entities", default: false
     t.boolean "entities_create", default: false

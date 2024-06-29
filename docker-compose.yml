@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    working_dir: /app
+    volumes:
+      - .:/app
+      - bundle:/usr/local/bundle
+    ports:
+      - "3000:3000"
+    command: bash -c "bundle install && rails db:prepare && rails assets:precompile && bundle exec rails server -b 0.0.0.0"
+
+volumes:
+  bundle:
