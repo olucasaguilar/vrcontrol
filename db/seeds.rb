@@ -86,5 +86,5 @@ Entity.find_or_create_by(nome: 'Vendedores Eficazes Ltda.', num_contato: '(31) 7
 Entity.find_or_create_by(nome: 'Vendedores do Norte', num_contato: '(54) 5555-4444', cidade: 'Caxias do Sul', estado: 'RS', entity_types_id: 6, juridica: true)
 
 # Usuário
-admin = User.create(name: 'Lucas', password: '123456')
+admin = User.create(name: 'Lucas', password: '123123')
 admin.user_permission = UserPermission.create(admin: true)
