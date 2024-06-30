@@ -8,7 +8,7 @@ Este é um sistema ERB desenvolvido para uma empresa de produção de roupas, co
 
 Para iniciar a aplicação, siga os passos abaixo:
 
-1. Certifique-se de ter o Git e Docker instalados no seu sistema.
+1. Certifique-se de ter o Git, Docker e Docker-Compose instalados no seu sistema.
 2. Clone o repositório do projeto:
 
 ```bash
@@ -51,7 +51,7 @@ This is an ERB system developed for a clothing manufacturing company, covering a
 
 To start the application, follow the steps below:
 
-1. Ensure you have Git and Docker installed on your system.
+1. Ensure you have Git, Docker and Docker-Compose installed on your system.
 2. Clone the project repository:
 
 ```bash
