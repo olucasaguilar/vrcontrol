@@ -2,7 +2,7 @@
 
 [English Version](#vr-control---english-version)
 
-Este é um sistema de gestão desenvolvido para uma empresa de produção de roupas, cobrindo todas as fases do processo, desde a aquisição de matéria-prima até a distribuição final. O sistema possui controle total do processo produtivo, incluindo terceirização e gerenciamento de estoque de matéria-prima e produtos acabados. Este projeto foi desenvolvido como parte do Trabalho de Conclusão de Curso (TCC) da faculdade de sistemas (2023).
+Este é um sistema ERB desenvolvido para uma empresa de produção de roupas, cobrindo todas as fases do processo, desde a aquisição de matéria-prima até a distribuição final. O sistema possui controle total do processo produtivo, incluindo gerenciamento de estoque de matéria-prima e produtos acabados. Este projeto foi desenvolvido como parte do Trabalho de Conclusão de Curso (TCC) da faculdade de sistemas (2023).
 
 ## Instruções para rodar a aplicação
 
@@ -45,7 +45,7 @@ Isso irá criar e iniciar os contêineres necessários para a aplicação, e ela
 
 # VR CONTROL - English Version
 
-This is a management system developed for a clothing production company, covering all stages of the process, from raw material acquisition to final distribution. The system provides full control over the production process, including outsourcing and inventory management of raw materials and finished products. This project was developed as part of a college capstone project (2023).
+This is an ERB system developed for a clothing manufacturing company, covering all phases of the process, from raw material acquisition to final distribution. The system provides complete control of the production process, including management of raw material inventory and finished products. This project was developed as part of a college capstone project (2023).
 
 ## Instructions to Run the Application
 
